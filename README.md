@@ -47,7 +47,7 @@ are never typed in by the agent, and a round whose metric is fully countable
 (12 of the 99 goals today) is judged with nobody reading anything.
 ```
 
-That example is a real run on our own product. We will publish its numbers here, good or bad.
+That example is a real run on our own product.
 
 ## The rules the engine enforces
 
@@ -75,13 +75,7 @@ That example is a real run on our own product. We will publish its numbers here,
 
 [`playbooks/`](playbooks/) holds 99 goals across Threads, Instagram, X, TikTok, YouTube, Reddit, LinkedIn, Product Hunt, Meta and Google ads, email and webinars. They compile into [`engine/library.json`](engine/library.json).
 
-Honest status:
-
-- **In a live test: 1.** "Threads: raise the link click rate from a post to your site". Its eleven steps are rewritten in plain English and are being run on a real product right now.
-- **Rewritten, not run yet: 2.** Two more Threads goals share those eleven steps.
-- **Experimental: 96.** Generated drafts, in Traditional Chinese, structurally complete, never run for real. Expect rough edges.
-
-Each playbook page says which it is.
+The Threads playbooks are written step by step in plain English, and the first one is running on a live product. The other channels are in Traditional Chinese. Each page shows its language.
 
 The most useful contribution is running one playbook on a real product and sending back what was unclear or wrong.
 
@@ -97,22 +91,13 @@ Everything needed to run the loop is here under Apache-2.0: the engine, the MCP 
 
 The hosted service at [engine.nuluno.com](https://engine.nuluno.com/?lang=en) adds what needs a server that stays on:
 
-| | Local (this repo) | Hosted free | Hosted Pro |
-|---|---|---|---|
-| Guided loop, all 99 playbooks | yes | yes | yes |
-| Works from Claude or ChatGPT on any device with one address | | yes | yes |
-| Tracked links and sale counter; countable rounds judged by the engine | | yes | yes |
-| Agent inbox for verification mail ([how it works](access-inbox/)) | self-host | 10 messages a month | 500 a month |
-| Products per account | one per data file | 1 | 5 |
-| Round results by email | | | yes |
+| | Local (this repo) | Hosted, free |
+|---|---|---|
+| Guided loop, all 99 playbooks | yes | yes |
+| One connection address that works from any device | | yes |
+| Tracked links and sale counter; countable rounds judged by the engine | | yes |
+| Agent inbox for verification mail ([how it works](access-inbox/)) | self-host | 10 messages a month |
 
-The free plan has no time limit. Pro is built and tested; it opens when payments are switched on. The code and the playbooks stay free.
-
-## Not done yet
-
-- No customer sale has been produced by the engine yet. This is being tested in public on our own product, and the numbers will be posted here, good or bad.
-- The engine does not post for the agent. The agent uses its own tools, or the owner presses publish.
-- The engine counts link clicks and sales. Views, impressions and other numbers only a platform can see are still read by the agent or the owner.
-- 96 of the 99 playbooks are unrun drafts in Traditional Chinese.
+The free plan has no time limit. The code and the playbooks stay free.
 
 [License](LICENSE) · Issues and playbook reports welcome

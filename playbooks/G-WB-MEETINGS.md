@@ -1,7 +1,7 @@
 # 活動問答接成已確認個別示範
 
 - **Goal id:** `G-WB-MEETINGS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** webinar
 - **Metric:** `confirmed_meetings` = `confirmed_meetings`, should increase
 - **Observation window:** 168 hours after publishing

@@ -3,7 +3,7 @@
 Threads提高貼文到網站點擊率
 
 - **Goal id:** `G-TH-LINK-RATE`
-- **Status:** in live test
+- **Language:** English · running on a live product
 - **Channel:** threads
 - **Metric:** `link_rate` = `link_clicks` / `views`, should increase
 - **Observation window:** 48 hours after publishing

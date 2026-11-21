@@ -1,7 +1,7 @@
 # X提高串文到profile造訪率
 
 - **Goal id:** `G-X-PROFILE-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** x
 - **Metric:** `profile_visit_rate` = `profile_visits` / `impressions`, should increase
 - **Observation window:** 48 hours after publishing

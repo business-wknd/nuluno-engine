@@ -1,7 +1,7 @@
 # IG提高個人檔案到網站點擊率
 
 - **Goal id:** `G-IG-LINK-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** instagram
 - **Metric:** `profile_link_rate` = `link_clicks` / `profile_visits`, should increase
 - **Observation window:** 48 hours after publishing

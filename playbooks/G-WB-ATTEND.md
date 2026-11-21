@@ -1,7 +1,7 @@
 # 提高線上示範活動實際出席率
 
 - **Goal id:** `G-WB-ATTEND`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** webinar
 - **Metric:** `attendance_rate` = `attendees` / `registrations`, should increase
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # Product Hunt上架帶來可核對網站流量
 
 - **Goal id:** `G-PH-LAUNCH-TRAFFIC`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** producthunt
 - **Metric:** `attributed_sessions` = `attributed_sessions`, should increase
 - **Observation window:** 168 hours after publishing

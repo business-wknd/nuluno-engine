@@ -1,7 +1,7 @@
 # YouTube增加淨訂閱
 
 - **Goal id:** `G-YT-SUBSCRIBERS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** youtube
 - **Metric:** `net_subscribers` = `subscribers`, should increase
 - **Observation window:** 168 hours after publishing

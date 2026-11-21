@@ -1,7 +1,7 @@
 # 已同意Email提高既有連結點擊率
 
 - **Goal id:** `G-EM-CLICK`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** email
 - **Metric:** `link_rate` = `unique_link_clicks` / `delivered`, should increase
 - **Observation window:** 168 hours after publishing

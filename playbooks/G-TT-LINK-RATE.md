@@ -1,7 +1,7 @@
 # TikTok提高profile到網站點擊率
 
 - **Goal id:** `G-TT-LINK-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok
 - **Metric:** `profile_link_rate` = `website_clicks` / `profile_visits`, should increase
 - **Observation window:** 48 hours after publishing

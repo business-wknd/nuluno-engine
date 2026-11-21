@@ -1,7 +1,7 @@
 # Reddit找到當前有需求且適配的人
 
 - **Goal id:** `G-RD-QUALIFIED`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** reddit
 - **Metric:** `qualified_request_rate` = `qualified_requests` / `read_requests`, should increase
 - **Observation window:** 48 hours after publishing

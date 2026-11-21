@@ -1,7 +1,7 @@
 # TikTok Ads提高連結點擊率
 
 - **Goal id:** `G-TA-LINK-CTR`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok_ads
 - **Metric:** `link_ctr` = `link_clicks` / `impressions`, should increase
 - **Observation window:** 168 hours after publishing

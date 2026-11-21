@@ -1,7 +1,7 @@
 # X增加淨追蹤人數
 
 - **Goal id:** `G-X-FOLLOWERS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** x
 - **Metric:** `net_followers` = `followers`, should increase
 - **Observation window:** 48 hours after publishing

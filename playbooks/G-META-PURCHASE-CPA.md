@@ -1,7 +1,7 @@
 # Meta Ads降低已核對外部購買成本
 
 - **Goal id:** `G-META-PURCHASE-CPA`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `purchase_cpa` = `spend_minor` / `external_purchases`, should decrease
 - **Observation window:** 72 hours after publishing

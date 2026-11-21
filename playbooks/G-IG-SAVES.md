@@ -1,7 +1,7 @@
 # IG提高內容收藏率
 
 - **Goal id:** `G-IG-SAVES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** instagram
 - **Metric:** `save_rate` = `saves` / `reach`, should increase
 - **Observation window:** 48 hours after publishing

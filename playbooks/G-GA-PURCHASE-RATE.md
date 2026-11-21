@@ -1,7 +1,7 @@
 # Google Ads提高既有網站付費率
 
 - **Goal id:** `G-GA-PURCHASE-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** google_ads
 - **Metric:** `site_purchase_rate` = `external_purchases` / `attributed_sessions`, should increase
 - **Observation window:** 168 hours after publishing

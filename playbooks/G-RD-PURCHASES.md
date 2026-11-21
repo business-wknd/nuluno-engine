@@ -1,7 +1,7 @@
 # Reddit對話接成已核對外部購買
 
 - **Goal id:** `G-RD-PURCHASES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** reddit
 - **Metric:** `external_purchases` = `external_purchases`, should increase
 - **Observation window:** 48 hours after publishing

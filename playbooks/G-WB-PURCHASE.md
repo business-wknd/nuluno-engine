@@ -1,7 +1,7 @@
 # 提高示範活動後外部付費比例
 
 - **Goal id:** `G-WB-PURCHASE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** webinar
 - **Metric:** `purchase_rate` = `external_purchases` / `attendees`, should increase
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # 已同意Email提高外部付款率
 
 - **Goal id:** `G-EM-PURCHASE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** email
 - **Metric:** `purchase_rate` = `external_purchases` / `delivered`, should increase
 - **Observation window:** 168 hours after publishing

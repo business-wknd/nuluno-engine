@@ -1,7 +1,7 @@
 # Meta Ads提高退款後可歸因ROAS
 
 - **Goal id:** `G-META-ROAS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `refund_adjusted_roas` = `net_attributed_receipts_minor` / `spend_minor`, should increase
 - **Observation window:** 72 hours after publishing

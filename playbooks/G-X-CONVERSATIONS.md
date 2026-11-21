@@ -1,7 +1,7 @@
 # X取得合格買方對話
 
 - **Goal id:** `G-X-CONVERSATIONS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** x
 - **Metric:** `qualified_conversations` = `qualified_conversations`, should increase
 - **Observation window:** 48 hours after publishing

@@ -1,7 +1,7 @@
 # TikTok提升既有網站流量付費率
 
 - **Goal id:** `G-TT-SITE-PURCHASE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok
 - **Metric:** `site_purchase_rate` = `external_purchases` / `attributed_sessions`, should increase
 - **Observation window:** 48 hours after publishing

@@ -1,7 +1,7 @@
 # 已同意Email提高有效買方回覆率
 
 - **Goal id:** `G-EM-REPLY`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** email
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `delivered`, should increase
 - **Observation window:** 168 hours after publishing

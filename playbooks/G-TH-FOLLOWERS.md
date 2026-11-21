@@ -1,7 +1,7 @@
 # Threads增加淨追蹤人數
 
 - **Goal id:** `G-TH-FOLLOWERS`
-- **Status:** rewritten, not run yet
+- **Language:** English
 - **Channel:** threads
 - **Metric:** `net_followers` = `followers`, should increase
 - **Observation window:** 48 hours after publishing

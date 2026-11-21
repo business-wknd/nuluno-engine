@@ -1,7 +1,7 @@
 # IG提高Reels觀看完成率
 
 - **Goal id:** `G-IG-REELS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** instagram
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 48 hours after publishing

@@ -1,7 +1,7 @@
 # LinkedIn候選找到可證實公開商務Email
 
 - **Goal id:** `G-LI-PUBLIC-EMAILS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin
 - **Metric:** `public_email_coverage` = `verified_public_emails` / `reviewed_people`, should increase
 - **Observation window:** 168 hours after publishing

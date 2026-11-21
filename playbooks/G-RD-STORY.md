@@ -1,7 +1,7 @@
 # Reddit真實創辦人故事帶來合格詢問
 
 - **Goal id:** `G-RD-STORY`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** reddit
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 168 hours after publishing

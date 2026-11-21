@@ -1,7 +1,7 @@
 # X提高串文網站點擊率
 
 - **Goal id:** `G-X-LINK-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** x
 - **Metric:** `link_rate` = `url_clicks` / `impressions`, should increase
 - **Observation window:** 48 hours after publishing

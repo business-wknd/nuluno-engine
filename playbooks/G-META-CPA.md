@@ -1,7 +1,7 @@
 # Meta Ads將指定轉換CPA降低X%
 
 - **Goal id:** `G-META-CPA`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `conversion_cpa` = `spend_minor` / `attributed_conversions`, should decrease
 - **Observation window:** 72 hours after publishing

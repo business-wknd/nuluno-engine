@@ -1,7 +1,7 @@
 # Threads增加合格買方對話
 
 - **Goal id:** `G-TH-REPLIES`
-- **Status:** rewritten, not run yet
+- **Language:** English
 - **Channel:** threads
 - **Metric:** `qualified_conversations` = `qualified_conversations`, should increase
 - **Observation window:** 48 hours after publishing

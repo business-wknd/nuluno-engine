@@ -1,7 +1,7 @@
 # Product Hunt Maker找到有來源的商務Email
 
 - **Goal id:** `G-PH-PUBLIC-EMAILS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** producthunt
 - **Metric:** `public_email_coverage` = `verified_public_emails` / `reviewed_makers`, should increase
 - **Observation window:** 168 hours after publishing

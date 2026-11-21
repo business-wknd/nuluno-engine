@@ -1,7 +1,7 @@
 # LinkedIn增加淨追蹤
 
 - **Goal id:** `G-LI-FOLLOWERS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin
 - **Metric:** `net_followers` = `followers`, should increase
 - **Observation window:** 168 hours after publishing

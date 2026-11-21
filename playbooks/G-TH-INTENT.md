@@ -1,7 +1,7 @@
 # Threads公開需求轉成有效回覆
 
 - **Goal id:** `G-TH-INTENT`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** threads
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing

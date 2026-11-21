@@ -1,7 +1,7 @@
 # 已同意Email降低退訂率
 
 - **Goal id:** `G-EM-UNSUBSCRIBE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** email
 - **Metric:** `unsubscribe_rate` = `unsubscribes` / `delivered`, should decrease
 - **Observation window:** 168 hours after publishing

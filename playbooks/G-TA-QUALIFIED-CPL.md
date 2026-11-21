@@ -1,7 +1,7 @@
 # TikTok Ads降低合格買方名單成本
 
 - **Goal id:** `G-TA-QUALIFIED-CPL`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok_ads
 - **Metric:** `qualified_lead_cpl` = `spend_minor` / `qualified_leads`, should decrease
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # Meta Ads提高連結點擊率
 
 - **Goal id:** `G-META-LINK-CTR`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `link_ctr` = `link_clicks` / `impressions`, should increase
 - **Observation window:** 72 hours after publishing

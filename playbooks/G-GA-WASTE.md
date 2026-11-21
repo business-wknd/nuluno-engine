@@ -1,7 +1,7 @@
 # Google Ads降低不相關查詢花費比例
 
 - **Goal id:** `G-GA-WASTE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** google_ads
 - **Metric:** `irrelevant_spend_rate` = `irrelevant_spend_minor` / `spend_minor`, should decrease
 - **Observation window:** 168 hours after publishing

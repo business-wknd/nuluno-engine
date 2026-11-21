@@ -1,7 +1,7 @@
 # YouTube求工具／服務留言接成合格對話
 
 - **Goal id:** `G-YT-REQUESTS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** youtube
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing

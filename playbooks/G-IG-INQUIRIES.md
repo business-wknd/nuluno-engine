@@ -1,7 +1,7 @@
 # IG取得更多合格產品詢問
 
 - **Goal id:** `G-IG-INQUIRIES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** instagram
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 48 hours after publishing

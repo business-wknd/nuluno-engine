@@ -1,7 +1,7 @@
 # Google Ads提高實際搜尋字詞適配率
 
 - **Goal id:** `G-GA-QUERY-QUALITY`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** google_ads
 - **Metric:** `query_fit_rate` = `qualified_queries` / `reviewed_queries`, should increase
 - **Observation window:** 168 hours after publishing

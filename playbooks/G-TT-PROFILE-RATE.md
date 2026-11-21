@@ -1,7 +1,7 @@
 # TikTok提高影片到profile造訪率
 
 - **Goal id:** `G-TT-PROFILE-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok
 - **Metric:** `profile_visit_rate` = `profile_visits` / `video_views`, should increase
 - **Observation window:** 48 hours after publishing

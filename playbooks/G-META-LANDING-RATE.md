@@ -1,7 +1,7 @@
 # Meta Ads提高點擊到既有網站載入率
 
 - **Goal id:** `G-META-LANDING-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `landing_rate` = `landing_page_views` / `link_clicks`, should increase
 - **Observation window:** 72 hours after publishing

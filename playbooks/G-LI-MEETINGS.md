@@ -1,7 +1,7 @@
 # LinkedIn既有對話接成已確認示範預約
 
 - **Goal id:** `G-LI-MEETINGS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin
 - **Metric:** `confirmed_meetings` = `confirmed_meetings`, should increase
 - **Observation window:** 168 hours after publishing

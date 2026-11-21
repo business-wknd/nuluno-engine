@@ -1,7 +1,7 @@
 # 驗證哪個具體銷售角度帶來有效詢問
 
 - **Goal id:** `G-AUD-ANGLE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** audience
 - **Metric:** `qualified_inquiry_rate` = `qualified_inquiries` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing

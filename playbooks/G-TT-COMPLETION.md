@@ -1,7 +1,7 @@
 # TikTok提高影片觀看完成率
 
 - **Goal id:** `G-TT-COMPLETION`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** tiktok
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 48 hours after publishing

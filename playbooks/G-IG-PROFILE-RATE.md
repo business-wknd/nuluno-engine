@@ -1,7 +1,7 @@
 # IG提高觸及到個人檔案造訪率
 
 - **Goal id:** `G-IG-PROFILE-RATE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** instagram
 - **Metric:** `profile_visit_rate` = `profile_visits` / `reach`, should increase
 - **Observation window:** 48 hours after publishing

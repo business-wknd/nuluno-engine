@@ -1,7 +1,7 @@
 # LinkedIn內容帶來合格產品詢問
 
 - **Goal id:** `G-LI-INQUIRIES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 168 hours after publishing

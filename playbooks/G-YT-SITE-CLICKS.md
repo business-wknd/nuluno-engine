@@ -1,7 +1,7 @@
 # YouTube提高影片說明既有連結點擊率
 
 - **Goal id:** `G-YT-SITE-CLICKS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** youtube
 - **Metric:** `link_rate` = `link_clicks` / `views`, should increase
 - **Observation window:** 168 hours after publishing

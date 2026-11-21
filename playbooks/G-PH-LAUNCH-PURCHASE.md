@@ -1,7 +1,7 @@
 # Product Hunt既有網站流量接成外部付款
 
 - **Goal id:** `G-PH-LAUNCH-PURCHASE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** producthunt
 - **Metric:** `site_purchase_rate` = `external_purchases` / `attributed_sessions`, should increase
 - **Observation window:** 168 hours after publishing

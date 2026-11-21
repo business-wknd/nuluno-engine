@@ -1,7 +1,7 @@
 # Meta Ads降低合格名單成本
 
 - **Goal id:** `G-META-CPL`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `qualified_lead_cpl` = `spend_minor` / `qualified_leads`, should decrease
 - **Observation window:** 72 hours after publishing

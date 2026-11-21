@@ -1,7 +1,7 @@
 # Reddit需求回覆帶來有效買方對話
 
 - **Goal id:** `G-RD-REPLIES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** reddit
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing

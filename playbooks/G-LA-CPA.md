@@ -1,7 +1,7 @@
 # LinkedIn Ads降低指定轉換CPA
 
 - **Goal id:** `G-LA-CPA`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin_ads
 - **Metric:** `conversion_cpa` = `spend_minor` / `attributed_conversions`, should decrease
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # Product Hunt找到適配產品的Maker名單
 
 - **Goal id:** `G-PH-MAKERS`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** producthunt
 - **Metric:** `maker_fit_rate` = `qualified_makers` / `reviewed_makers`, should increase
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # LinkedIn提高名單中正確買方角色比例
 
 - **Goal id:** `G-LI-ROLES`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** linkedin
 - **Metric:** `role_fit_rate` = `qualified_roles` / `reviewed_roles`, should increase
 - **Observation window:** 168 hours after publishing

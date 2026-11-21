@@ -1,7 +1,7 @@
 # Meta Ads提高全成本後每位外部客戶貢獻
 
 - **Goal id:** `G-META-NET-CONTRIBUTION`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** meta_ads
 - **Metric:** `net_per_customer` = `net_after_all_costs_minor` / `external_purchases`, should increase
 - **Observation window:** 72 hours after publishing

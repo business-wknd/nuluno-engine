@@ -1,7 +1,7 @@
 # 驗證受眾真正想要的結果與購買動機
 
 - **Goal id:** `G-AUD-DESIRE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** audience
 - **Metric:** `desire_response_rate` = `qualified_desire_responses` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing

@@ -1,7 +1,7 @@
 # 驗證哪個受眾與賣點帶來退款後外部購買
 
 - **Goal id:** `G-AUD-PURCHASE`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** audience
 - **Metric:** `external_purchase_rate` = `external_purchases` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing

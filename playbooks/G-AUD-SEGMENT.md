@@ -1,7 +1,7 @@
 # 找出目前最值得賣給哪個購買情境受眾
 
 - **Goal id:** `G-AUD-SEGMENT`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** audience
 - **Metric:** `qualified_inquiry_rate` = `qualified_inquiries` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing

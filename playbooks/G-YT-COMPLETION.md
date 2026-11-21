@@ -1,7 +1,7 @@
 # YouTube提高影片觀看完成率
 
 - **Goal id:** `G-YT-COMPLETION`
-- **Status:** experimental
+- **Language:** 繁體中文
 - **Channel:** youtube
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 168 hours after publishing

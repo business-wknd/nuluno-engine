@@ -117,10 +117,21 @@ def _counted(store, owner, state, until=None):
     return store.measured(owner, since, until or time.time(), state['round'])
 
 
-def _countable(goal, counted):
-    """Metric components the engine can fill in itself, by component name."""
+def _in_place(store, owner, state, counted):
+    """Which counters have evidence of being in place. A zero only means zero when the tracked link was really used
+    in what was published, or the sale counter has ever fired; otherwise the number must be read from the platform."""
     if counted is None: return {}
-    return {part: counted[ENGINE_COUNTS[part]] for part in goal['metric']['components'] if part in ENGINE_COUNTS}
+    proven = {}
+    link = store.tracked_link(owner, state['round'], '')
+    used = bool(link) and any(row['round'] == state['round'] and link in json.dumps(row['content'], ensure_ascii=False) for row in store.outputs(owner, 14))
+    if counted['clicks'] > 0 or used: proven['clicks'] = counted['clicks']
+    if counted['sales'] > 0 or store.measured(owner, 0, time.time(), None)['sales'] > 0: proven['sales'] = counted['sales']
+    return proven
+
+
+def _countable(goal, proven):
+    """Metric components the engine can fill in itself, by component name."""
+    return {part: proven[ENGINE_COUNTS[part]] for part in goal['metric']['components'] if ENGINE_COUNTS.get(part) in proven}
 
 
 def _close_round(store, owner, state, goal, node, reading, counted):
@@ -144,7 +155,7 @@ def auto_judge(store, owner, product):
     if state['status'] != 'observing' or time.time() < state.get('wait_until', 0): return None
     goal = goals()[state['goal']['id']]; node = state['nodes'][state['cursor']]
     if node['measure'] != 'current': return None
-    counted = _counted(store, owner, state, state['wait_until']); values = _countable(goal, counted)
+    counted = _counted(store, owner, state, state['wait_until']); values = _countable(goal, _in_place(store, owner, state, counted))
     if len(values) < len(goal['metric']['components']) or _metric(goal, values) is None:
         if state.get('asked_round') == state['round']: return None
         state['asked_round'] = state['round']; store.save(owner, state)
@@ -236,8 +247,8 @@ def _step(store, owner, product, state):
                     + ' Get them from the platform\'s own insights (your tools, or ask the owner to read them). Then call record_numbers with values for: ' + ', '.join(parts) + '. If the account is new and has no history, record zeros and say so in source.',
                     call='record_numbers', values_needed=parts, checklist=info['steps'])
         counted = _counted(store, owner, state) if node['measure'] == 'current' else None
-        if _countable(goal, counted):
-            step['counted_by_engine'] = _countable(goal, counted)
+        if _countable(goal, _in_place(store, owner, state, counted)):
+            step['counted_by_engine'] = _countable(goal, _in_place(store, owner, state, counted))
             step['instruction'] += ' The engine already counted these itself from the tracked link and sale counter, so leave them out or pass them unchanged: ' + ', '.join(step['counted_by_engine']) + '.'
             step['values_needed'] = [p for p in parts if p not in step['counted_by_engine']]
     else:
@@ -361,7 +372,7 @@ def record_numbers(store, owner, product, args):
     if not isinstance(values, dict) or not source: return {'accepted': False, 'error': 'Pass values (numbers by name) and source (where the numbers were read).'}
     parts = goal['metric']['components']; node = state['nodes'][state['cursor']]
     counted = _counted(store, owner, state) if node['measure'] == 'current' else None
-    filled = {part: number for part, number in _countable(goal, counted).items() if not isinstance(values.get(part), (int, float))}
+    filled = {part: number for part, number in _countable(goal, _in_place(store, owner, state, counted)).items() if not isinstance(values.get(part), (int, float))}
     values = {**values, **filled}
     lacking = [p for p in parts if not isinstance(values.get(p), (int, float))]
     if lacking: return {'accepted': False, 'error': 'Missing numbers: ' + ', '.join(lacking) + '. Unknown stays unknown; do not estimate.'}

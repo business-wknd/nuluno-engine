@@ -9,6 +9,13 @@ This module has no dependencies and no storage of its own. A store object
 provides: load(owner), save(owner, state), log(owner, round, node, kind,
 content) -> receipt, outputs(owner, limit), count_outputs(owner),
 last_blocked(owner).
+
+A store may also measure for itself (the hosted service does): tracked_link(owner,
+round, target) -> a redirect URL that counts human clicks, sale_counter(owner) -> a
+URL that counts one sale per visit, and measured(owner, since, until, round) ->
+{'clicks', 'sales', 'revenue_minor'}. With those, numbers the engine can count are never typed
+in by the agent, and a round whose metric is fully countable is judged with no one
+reading anything.
 """
 import hashlib, ipaddress, json, re, socket, time, urllib.error, urllib.parse, urllib.request
 from functools import lru_cache
@@ -27,6 +34,11 @@ RULES = [
     'Ask the owner only for what needs a person: logging in, approving text before it is published, numbers only they can see.',
     'When a step is finished call submit_step immediately, then continue with the step it returns.',
 ]
+
+
+# Metric components the engine can count itself when the store measures.
+ENGINE_COUNTS = {'link_clicks': 'clicks', 'unique_link_clicks': 'clicks', 'url_clicks': 'clicks', 'website_clicks': 'clicks', 'outbound_clicks': 'clicks',
+                 'attributed_sessions': 'clicks', 'external_purchases': 'sales'}
 
 
 # ---------- library ----------
@@ -98,6 +110,51 @@ def _verdict(goal, state, value):
     return (value >= needed if up else value <= needed), {'value': value, 'baseline': base, 'needed': needed, 'rule': '20% better than baseline'}
 
 
+def _counted(store, owner, state, until=None):
+    """What the store counted for the current round since it was published, or None when the store does not measure."""
+    since = state.get('published_at') or state.get('round_published_at')
+    if not hasattr(store, 'measured') or not since: return None
+    return store.measured(owner, since, until or time.time(), state['round'])
+
+
+def _countable(goal, counted):
+    """Metric components the engine can fill in itself, by component name."""
+    if counted is None: return {}
+    return {part: counted[ENGINE_COUNTS[part]] for part in goal['metric']['components'] if part in ENGINE_COUNTS}
+
+
+def _close_round(store, owner, state, goal, node, reading, counted):
+    """Judge the round on a final reading and move to reached or diagnose."""
+    value = reading['metric']
+    reached, detail = _verdict(goal, state, value)
+    state['current'] = reading
+    store.log(owner, state['round'], node['node'], 'numbers', {'role': 'current', **reading, 'reached': reached, 'detail': detail})
+    entry = {'round': state['round'], 'metric': value, 'baseline': (state.get('baseline') or {}).get('metric'), 'verdict': 'reached' if reached else 'missed', 'detail': detail, 'at': time.time()}
+    if counted is not None: entry['counted_by_engine'] = counted
+    state['rounds'].append(entry)
+    state.update(status='reached' if reached else 'diagnose', wait_until=None, round_published_at=state.get('published_at'), published_at=None)
+    store.save(owner, state)
+    return reached, detail
+
+
+def auto_judge(store, owner, product):
+    """Called by a host on a timer. When the observation window is over and every number in the metric is one the
+    engine counts itself, the round is judged without anyone reading anything. Returns what happened, or None."""
+    state = store.load(owner)
+    if state['status'] != 'observing' or time.time() < state.get('wait_until', 0): return None
+    goal = goals()[state['goal']['id']]; node = state['nodes'][state['cursor']]
+    if node['measure'] != 'current': return None
+    counted = _counted(store, owner, state, state['wait_until']); values = _countable(goal, counted)
+    if len(values) < len(goal['metric']['components']) or _metric(goal, values) is None:
+        if state.get('asked_round') == state['round']: return None
+        state['asked_round'] = state['round']; store.save(owner, state)
+        return {'event': 'numbers_needed', 'round': state['round'], 'goal': goal['title'], 'counted_by_engine': counted,
+                'still_needed': [p for p in goal['metric']['components'] if p not in values]}
+    reading = {'values': values, 'metric': _metric(goal, values), 'source': 'Counted by the engine: tracked link and sale counter', 'at': time.time(), 'engine_counted': sorted(values)}
+    reached, detail = _close_round(store, owner, state, goal, node, reading, counted)
+    return {'event': 'round_judged', 'round': state['rounds'][-1]['round'], 'goal': goal['title'], 'reached': reached, 'metric': reading['metric'], 'detail': detail, 'counted_by_engine': counted}
+
+
 # ---------- reading ----------
 
 def _public_host(host):
@@ -160,7 +217,8 @@ def _step(store, owner, product, state):
     if state['status'] == 'observing' and time.time() < state.get('wait_until', 0):
         return {'state': 'waiting_for_results', 'come_back_at': state['wait_until'], 'come_back_at_text': time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime(state['wait_until'])),
                 'message': 'The post is live and results need time. Do not publish a new variant yet (one change per round). Until then: answer real replies, and tell the owner exactly when you will read the numbers.',
-                'early_numbers': 'If the owner already has numbers you may call record_numbers now; they are stored as interim and do not end the round.'}
+                'early_numbers': 'If the owner already has numbers you may call record_numbers now; they are stored as interim and do not end the round.',
+                'counted_by_engine_so_far': _counted(store, owner, state)}
     if state['status'] == 'diagnose':
         last = state['rounds'][-1]
         return {'state': 'target_missed_choose_one_change', 'step_id': 'diagnose:r%d' % state['round'], 'numbers': last,
@@ -177,6 +235,11 @@ def _step(store, owner, product, state):
         step.update(instruction=('Read the numbers BEFORE anything is published (baseline).' if node['measure'] == 'baseline' else 'Read the numbers for the same account and period AFTER the observation window.')
                     + ' Get them from the platform\'s own insights (your tools, or ask the owner to read them). Then call record_numbers with values for: ' + ', '.join(parts) + '. If the account is new and has no history, record zeros and say so in source.',
                     call='record_numbers', values_needed=parts, checklist=info['steps'])
+        counted = _counted(store, owner, state) if node['measure'] == 'current' else None
+        if _countable(goal, counted):
+            step['counted_by_engine'] = _countable(goal, counted)
+            step['instruction'] += ' The engine already counted these itself from the tracked link and sale counter, so leave them out or pass them unchanged: ' + ', '.join(step['counted_by_engine']) + '.'
+            step['values_needed'] = [p for p in parts if p not in step['counted_by_engine']]
     else:
         step.update(instruction='Do this step for the product now, in order, then call submit_step with the deliverables as a JSON object.',
                     checklist=info['steps'], deliver=info['deliver'] or ['result'], if_blocked=info['blockers'], publishes=info['needs_link'])
@@ -188,6 +251,9 @@ def _step(store, owner, product, state):
             step['publishing'] = 'This step puts something in public. Show the owner the exact text first. Publish with your own tools if you have them, otherwise the owner posts it. After it is live, pass the public URL in links so the engine can read it back.'
         elif info['writes']:
             step['publishing'] = 'This step changes or sends something outside. Show the owner exactly what will be sent before it goes out.'
+        if (info['needs_link'] or info['writes']) and not info['identity'] and hasattr(store, 'tracked_link'):
+            step['tracked_link'] = {'url': store.tracked_link(owner, state['round'], product),
+                                    'use': 'Use this link wherever the post points to the product. It forwards to the product page and the engine counts real human clicks itself, so nobody has to read them from insights. Add ?p=/some/page to land on another page of the same site. If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
     lessons = [{'round': r['round'], 'change': r.get('change'), 'metric': r.get('metric'), 'verdict': r.get('verdict')} for r in state['rounds']]
     step.update(delivered_so_far=_recent(store, owner), sources_read=state.get('sources', [])[-6:], lessons_from_earlier_rounds=lessons, rules=RULES)
     return step
@@ -207,7 +273,7 @@ def where_are_we(store, owner, product, args):
     blocked = store.last_blocked(owner); waiting_on_owner = None
     if blocked and state['status'] == 'working' and blocked['node'] == state['nodes'][state['cursor']]['node']:
         waiting_on_owner = {'step': blocked['node'], 'needs': blocked['content'].get('needs'), 'since': blocked['created']}
-    return {'state': state['status'], 'product_url': product, 'goal': {'goal_id': state['goal']['id'], 'title': goal['title'], 'metric': goal['metric'], 'target': state['goal'].get('target')},
+    return {'state': state['status'], 'product_url': product, 'goal': {'goal_id': state['goal']['id'], 'title': goal['title'], 'title_local': goal.get('title_zh'), 'metric': goal['metric'], 'target': state['goal'].get('target')},
             'round': state['round'], 'steps_delivered': store.count_outputs(owner), 'baseline': state.get('baseline'), 'latest_numbers': state.get('current'), 'rounds': state['rounds'],
             'waiting_on_owner': waiting_on_owner, 'next': _step(store, owner, product, state)}
 
@@ -221,7 +287,8 @@ def set_goal(store, owner, product, args):
     if state.get('goal', {}).get('id') == goal_id and state['status'] not in ('reached', 'stopped'):
         state['goal']['target'] = target if target is not None else state['goal'].get('target')  # same goal: only the target changes
     else:
-        state.update(status='working', goal={'id': goal_id, 'target': target, 'set_at': time.time()}, round=1, nodes=plan_for(goal_id), cursor=0, rounds=[], baseline=None, current=None, wait_until=None)
+        state.update(status='working', goal={'id': goal_id, 'target': target, 'set_at': time.time()}, round=1, nodes=plan_for(goal_id), cursor=0, rounds=[], baseline=None, current=None, wait_until=None,
+                     published_at=None, round_published_at=None, asked_round=None)
         store.log(owner, 1, 'goal', 'goal', {'goal_id': goal_id, 'target': target, 'why': str(args.get('why', ''))[:1000]})
     store.save(owner, state)
     return {'accepted': True, 'goal': goals()[goal_id]['title'], 'target': state['goal'].get('target'),
@@ -254,7 +321,7 @@ def submit_step(store, owner, product, args):
         stage = [n for n in plan_for(state['goal']['id']) if '.common.' not in n['node'] and 'ACCESS' not in n['skill'] and n['measure'] != 'baseline']
         route = goal['bottleneck_routes'][choice]
         state['rounds'][-1]['change'] = str(output['one_change'])[:500]
-        state.update(round=state['round'] + 1, status='working', cursor=0, baseline=state.get('current'), current=None, wait_until=None,
+        state.update(round=state['round'] + 1, status='working', cursor=0, baseline=state.get('current'), current=None, wait_until=None, round_published_at=None,
                      nodes=[{'node': 'fix.' + route, 'skill': route, 'measure': None}] + [n for n in stage if n['skill'] != route or n['measure']])
         store.save(owner, state)
         return {'accepted': True, 'message': 'Round %d opened with one change: %s' % (state['round'], state['rounds'][-1]['change']), 'next': _step(store, owner, product, state)}
@@ -292,11 +359,15 @@ def record_numbers(store, owner, product, args):
     if state['status'] in ('no_goal', 'reached', 'stopped', 'diagnose'): return {'accepted': False, 'error': 'No measurement is expected right now.', 'next': next_step(store, owner, product, {})}
     goal = goals()[state['goal']['id']]; values = args.get('values') or {}; source = str(args.get('source', ''))[:500]
     if not isinstance(values, dict) or not source: return {'accepted': False, 'error': 'Pass values (numbers by name) and source (where the numbers were read).'}
-    parts = goal['metric']['components']
+    parts = goal['metric']['components']; node = state['nodes'][state['cursor']]
+    counted = _counted(store, owner, state) if node['measure'] == 'current' else None
+    filled = {part: number for part, number in _countable(goal, counted).items() if not isinstance(values.get(part), (int, float))}
+    values = {**values, **filled}
     lacking = [p for p in parts if not isinstance(values.get(p), (int, float))]
     if lacking: return {'accepted': False, 'error': 'Missing numbers: ' + ', '.join(lacking) + '. Unknown stays unknown; do not estimate.'}
-    node = state['nodes'][state['cursor']]; value = _metric(goal, values)
+    value = _metric(goal, values)
     reading = {'values': {k: values[k] for k in values if isinstance(values[k], (int, float))}, 'metric': value, 'source': source, 'at': time.time()}
+    if filled: reading['engine_counted'] = sorted(filled)
     if node['measure'] == 'baseline' and state['status'] == 'working':
         state['baseline'] = reading; state['cursor'] += 1
         store.log(owner, state['round'], node['node'], 'numbers', {'role': 'baseline', **reading}); store.save(owner, state)
@@ -307,12 +378,7 @@ def record_numbers(store, owner, product, args):
         return {'accepted': True, 'recorded_as': 'interim', 'metric': value, 'message': 'Stored. The round is judged after the observation window.', 'next': _step(store, owner, product, state)}
     if value is None:
         return {'accepted': False, 'error': 'The denominator is zero, so the metric cannot be computed yet. Read the numbers again later; nothing is republished.'}
-    reached, detail = _verdict(goal, state, value)
-    state['current'] = reading
-    store.log(owner, state['round'], node['node'], 'numbers', {'role': 'current', **reading, 'reached': reached, 'detail': detail})
-    state['rounds'].append({'round': state['round'], 'metric': value, 'baseline': (state.get('baseline') or {}).get('metric'), 'verdict': 'reached' if reached else 'missed', 'detail': detail, 'at': time.time()})
-    state.update(status='reached' if reached else 'diagnose', wait_until=None, published_at=None)
-    store.save(owner, state)
+    reached, detail = _close_round(store, owner, state, goal, node, reading, counted)
     return {'accepted': True, 'recorded_as': 'result', 'metric': value, 'reached': reached, 'detail': detail, 'next': _step(store, owner, product, state)}
 
 
@@ -331,6 +397,18 @@ def read_page(store, owner, product, args):
             'note': 'Quote facts from this text only. Anything not here (price, results, guarantees) is unknown.'}
 
 
+def tracking(store, owner, product, args):
+    """The tracked link for this round, the sale counter, and what has been counted so far."""
+    if not hasattr(store, 'tracked_link'):
+        return {'available': False, 'note': 'This local server does not count clicks or sales. Read numbers from the platform and pass them to record_numbers. The hosted service at https://engine.nuluno.com counts them itself.'}
+    state = store.load(owner); counter = store.sale_counter(owner)
+    return {'available': True, 'tracked_link': store.tracked_link(owner, max(state['round'], 1), product),
+            'tracked_link_use': 'Put this link in posts, bios and messages instead of the bare product URL. Human clicks are counted; link-preview robots are not.',
+            'sale_counter': {'image_tag': '<img src="' + counter + '.gif" width="1" height="1" alt="">', 'redirect_url': counter,
+                             'use': 'Sales are counted when a buyer reaches the page shown after payment. Either the owner pastes image_tag into that page, or sets the payment provider\'s after-payment redirect to redirect_url (it forwards to the product page). Add ?value=<amount in cents>&order=<order id> when known. This needs the owner once; ask them only when the goal is about purchases.'},
+            'counted_this_round': _counted(store, owner, state), 'counted_all_time': store.measured(owner, 0, time.time(), None)}
+
+
 def stop_goal(store, owner, product, args):
     state = store.load(owner)
     if state['status'] == 'no_goal': return {'stopped': False}
@@ -339,7 +417,7 @@ def stop_goal(store, owner, product, args):
 
 
 TOOLS = {'where_are_we': where_are_we, 'set_goal': set_goal, 'next_step': next_step, 'submit_step': submit_step,
-         'record_numbers': record_numbers, 'read_page': read_page, 'stop_goal': stop_goal}
+         'record_numbers': record_numbers, 'read_page': read_page, 'stop_goal': stop_goal, 'tracking': tracking}
 
 # Tool descriptions shared by every MCP front end.
 TOOL_SPECS = [
@@ -353,8 +431,10 @@ TOOL_SPECS = [
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
     {'name': 'submit_step', 'description': 'Record the finished step and receive the following one. output is a JSON object with the deliverable keys the step listed. If a person is needed (login, approval), use status "blocked" and say in needs the one thing the owner must do. Publishing steps need the public URL in links.',
      'inputSchema': {'type': 'object', 'properties': {'step_id': {'type': 'string'}, 'status': {'type': 'string', 'enum': ['done', 'blocked']}, 'output': {'type': 'object'}, 'links': {'type': 'array', 'items': {'type': 'string'}}, 'needs': {'type': 'string'}}, 'required': ['step_id'], 'additionalProperties': False}},
-    {'name': 'record_numbers', 'description': 'Record real numbers read from the platform (baseline before publishing, results after the observation window). values holds the metric components by name; source says where and when they were read. The engine decides whether the target is reached; if not it opens another round.',
+    {'name': 'record_numbers', 'description': 'Record real numbers read from the platform (baseline before publishing, results after the observation window). values holds the metric components by name; source says where and when they were read. Numbers the engine counted itself (the step lists them) can be left out. The engine decides whether the target is reached; if not it opens another round.',
      'inputSchema': {'type': 'object', 'properties': {'values': {'type': 'object', 'additionalProperties': {'type': 'number'}}, 'source': {'type': 'string'}}, 'required': ['values', 'source'], 'additionalProperties': False}},
+    {'name': 'tracking', 'description': 'Get the tracked link for this round, the sale counter for the page shown after payment, and the clicks and sales the engine has counted itself. Hosted service only; the local server answers that it does not count.',
+     'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
     {'name': 'stop_goal', 'description': 'Stop working on the current goal when the owner says so. Everything delivered stays on record.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
 ]

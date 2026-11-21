@@ -19,6 +19,14 @@ claude mcp add nuluno-engine -- python3 "$PWD/nuluno-engine/engine/server.py" --
 
 Any MCP client that can start a local command works the same way. Progress is saved in `~/.nuluno-engine/`, so a new chat continues where the last one stopped.
 
+**Just want to see it? Five seconds, no agent, no network:**
+
+```sh
+python3 nuluno-engine/engine/demo.py
+```
+
+A scripted agent works one goal and you watch the engine refuse a half-finished step, refuse skipping ahead, wait for numbers, call a miss, and open round 2 with one change.
+
 ## What a round looks like
 
 ```text
@@ -32,6 +40,11 @@ submit_step       -> post is live; engine reads the public URL back.
 next_step         -> "waiting for results until 2026-11-23 08:15 UTC".
 record_numbers    -> results. Target reached: done. Missed: pick one bottleneck,
                      change one thing, round 2 starts.
+
+Hosted only: the publishing step also hands the agent a tracked link. Human clicks
+on it and sales on your thank-you page are counted by the engine, so those numbers
+are never typed in by the agent, and a round whose metric is fully countable
+(12 of the 99 goals today) is judged with nobody reading anything.
 ```
 
 That example is a real run on our own product. We will publish its numbers here, good or bad.
@@ -41,7 +54,7 @@ That example is a real run on our own product. We will publish its numbers here,
 - **One step at a time, in order.** Out-of-order or repeated submissions are refused and the current step is returned.
 - **Deliverables, not "done".** Each step names what must be handed back; missing pieces are rejected.
 - **Published means published.** A publishing step needs the public URL, and the engine fetches it.
-- **Numbers decide.** Only recorded numbers with a stated source can end a goal. No self-scoring.
+- **Numbers decide.** Only recorded numbers with a stated source can end a goal. No self-scoring. On the hosted service, clicks and sales come from the engine's own counters, not from the agent.
 - **One change per round.** After a miss the agent must name one bottleneck and one change, and cannot repeat a variant.
 - **A person only when a person is needed.** Logins and approvals are recorded as "waiting on the owner" with the one thing to do; the step stays open.
 
@@ -55,6 +68,7 @@ That example is a real run on our own product. We will publish its numbers here,
 | `next_step` | The current step: checklist, deliverables, earlier work, lessons from past rounds |
 | `submit_step` | Hand in the step, or mark it blocked on the owner |
 | `record_numbers` | Baseline and results; the engine judges the round |
+| `tracking` | Hosted: the round's tracked link, the sale counter, and what the engine has counted. Local: says it does not count |
 | `stop_goal` | Stop; the record stays |
 
 ## Playbooks
@@ -71,16 +85,34 @@ Each playbook page says which it is.
 
 The most useful contribution is running one playbook on a real product and sending back what was unclear or wrong.
 
+## How this is different
+
+- **Agent frameworks** (LangGraph and others) give you durable graphs to build your own agent. Nuluno Engine is not a framework. It is one finished loop, selling, that plugs into the agent you already use over MCP. There is nothing to build.
+- **Website optimizers** (Coframe and others) run experiments on copy on a site you own. Nuluno Engine works off-site too, where most small products actually find buyers: posts, replies, launches, email. The experiment discipline is the same: a baseline, one change per round, numbers decide.
+- **A prompt or a skills folder** tells an agent what to do once. The engine remembers across chats, refuses work that is not finished, and does not accept "done" without a public URL or a number.
+
 ## Open source and hosted
 
-Everything needed to run the loop is here under Apache-2.0: the engine, the MCP server and every playbook.
+Everything needed to run the loop is here under Apache-2.0: the engine, the MCP server and every playbook. Fork it, run it locally, change the playbooks.
 
-The hosted service adds what needs a server that stays on: a connection address that works from any device, progress kept for you, and agent inboxes (an email address your agent can use to sign up somewhere and read back only the verification code). Paid plans, when they open, will cover the parts that cost us money to run. The code and playbooks stay free.
+The hosted service at [engine.nuluno.com](https://engine.nuluno.com/?lang=en) adds what needs a server that stays on:
+
+| | Local (this repo) | Hosted free | Hosted Pro |
+|---|---|---|---|
+| Guided loop, all 99 playbooks | yes | yes | yes |
+| Works from Claude or ChatGPT on any device with one address | | yes | yes |
+| Tracked links and sale counter; countable rounds judged by the engine | | yes | yes |
+| Agent inbox for verification mail ([how it works](access-inbox/)) | self-host | 10 messages a month | 500 a month |
+| Products per account | one per data file | 1 | 5 |
+| Round results by email | | | yes |
+
+The free plan has no time limit. Pro is built and tested; it opens when payments are switched on. The code and the playbooks stay free.
 
 ## Not done yet
 
-- No customer sale has been produced by the engine yet. This is being tested in public.
+- No customer sale has been produced by the engine yet. This is being tested in public on our own product, and the numbers will be posted here, good or bad.
 - The engine does not post for the agent. The agent uses its own tools, or the owner presses publish.
-- Numbers are entered by the agent or owner; automatic reading from platforms is not built.
+- The engine counts link clicks and sales. Views, impressions and other numbers only a platform can see are still read by the agent or the owner.
+- 96 of the 99 playbooks are unrun drafts in Traditional Chinese.
 
 [License](LICENSE) · Issues and playbook reports welcome

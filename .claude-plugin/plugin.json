@@ -1,0 +1,13 @@
+{
+  "name": "nuluno-engine",
+  "description": "Sales goals for AI agents: 99 measured playbooks and an engine that holds the agent to the number",
+  "version": "0.2.0",
+  "author": {
+    "name": "Nuluno"
+  },
+  "homepage": "https://engine.nuluno.com/?lang=en",
+  "repository": "https://github.com/business-wknd/nuluno-engine",
+  "license": "Apache-2.0",
+  "keywords": ["sales", "marketing", "growth", "mcp", "skills"],
+  "skills": "./skills/"
+}

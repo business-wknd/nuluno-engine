@@ -1,0 +1,348 @@
+# Email: raise purchases from your opted-in list
+
+- **Goal id:** `G-EM-PURCHASE`
+- **Language:** English
+- **Channel:** email
+- **Metric:** `purchase_rate` = `external_purchases` / `delivered`, should increase
+- **Observation window:** 168 hours after publishing
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-EM-SEGMENT`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), data (the next round starts with `C-EM-METRICS`)
+
+## Steps
+
+### 1. Read the product and what it sells
+
+Build one dated fact sheet of what the product does, what it costs, and what is still unknown, so every later sentence of sales copy can be checked against something real.
+
+- **S01.01** Open the product's own pages: home page, sales page, pricing page, and any help or delivery documents. Write down each URL and the date and time you read it.  
+  _Done when:_ A list of URLs or file names, each with the time it was read.
+- **S01.02** Look at the live product or a demo and list what a user can actually get done with it today. Ask the owner about anything you cannot see for yourself.  
+  _Done when:_ Each listed function points to a screen, a document page, or the owner's confirmation.
+- **S01.03** For each item on that list, mark whether the software does it, a person does it as a service, or it is not delivered yet.  
+  _Done when:_ Every item is labeled software, human service, or not yet available, with who delivers it and any limit.
+- **S01.04** Write down what is for sale: plan names, price, currency, billing period, current discounts, and when each discount ends. If a price is not shown on the product's pages, write 'unknown' and ask the owner.  
+  _Done when:_ Every price and term has the URL or owner message it came from.
+- **S01.05** Open the existing trial, sign-up, and buy links and check that each one loads and lands on the right product. Do not fill in forms and do not pay.  
+  _Done when:_ Each link is listed with the page it actually reached and whether it worked.
+- **S01.06** Collect proof that may be quoted: real customer cases, screenshots, numbers, and statements the owner has approved for public use.  
+  _Done when:_ Each piece of proof has a source and a note on where it may be used.
+- **S01.07** List what must never be promised without the owner's say: features that do not exist, new prices, extra deliverables, and business limits.  
+  _Done when:_ A 'do not promise' list that later posts and replies can be checked against.
+- **S01.08** Put everything into one product fact sheet: what is sold, proof, links, limits, and unknowns. Date it so later steps know which version they used.  
+  _Done when:_ One dated fact sheet that the following steps can use without reopening the site.
+- **S01.09** Note when the sources should be checked again, and update the fact sheet whenever the owner says something changed.  
+  _Done when:_ A next-check date written on the fact sheet.
+
+**Hand back:** `product_facts`, `offer_and_price`, `limits_and_unknowns`
+
+**If stuck:**
+- `site_unreachable`: If the product pages will not load, ask the owner for a working URL or the page text, and do not describe the product from memory.
+- `price_not_shown`: If no price is visible, record the price as unknown and ask the owner; never guess one.
+- `product_behind_login`: If the product can only be seen after signing in, ask the owner for screenshots or a short walk-through; never ask for a password.
+- `pages_disagree`: If two pages state different prices or features, list both versions with their URLs and ask the owner which one is current.
+- `broken_buy_link`: If a sign-up or buy link fails or lands on the wrong page, report it to the owner before any post sends people there.
+
+### 2. Collect real buyer quotes
+
+Gather the exact words real people use for this problem and the result they want, because copy written in buyers' own words gets read and copy written in the seller's words gets skipped.
+
+- **A-VOC.01** List where real buyers talk about this problem: interviews, reviews, public help threads, customer emails, and refund reasons. Mark which of these the owner allows you to use.  
+  _Done when:_ A source list with the URL or origin of each source and whether its use is allowed.
+- **A-VOC.02** Collect at least five posts or comments where real people describe this problem in their own words. For each one keep the shortest exact quote, its URL, its date, and an anonymous label such as 'person 1' instead of a name.  
+  _Done when:_ At least five quotes, each with URL, date, and anonymous label.
+- **A-VOC.03** Sort each quote under one of five headings: the situation they were in, what they do today, what it costs them, the result they want, and what makes them hesitate before buying.  
+  _Done when:_ Every quote sits under one heading.
+- **A-VOC.04** Remove sellers promoting themselves, AI-written answers, and guesses with no source. If you cannot read the original text, mark it as missing and do not paraphrase it from memory.  
+  _Done when:_ A list of what was removed and why.
+- **A-VOC.05** Note which kind of people the sample came from (people who have not bought, buyers, people who refunded) and state its limits. Do not present it as the whole market.  
+  _Done when:_ A short note on who is in the sample and who is missing.
+
+**Hand back:** `buyer_quotes`, `sources`, `patterns_found`, `limits_and_unknowns`
+
+**If stuck:**
+- `no_real_quotes`: If you find fewer than five real quotes, ask the owner for customer emails or reviews, say which public places you searched, and label everything else as a guess.
+- `source_unreadable`: If a page is blocked or needs sign-in, skip it or ask the owner for a copy; do not rebuild the quote from search snippets.
+- `private_messages_without_permission`: If the only material is private customer messages, ask the owner whether they may be used and remove names before using them.
+- `sensitive_personal_details`: If a quote exposes health, money, or relationship details about an identifiable person, drop the identifying details and keep only the need that relates to the product.
+
+### 3. Group buyers by situation and trigger
+
+Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because copy aimed at one clear situation gets more response than copy aimed at everyone.
+
+- **A-SEGMENTS.01** Read the collected quotes and the product fact sheet. Do not work out why people buy from their age or gender.  
+  _Done when:_ Each observation points to a quote or a product fact.
+- **A-SEGMENTS.02** Group buyers by five things: when the problem shows up, what they use instead today, what that costs them, the result they want, and the time, money, or skill they have.  
+  _Done when:_ Two to four named groups, each described on those five points.
+- **A-SEGMENTS.03** Attach at least one real quote to each group, or label the group as a guess. For each group, say who is not a fit.  
+  _Done when:_ Each group shows its quote or the word 'guess', plus who it leaves out.
+- **A-SEGMENTS.04** Leave ability to pay, who decides, budget, and timing as 'unknown' unless a source says otherwise. Do not answer these from a job title.  
+  _Done when:_ A list of unknowns for each group.
+- **A-SEGMENTS.05** Choose the one group you can reach on this goal's channel now and that the product can serve today. Record why you chose it and what would show the choice is wrong.  
+  _Done when:_ The chosen group, the reason, and at least one case that argues against it.
+
+**Hand back:** `buyer_groups`, `chosen_group`, `why_chosen`, `unknowns`
+
+**If stuck:**
+- `no_real_quotes`: If there are no buyer quotes, go back and collect them; if the owner wants to continue anyway, label every group as a guess.
+- `only_demographics`: If all you have is age, gender, or job title, do not build groups from it; ask the owner about three recent buyers and what happened just before they bought.
+- `group_cannot_be_served`: If the best-supported group needs something the product does not do, choose the next group and report the gap to the owner.
+- `groups_overlap`: If two groups differ only in name, keep the one with more quotes and drop the other.
+
+### 4. Map each problem to a buying motive
+
+Connect each stated problem to the deeper result the buyer wants, because people pay for a change in their life or work, not for a feature.
+
+- **A-MOTIVES.01** For each group, reread the real quotes and separate the problem they have right now from the change they want in their life or work.  
+  _Done when:_ Each group has a 'problem now' line and a 'change wanted' line, both tied to quotes.
+- **A-MOTIVES.02** Give each motive a working label such as earning money or career, love or company, health, looks, being liked, saving time, independence, or belonging. Treat every label as a guess to be tested.  
+  _Done when:_ A list of motives, each with its label and marked 'to be tested'.
+- **A-MOTIVES.03** For each motive write the quote behind it, the situation, how confident you are, and any quote that points the other way. Do not infer sensitive weaknesses from personal data.  
+  _Done when:_ Each motive has a quote, a confidence note (strong, some, or guess), and any opposing quote.
+- **A-MOTIVES.04** Split each motive into three parts: the practical job they want done, how they want to feel, and how they want others to see them.  
+  _Done when:_ Each motive lists its practical, emotional, and social part, with 'unknown' where there is no evidence.
+- **A-MOTIVES.05** Keep only the parts the product can really help with. Do not inflate fear, and do not promise income, health, or relationship outcomes.  
+  _Done when:_ A final list of motives the product can serve, plus the ones you dropped and why.
+
+**Hand back:** `motives`, `supporting_quotes`, `guesses_to_test`, `limits`
+
+**If stuck:**
+- `no_real_quotes`: If a motive has no quote behind it, mark it as a guess and go back to collect buyer quotes before relying on it.
+- `motive_does_not_fit_a_label`: If a motive does not fit the common labels, describe it in the buyer's own words and do not force it into one.
+- `product_cannot_help`: If the product does not really help with a motive, drop it from the selling plan and tell the owner what buyers wanted.
+- `sensitive_guess`: If a motive depends on guessing someone's health, finances, or relationship status, remove it and use only needs people stated themselves.
+
+### 5. Pick the strongest motive and objection
+
+Choose the single motive and the single objection that matter most to the chosen group right now, so the post makes one strong point and not five weak ones.
+
+- **A-PRIORITY.01** For the chosen group, read the list of motives, what they use today, and the event that makes them look for a solution. Count repeated quotes from the same person once.  
+  _Done when:_ The group name and the quotes used, with repeats from one person merged.
+- **A-PRIORITY.02** Compare the motives on four points: how strong the quotes are, how urgent the timing is, what the buyer already pays or loses, and how much of it the product can help with. Judge by this evidence, not by scoring a fixed list of desires.  
+  _Done when:_ A short comparison showing each motive against the four points.
+- **A-PRIORITY.03** Name the main motive, the second motive, and the cases that contradict them. If the evidence is thin, keep two candidates and say so.  
+  _Done when:_ Main and second motive, opposing cases, and a plain statement of how sure you are.
+- **A-PRIORITY.04** Separate people who have the budget and the authority to buy from people who only want it. List unknown buying obstacles as questions to ask.  
+  _Done when:_ Known objections, plus a list of open questions for the owner or for buyers.
+- **A-PRIORITY.05** Pass the main motive on to the benefits step and the angle test. Write down beforehand which real replies or payments would prove it wrong.  
+  _Done when:_ The main motive in one sentence and what result would disprove it.
+
+**Hand back:** `main_motive`, `main_objection`, `second_motive`, `what_would_disprove_it`, `open_questions`
+
+**If stuck:**
+- `no_real_quotes`: If the ranking rests on no buyer quotes, say it is a guess and go back to collect quotes before treating it as settled.
+- `evidence_too_thin`: If the quotes cannot separate two motives, keep both and let the angle test compare them.
+- `cannot_tell_who_can_pay`: If nothing shows who has the budget or the say, leave it unknown and ask the owner who has actually paid before.
+- `owner_disagrees`: If the owner believes a different motive is strongest, record both views with their evidence and test both.
+
+### 6. Turn features into benefits you can prove
+
+Translate each real feature into the benefit and result a buyer cares about, and mark exactly where proof stops, so the post is persuasive and still true.
+
+- **A-LADDER.01** Read the product facts, the limits, and the buyer quotes one at a time. Do not add anything the product cannot do.  
+  _Done when:_ The facts and quotes you used, each traceable to the fact sheet or a source URL.
+- **A-LADDER.02** For each feature write a chain of four items: the feature, the benefit a buyer can observe, the result they want, and the point past which nothing may be promised.  
+  _Done when:_ One chain per feature with all four items filled in.
+- **A-LADDER.03** Mark each link in every chain as verified, guess, or unsupported, and give the reason.  
+  _Done when:_ Every link carries one of the three marks and its basis.
+- **A-LADDER.04** Check every number and every cause-and-effect claim separately. For example, 'meet people from five industries' and 'raise your chance of a new job' are two claims, and each needs its own proof.  
+  _Done when:_ A list of claims, each with its proof or the note 'no proof, do not state as fact'.
+- **A-LADDER.05** Choose the value statement that is both true and matches the main motive, and write it as one to three short message options ready to test.  
+  _Done when:_ The chosen statement and its message options, each tied to verified facts.
+
+**Hand back:** `chosen_message`, `message_options`, `facts_used`, `must_not_promise`
+
+**If stuck:**
+- `no_product_facts`: If the product fact sheet is missing or out of date, go back and read the product before writing any benefit.
+- `claim_has_no_proof`: If a benefit has no proof, word it as an invitation to try or as something being tested, never as a result.
+- `number_without_source`: If a number has no source, remove it or ask the owner where it comes from.
+- `benefit_needs_missing_feature`: If the benefit buyers want depends on a feature that does not exist, drop it from the copy and tell the owner about the gap.
+
+### 7. Design the sales angle test
+
+Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.
+
+- **A-ANGLES.01** Name one buyer group in one situation, the quote that represents them, the motive, and the benefit the product can deliver.  
+  _Done when:_ Group, quote, motive, and benefit written in four short lines.
+- **A-ANGLES.02** Write two or three angles: the progress they hope for, getting past the real obstacle, and a believable demonstration. Do not use fear to exaggerate outcomes.  
+  _Done when:_ Two or three angles, each in one or two sentences.
+- **A-ANGLES.03** For each angle list the facts that support it, the promises that are still unknown, and the wording that must not be used.  
+  _Done when:_ Each angle has supporting facts, unknowns, and banned wording next to it.
+- **A-ANGLES.04** Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.  
+  _Done when:_ A test plan written before the first post, showing the guess, the duration, the win number, and the cost.
+- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.  
+  _Done when:_ The main number, the rule for stopping, and the versions ready to be written as posts.
+
+**Hand back:** `test_guess`, `angles`, `facts_used`, `win_rule`
+
+**If stuck:**
+- `no_main_motive`: If no main motive has been chosen, go back and choose one before writing angles.
+- `angle_needs_unproven_claim`: If an angle only works with a claim that has no proof, rewrite it as an invitation to try or drop the angle.
+- `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
+- `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
+
+### 8. Confirm the brand's sender address, sending tool and who sends
+
+Settle which brand address sends, through which tool the owner already uses, who presses send and how unsubscribes work, so the email goes out under the right name to people who agreed to it without the owner being stopped halfway.
+
+- **C-EMAIL-ACCESS.01** Ask the owner which brand address will send and which address replies should go to. Check both are on the brand's own domain. Never borrow another brand's or a personal sender address.  
+  _Done when:_ The From name, From address and Reply-To address, confirmed by the owner.
+- **C-EMAIL-ACCESS.02** Ask which tool the owner already uses to send email (for example the brand's mailbox or an email marketing tool), where the contact list and its unsubscribes are kept, and whether that list records how each contact signed up. Use that tool; do not sign up for a new one unless the owner asks in this conversation.  
+  _Done when:_ The name of the sending tool, where the list and unsubscribes live, and whether signup sources are recorded.
+- **C-EMAIL-ACCESS.03** Decide who presses send: the owner in their own tool, or the agent's own browser if it is already signed in to that account. If nobody is signed in, the owner signs in on the tool's official screen and enters any two-step code themselves. Never ask for a password.  
+  _Done when:_ Who will send, and the account name shown after sign-in.
+- **C-EMAIL-ACCESS.04** If the owner asks for a new sending tool, create one account only, in the brand's name, on a free plan, following the tool's rules. Sign up with the brand's own address and let the owner read the code; use inbox_address, with inbox_latest for the code, only if the owner prefers that. Terms screens, payment details and identity checks go to the owner.  
+  _Done when:_ The new account's name and sign-in address, or a note that no new account was needed.
+- **C-EMAIL-ACCESS.05** Check that the sending domain is verified where the sending tool shows domain authentication (SPF and DKIM passing), or ask the owner for a screenshot of it. If it is not verified, keep all emails as drafts and tell the owner which records their domain manager must add; do not switch to another sender.  
+  _Done when:_ The domain's verification status as the tool shows it, with the time it was checked.
+- **C-EMAIL-ACCESS.06** Find the limits for this round: the tool's daily sending limit, the most the owner wants sent per day, and the date of the last promotional email to this list. If the list got one in the last 72 hours, plan this send for later. When sending from the brand's normal mailbox instead of an email tool, keep to 50 emails a day, sent one by one.  
+  _Done when:_ The daily cap for this round, the last send date, and the earliest send date.
+- **C-EMAIL-ACCESS.07** Confirm how people unsubscribe: an unsubscribe link the tool adds automatically, or a 'reply STOP' line the owner will honour within 2 days. Check where unsubscribes are recorded, and that the footer can carry the sender's postal address where the law asks for it. Agree that only emails shown in Sent count as sent; drafts and scheduled emails do not.  
+  _Done when:_ The unsubscribe method, where unsubscribes are recorded, and the footer that will be used.
+- **C-EMAIL-ACCESS.08** Agree on test sends: tests go only to an address the owner names as their own, never to contacts on the list. Any link or attachment in the email must be the brand's own; open each one before the test to check it loads and is the right file.  
+  _Done when:_ The test address the owner named and the list of links and attachments checked.
+
+**Hand back:** `sender_address`, `sending_tool`, `who_sends`, `send_limits`, `unsubscribe_method`
+
+**If stuck:**
+- `sender_unverified`: If the sending domain is not verified, keep the emails as drafts, tell the owner which records are missing, and do not send from a different address.
+- `no_sending_tool`: If the owner has no way to send to their list, ask whether they want one sending tool set up in the brand's name; do not send bulk email from a personal mailbox.
+- `owner_action_needed`: If a two-step code, terms screen or identity check appears, stop and tell the owner which screen and which button; never enter their codes or accept terms for them.
+- `wrong_sender_account`: If the signed-in account is a personal address or another brand, stop and ask the owner to switch to the agreed brand account.
+- `list_location_unknown`: If nobody knows where the contact list and its unsubscribes are kept, ask the owner for an export before any segment or send step.
+- `plan_limit_reached`: If the tool's plan cannot send this round's volume, show the owner the limit and either send fewer or wait; never upgrade or pay without the owner's written yes.
+
+### 9. Pick the opted-in email contacts for this round
+
+Produce a clean group of contacts who agreed to hear from the brand and match this round's buyer situation, with everyone who must not be emailed removed, because the right readers move the goal's main number and the wrong ones only add unsubscribes and spam reports.
+
+- **C-EM-SEGMENT.01** Ask the owner for an export or a view of the contact list, and for where each group of contacts came from (signup form, purchase, free trial, event, inquiry). Use only contacts the brand collected itself; never bought, scraped or copied lists, and never addresses found on public pages. Use the export only for this round and do not paste it anywhere public.  
+  _Done when:_ Each source with its contact count and the date it was exported.
+- **C-EM-SEGMENT.02** For each source, write down what people agreed to receive, as stated on the form, checkbox or terms they saw. If a source has no record of what people agreed to, mark it 'consent unknown' and keep it out of this round.  
+  _Done when:_ Each source marked with what was agreed, or 'consent unknown'.
+- **C-EM-SEGMENT.03** Merge duplicates by email address, ignoring upper and lower case. If any copy of a person is unsubscribed, bounced or marked the brand as spam, that person stays out; an import never overrides an unsubscribe.  
+  _Done when:_ Contact counts before and after merging, and how many were kept out by an earlier unsubscribe.
+- **C-EM-SEGMENT.04** Build the exclusion list: unsubscribed, hard bounced, spam complaints, people who replied 'not interested', the owner, the team and test addresses. Leave out people who already bought this product when the email is an offer to buy it.  
+  _Done when:_ The exclusion list with a count per reason.
+- **C-EM-SEGMENT.05** Group the remaining contacts by what they actually did, matching the buyer groups from the earlier segment step: bought before, signed up or tried but did not buy, asked a question or showed clear interest, or subscribed only. Never guess sensitive traits such as health, money trouble, religion or politics.  
+  _Done when:_ Each group with its count and the action that put people in it.
+- **C-EM-SEGMENT.06** Pick the one group that fits this round's chosen angle. If two versions will be tested, split that group at random into two halves labeled A and B (use the tool's own A/B split if it has one, or sort the export at random and take alternate rows). If the group has fewer than 200 contacts, send one version only and note that the result will be noisy.  
+  _Done when:_ The chosen group, its count, and how it was split, if it was.
+- **C-EM-SEGMENT.07** Show the owner the chosen group, its count, the exclusion counts and the 'consent unknown' count, and get their confirmation before anything is written or sent to it. If the group has to be saved as a segment or tag in the owner's tool, do that only after their yes, and never re-subscribe anyone.  
+  _Done when:_ The owner's confirmation of the group to email this round, and the name of the saved segment if one was made.
+
+**Hand back:** `list_sources`, `chosen_segment`, `excluded`, `consent_unknown`
+
+**If stuck:**
+- `consent_unknown`: If you cannot tell what a group of contacts agreed to, keep them out of promotional email and ask the owner where the signup record is.
+- `list_not_available`: If the owner cannot export or show the list, ask for a screenshot of the tool's audience page with group counts and stop until it arrives.
+- `bought_or_scraped_list`: If any contacts come from a bought, rented or scraped list, leave them out entirely and tell the owner why.
+- `unsubscribes_not_visible`: If you cannot see who has unsubscribed or bounced, do not build the group; ask the owner to export the unsubscribe and bounce list first.
+- `segment_too_small`: If the chosen group has fewer than 50 contacts, tell the owner the result will not be readable as a rate and ask whether to merge it with the next closest group.
+
+### 10. Write the post from proven facts
+
+Write the post or message that opens with the buyer's own situation and offers one true step forward, because specific, believable copy is what makes a reader act.
+
+- **A-COPY.01** Read the chosen angle, the buyer quotes, and the product fact sheet. Open the post with the situation the reader is in right now, in words close to how buyers describe it.  
+  _Done when:_ The opening line, with the quote and facts it draws on.
+- **A-COPY.02** Then state one specific step forward the product helps with, and point to the existing link where the reader can act on it.  
+  _Done when:_ One or more draft versions, each with one benefit and one link you have opened and checked.
+- **A-COPY.03** Keep what the product delivers separate from what the buyer hopes will follow. Without data, do not write 'improves X%' and do not guarantee an outcome such as getting a job.  
+  _Done when:_ A list of the claims in the post, each marked 'delivered by the product' or 'hoped-for result'.
+- **A-COPY.04** If you write more than one version, change only one thing between them and label what changed, so the versions can be compared fairly.  
+  _Done when:_ Each version is labeled with the single thing that differs.
+- **A-COPY.05** Check every sentence against the fact sheet and against the way the owner writes. Remove any number without support, or reword it as a clearly labeled guess.  
+  _Done when:_ The final text, a sentence-by-sentence fact check, and a note that it is ready to show the owner.
+
+**Hand back:** `post_text`, `facts_used`, `claims_avoided`
+
+**If stuck:**
+- `no_chosen_angle`: If no angle has been chosen, go back to the angle test step before writing.
+- `fact_missing_for_claim`: If a sentence needs a fact you do not have, remove the sentence or ask the owner; never fill the gap with a guess.
+- `no_working_link`: If you do not have a product link that you have opened and seen load, ask the owner which URL to use.
+- `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
+- `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
+
+### 11. Read this goal's email numbers (baseline numbers)
+
+Record the numbers this goal is judged on, for the send before this round and for this round's send, so rounds are compared on real counts. record_numbers lists exactly which numbers it needs.
+
+- **C-EM-METRICS.01** Confirm what you are measuring: the sender, which email or campaign, the date range and the time zone. For the baseline use the last comparable send to a similar group before this round; for the current reading use this round's send, read once the goal's observation window has passed (7 days after sending for these goals).  
+  _Done when:_ The email or campaign name, send date, date range with time zone, and whether this is the baseline or the current reading.
+- **C-EM-METRICS.02** Read the sending tool's report for that send: sent, bounced, delivered, unsubscribes, spam complaints and unique link clicks. If the tool does not show delivered, use sent minus bounced and say so. If you cannot open the report, ask the owner for a screenshot or an export. Do not use opens; they are not reliable and an open is not a reader.  
+  _Done when:_ The numbers exactly as the tool shows them, the screen or export they came from, and when they were read.
+- **C-EM-METRICS.03** Take out the owner's, the team's and test addresses, and count each person once for clicks, unsubscribes and replies. If many clicks arrive within a minute of delivery from the same company domain, note that mail security scanners may have made them.  
+  _Done when:_ What was removed and why, with counts before and after.
+- **C-EM-METRICS.04** Read the replies to this send in the mailbox for the same date range. Count a qualified reply once per person who asks about buying, price, fit or a demo. Do not count auto-replies, out-of-office notes, bounces, unsubscribe requests or the owner's own messages.  
+  _Done when:_ The number of qualified replies, with sender, date and one-line summary for each.
+- **C-EM-METRICS.05** Read clicks and sales for each version from the round's tracked link (per ?v= label) and its sale counter, and from the owner's payment records for the same dates. Count each order once, take out refunds and test or owner payments, and say plainly where you cannot tell whether a sale came from this email. For unique_link_clicks use the sending tool's unique clicks per recipient where it shows them, otherwise the tracked link's count; use the same source for the baseline and the current reading, and never add the two together.  
+  _Done when:_ Clicks and purchases per version, each with its source, and any sale whose link to the email is unclear.
+- **C-EM-METRICS.06** Write down what this send cost: the sending tool's fee for the period and any other cost the owner reports. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-EM-METRICS.07** Call record_numbers with the exact component names this goal lists: delivered plus one of qualified_replies, unique_link_clicks, external_purchases or unsubscribes. Give each value its source. If there is no earlier send, record 0 and say 'no history' in the source. If delivered is 0 or the delivery data is incomplete, do not work out a rate; report which number is missing. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
+
+**If stuck:**
+- `cannot_open_report`: If you cannot open the sending tool's report, ask the owner for a screenshot or export of that send's report and wait for it.
+- `no_history`: If there is no earlier comparable send, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `delivery_data_incomplete`: If sent or delivered counts are missing or still changing, do not work out a rate; report the missing number and read again later.
+- `too_early_to_read`: If the goal's observation window has not passed since the send, report the numbers as early and read them again when it has.
+- `own_activity_mixed_in`: If you cannot separate the owner's or team's test clicks, replies or payments from real ones, say so in the source and do not count them.
+- `sales_not_traceable`: If payments cannot be matched to this send, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.
+
+### 12. Send the approved email to the opted-in group once
+
+Send the owner-approved email, with the round's tracked link and a working unsubscribe, once to the chosen group, and stop follow-ups to anyone who replied, bought or opted out, because the goal's number can only be read on a send that went out exactly as approved.
+
+- **C-EM-SEND.01** Gather the approved text from the copy step, the chosen group from the segment step, and the round's tracked link from tracking, with ?v=A and ?v=B if there are two versions. Open each link and see it load the product page.  
+  _Done when:_ The text, the group and its count, and each tracked link you opened.
+- **C-EM-SEND.02** Turn the text into an email: a subject under 60 characters, one main link (the tracked link), the sender name, and a footer with the unsubscribe link or line and the postal address where the law asks for it. Do not put 'Re:' or 'Fwd:' in the subject, and keep only claims the product facts support, with no invented deadlines, stock limits or guarantees.  
+  _Done when:_ The full email for each version: subject, body, link and footer.
+- **C-EM-SEND.03** Show the owner, word for word, the From and Reply-To, subject, body, links, footer, which group and how many people, and the send day and time with time zone. Nothing is sent without their clear yes to this exact email.  
+  _Done when:_ The exact email shown and the owner's approval message.
+- **C-EM-SEND.04** Send one test to the owner's own address only. Check the sender name, subject, that every link opens through the tracked link, that the unsubscribe link or line is there, and that it reads well on a phone. Fix and re-show the owner any change. The test is not counted.  
+  _Done when:_ The test result: what was checked and anything fixed.
+- **C-EM-SEND.05** Right before sending, read the latest unsubscribes, bounces, spam complaints, replies and purchases since the group was built. Remove anyone who unsubscribed, bounced, said no, has no record of agreeing to email, or already bought, and stop any older automatic follow-up to them. The approved count can only go down at this point, never up.  
+  _Done when:_ How many people were removed and why, and which older follow-ups were stopped.
+- **C-EM-SEND.06** The owner sends, or the agent sends with its own browser if it has the tool open and the owner said yes. Send once, only to the approved group, within the daily cap; split across days if needed. Never put many addresses in To or CC. If sending seems to fail, check Sent or the campaign status before trying again; never send twice and never resend through another channel.  
+  _Done when:_ Who sent, when, and to how many people.
+- **C-EM-SEND.07** Open the sent copy or the campaign page and copy the exact subject and body as sent, the number of recipients and the send time. Drafts and scheduled emails do not count as sent. If the tool gives a 'view in browser' link, keep it as the email's public URL.  
+  _Done when:_ The subject and body as sent, the recipient count, the send time, and the web view link if there is one.
+- **C-EM-SEND.08** Do not send a follow-up inside this round's 7-day reading window, so the round's numbers stay clean. If the owner wants one, plan at most one for after the reading, only to people who did not reply, click, buy or unsubscribe, with its own owner yes. Remove anyone who hard bounced and never retry them with a changed spelling.  
+  _Done when:_ The follow-up plan with date and audience, or a note that none will be sent, and the list of bounced addresses removed.
+
+**Hand back:** `sent_record`, `sent_text`, `owner_approval`, `tracked_links`, `stopped_contacts`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not said yes to this exact email, do not send; show them the email and stop until they answer.
+- `sender_unverified`: If the sending domain is not verified, keep the email as a draft and do not switch to another sender address.
+- `send_status_unknown`: If you cannot tell whether the email went out, check Sent and the campaign status in the sending tool; never send again, or through another channel, until you know.
+- `hard_bounce`: If an address hard bounces, remove it from this and later sends; never retry it with a changed spelling.
+- `over_daily_limit`: If the group is larger than the daily cap, send the rest on the following days at the same time; never go over the cap the owner set.
+- `consent_unknown`: If someone in the group has no record of agreeing to email, take them out of this send and tell the owner.
+
+### 13. Read this goal's email numbers (result numbers)
+
+Record the numbers this goal is judged on, for the send before this round and for this round's send, so rounds are compared on real counts. record_numbers lists exactly which numbers it needs.
+
+- **C-EM-METRICS.01** Confirm what you are measuring: the sender, which email or campaign, the date range and the time zone. For the baseline use the last comparable send to a similar group before this round; for the current reading use this round's send, read once the goal's observation window has passed (7 days after sending for these goals).  
+  _Done when:_ The email or campaign name, send date, date range with time zone, and whether this is the baseline or the current reading.
+- **C-EM-METRICS.02** Read the sending tool's report for that send: sent, bounced, delivered, unsubscribes, spam complaints and unique link clicks. If the tool does not show delivered, use sent minus bounced and say so. If you cannot open the report, ask the owner for a screenshot or an export. Do not use opens; they are not reliable and an open is not a reader.  
+  _Done when:_ The numbers exactly as the tool shows them, the screen or export they came from, and when they were read.
+- **C-EM-METRICS.03** Take out the owner's, the team's and test addresses, and count each person once for clicks, unsubscribes and replies. If many clicks arrive within a minute of delivery from the same company domain, note that mail security scanners may have made them.  
+  _Done when:_ What was removed and why, with counts before and after.
+- **C-EM-METRICS.04** Read the replies to this send in the mailbox for the same date range. Count a qualified reply once per person who asks about buying, price, fit or a demo. Do not count auto-replies, out-of-office notes, bounces, unsubscribe requests or the owner's own messages.  
+  _Done when:_ The number of qualified replies, with sender, date and one-line summary for each.
+- **C-EM-METRICS.05** Read clicks and sales for each version from the round's tracked link (per ?v= label) and its sale counter, and from the owner's payment records for the same dates. Count each order once, take out refunds and test or owner payments, and say plainly where you cannot tell whether a sale came from this email. For unique_link_clicks use the sending tool's unique clicks per recipient where it shows them, otherwise the tracked link's count; use the same source for the baseline and the current reading, and never add the two together.  
+  _Done when:_ Clicks and purchases per version, each with its source, and any sale whose link to the email is unclear.
+- **C-EM-METRICS.06** Write down what this send cost: the sending tool's fee for the period and any other cost the owner reports. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-EM-METRICS.07** Call record_numbers with the exact component names this goal lists: delivered plus one of qualified_replies, unique_link_clicks, external_purchases or unsubscribes. Give each value its source. If there is no earlier send, record 0 and say 'no history' in the source. If delivered is 0 or the delivery data is incomplete, do not work out a rate; report which number is missing. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
+
+**If stuck:**
+- `cannot_open_report`: If you cannot open the sending tool's report, ask the owner for a screenshot or export of that send's report and wait for it.
+- `no_history`: If there is no earlier comparable send, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `delivery_data_incomplete`: If sent or delivered counts are missing or still changing, do not work out a rate; report the missing number and read again later.
+- `too_early_to_read`: If the goal's observation window has not passed since the send, report the numbers as early and read them again when it has.
+- `own_activity_mixed_in`: If you cannot separate the owner's or team's test clicks, replies or payments from real ones, say so in the source and do not count them.
+- `sales_not_traceable`: If payments cannot be matched to this send, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.

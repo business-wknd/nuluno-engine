@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Nuluno Engine, local single-user MCP server (stdio). No dependencies.
 
-    python3 server.py --product https://your-product.com/
+    python3 server.py [--product https://your-product.com/]
 
 Add it to any MCP client that can start a local command, for example:
 
-    claude mcp add --scope user nuluno-engine -- python3 /path/to/engine/server.py --product https://your-product.com/
+    claude mcp add --scope user nuluno-engine -- python3 /path/to/engine/server.py
+
+Without --product it uses the product given to `nuluno.py start`, or asks the agent to
+call use_product with the owner's product URL.
 
 Everything the agent delivers is kept in one JSON file per product under
 ~/.nuluno-engine/ (or --data DIR), so a new chat continues where the last one stopped.
@@ -16,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import core
 
-VERSION = '0.1.1'
+VERSION = '0.2.0'
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 
 
@@ -65,8 +68,31 @@ class FileStore:
         return rows[-1] if rows else None
 
 
+def check_product(url):
+    """The product must be a public https URL; returns it unchanged or exits with the reason."""
+    parts = urllib.parse.urlsplit(str(url))
+    if parts.scheme != 'https' or not parts.hostname or '.' not in parts.hostname or parts.username or parts.password or re.search(r'\s', str(url)):
+        raise SystemExit('The product must be a public https URL, for example https://your-product.com/')
+    return str(url)
+
+
+def owner_of(product): return re.sub(r'^https?://', '', product).strip('/')
+
+
+def saved_product(store):
+    path = store.folder / 'current-product'
+    return path.read_text(encoding='utf-8').strip() if path.exists() else None
+
+
+def save_product(store, product): (store.folder / 'current-product').write_text(product + '\n', encoding='utf-8')
+
+
+USE_PRODUCT = {'name': 'use_product', 'description': 'Set the product to sell: its public https URL. Needed once; later conversations remember it.',
+               'inputSchema': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url'], 'additionalProperties': False}}
+
+
 def serve(product, store):
-    owner = re.sub(r'^https?://', '', product).strip('/')
+    fixed = product
     def reply(message_id, result=None, error=None):
         body = {'jsonrpc': '2.0', 'id': message_id}
         body.update({'error': error} if error else {'result': result})
@@ -91,14 +117,25 @@ def serve(product, store):
         elif method == 'ping':
             reply(message_id, {})
         elif method == 'tools/list':
-            reply(message_id, {'tools': core.TOOL_SPECS})
+            reply(message_id, {'tools': core.TOOL_SPECS + ([] if fixed else [USE_PRODUCT])})
         elif method == 'tools/call':
             name, arguments = params.get('name'), params.get('arguments')
             if not isinstance(arguments, dict): arguments = {}
+            if not fixed and name == 'use_product':
+                try: chosen = check_product(str(arguments.get('url', '')).strip())
+                except SystemExit as error: value = {'accepted': False, 'error': str(error)}
+                else:
+                    save_product(store, chosen)
+                    value = {'accepted': True, 'product_url': chosen, 'next': core.where_are_we(store, owner_of(chosen), chosen, {})}
+                reply(message_id, {'content': [{'type': 'text', 'text': json.dumps(value, ensure_ascii=False)}], 'structuredContent': value, 'isError': False}); continue
             if not isinstance(name, str) or name not in core.TOOLS:
                 reply(message_id, error={'code': -32602, 'message': 'Unknown tool: ' + str(name)}); continue
+            product = fixed or saved_product(store)
+            if not product:
+                value = {'state': 'no_product_yet', 'instruction': 'Ask the owner for the public https URL of the product to sell, then call use_product with it.'}
+                reply(message_id, {'content': [{'type': 'text', 'text': json.dumps(value)}], 'structuredContent': value, 'isError': False}); continue
             try:
-                value = core.TOOLS[name](store, owner, product, arguments)
+                value = core.TOOLS[name](store, owner_of(product), product, arguments)
                 reply(message_id, {'content': [{'type': 'text', 'text': json.dumps(value, ensure_ascii=False, allow_nan=False)}], 'structuredContent': value, 'isError': False})
             except Exception as error:  # the agent gets a readable failure instead of a dead connection
                 reply(message_id, {'content': [{'type': 'text', 'text': json.dumps({'error': type(error).__name__ + ': ' + str(error)[:300]})}], 'isError': True})
@@ -108,13 +145,10 @@ def serve(product, store):
 
 def main():
     parser = argparse.ArgumentParser(description='Nuluno Engine local MCP server')
-    parser.add_argument('--product', required=True, help='public https URL of the product to sell')
+    parser.add_argument('--product', help='public https URL of the product to sell (default: the saved one, or ask)')
     parser.add_argument('--data', default='~/.nuluno-engine', help='folder for saved progress')
     args = parser.parse_args()
-    parts = urllib.parse.urlsplit(args.product)
-    if parts.scheme != 'https' or not parts.hostname or '.' not in parts.hostname or parts.username or parts.password or re.search(r'\s', args.product):
-        raise SystemExit('--product must be a public https URL')
-    serve(args.product, FileStore(args.data))
+    serve(check_product(args.product) if args.product else None, FileStore(args.data))
 
 
 if __name__ == '__main__':

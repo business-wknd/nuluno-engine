@@ -1,0 +1,18 @@
+{
+  "name": "nuluno-engine",
+  "owner": {
+    "name": "Nuluno",
+    "url": "https://engine.nuluno.com/?lang=en"
+  },
+  "metadata": {
+    "description": "Sales goals for AI agents: 99 measured playbooks and an engine that holds the agent to the number",
+    "version": "0.2.0"
+  },
+  "plugins": [
+    {
+      "name": "nuluno-engine",
+      "description": "24 sales skills (Instagram, TikTok, Threads, X, Reddit, LinkedIn, email, Meta ads, search ads, Product Hunt, search and AI answers, partners and more) holding 99 step-by-step playbooks, plus the Nuluno Engine MCP server: it refuses unfinished steps, waits for real numbers and, when a round misses, makes the agent change one thing and run again",
+      "source": "./"
+    }
+  ]
+}

@@ -1,11 +1,11 @@
 # Reddit對話接成已核對外部購買
 
 - **Goal id:** `G-RD-PURCHASES`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** reddit
 - **Metric:** `external_purchases` = `external_purchases`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), query (redo `C-RD-INTENT`), message (redo `A-COPY`), data (redo `C-RD-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), query (the next round starts with `C-RD-INTENT`), message (the next round starts with `A-COPY`), data (the next round starts with `C-RD-METRICS`)
 
 ## Steps
 

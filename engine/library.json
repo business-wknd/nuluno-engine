@@ -1,5 +1,5 @@
 {
- "version": "2026.11.21",
+ "version": "2026.11.22",
  "goals": {
   "G-IG-FOLLOWERS": {
    "title": "IG增加淨追蹤人數",
@@ -589,7 +589,7 @@
    ]
   },
   "G-TH-FOLLOWERS": {
-   "title": "Threads增加淨追蹤人數",
+   "title": "Threads: grow net followers",
    "channel": "threads",
    "metric": {
     "key": "net_followers",
@@ -668,10 +668,11 @@
      "skill": "C-TH-METRICS",
      "measure": "current"
     }
-   ]
+   ],
+   "title_zh": "Threads增加淨追蹤人數"
   },
   "G-TH-REPLIES": {
-   "title": "Threads增加合格買方對話",
+   "title": "Threads: start qualified buyer conversations",
    "channel": "threads",
    "metric": {
     "key": "qualified_conversations",
@@ -750,7 +751,8 @@
      "skill": "C-TH-METRICS",
      "measure": "current"
     }
-   ]
+   ],
+   "title_zh": "Threads增加合格買方對話"
   },
   "G-TH-LINK-RATE": {
    "title": "Threads: raise the link click rate from a post to your site",

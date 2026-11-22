@@ -16,7 +16,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import core
 
-VERSION = '0.1.0'
+VERSION = '0.1.1'
+PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 
 
 class FileStore:
@@ -26,16 +27,17 @@ class FileStore:
         try: os.chmod(self.folder, 0o700)
         except OSError: pass
 
-    def _path(self, owner): return self.folder / (re.sub(r'[^a-z0-9.-]+', '-', owner.lower()).strip('-')[:80] + '.json')
+    def _path(self, owner):  # readable name plus a hash, so two products can never share a file
+        return self.folder / (re.sub(r'[^a-z0-9.-]+', '-', owner.lower()).strip('-')[:60] + '-' + hashlib.sha256(owner.encode()).hexdigest()[:8] + '.json')
 
     def _read(self, owner):
         path = self._path(owner)
-        return json.loads(path.read_text()) if path.exists() else {'state': core.new_state(), 'log': []}
+        return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'state': core.new_state(), 'log': []}
 
     def _write(self, owner, data):
         path = self._path(owner)
         handle, temporary = tempfile.mkstemp(dir=str(self.folder), suffix='.tmp')
-        with os.fdopen(handle, 'w') as out: json.dump(data, out, ensure_ascii=False, indent=1)
+        with os.fdopen(handle, 'w', encoding='utf-8') as out: json.dump(data, out, ensure_ascii=False, indent=1)
         os.replace(temporary, path)
 
     def load(self, owner): return self._read(owner)['state']
@@ -67,27 +69,35 @@ def serve(product, store):
         body = {'jsonrpc': '2.0', 'id': message_id}
         body.update({'error': error} if error else {'result': result})
         sys.stdout.write(json.dumps(body, ensure_ascii=False) + '\n'); sys.stdout.flush()
+    for stream in (sys.stdin, sys.stdout):  # the library is UTF-8 whatever the system locale says (Windows)
+        if hasattr(stream, 'reconfigure'): stream.reconfigure(encoding='utf-8')
     for line in sys.stdin:
         line = line.strip()
         if not line: continue
         try: message = json.loads(line)
-        except ValueError: continue
-        method, message_id, params = message.get('method'), message.get('id'), message.get('params') or {}
-        if message_id is None: continue  # notifications need no answer
+        except ValueError:
+            reply(None, error={'code': -32700, 'message': 'Parse error'}); continue
+        if not isinstance(message, dict):
+            reply(None, error={'code': -32600, 'message': 'Send one JSON-RPC object per line; batches are not supported.'}); continue
+        method, message_id, params = message.get('method'), message.get('id'), message.get('params')
+        if not isinstance(method, str) or message_id is None: continue  # notifications and stray responses need no answer
+        if not isinstance(params, dict): params = {}
         if method == 'initialize':
-            reply(message_id, {'protocolVersion': params.get('protocolVersion', '2025-06-18'), 'capabilities': {'tools': {}},
+            asked = params.get('protocolVersion')
+            reply(message_id, {'protocolVersion': asked if asked in PROTOCOLS else PROTOCOLS[0], 'capabilities': {'tools': {}},
                                'serverInfo': {'name': 'nuluno-engine', 'version': VERSION}, 'instructions': core.INSTRUCTIONS})
         elif method == 'ping':
             reply(message_id, {})
         elif method == 'tools/list':
             reply(message_id, {'tools': core.TOOL_SPECS})
         elif method == 'tools/call':
-            name, arguments = params.get('name'), params.get('arguments') or {}
+            name, arguments = params.get('name'), params.get('arguments')
+            if not isinstance(arguments, dict): arguments = {}
             if name not in core.TOOLS:
                 reply(message_id, error={'code': -32602, 'message': 'Unknown tool: ' + str(name)}); continue
             try:
                 value = core.TOOLS[name](store, owner, product, arguments)
-                reply(message_id, {'content': [{'type': 'text', 'text': json.dumps(value, ensure_ascii=False)}], 'structuredContent': value, 'isError': False})
+                reply(message_id, {'content': [{'type': 'text', 'text': json.dumps(value, ensure_ascii=False, allow_nan=False)}], 'structuredContent': value, 'isError': False})
             except Exception as error:  # the agent gets a readable failure instead of a dead connection
                 reply(message_id, {'content': [{'type': 'text', 'text': json.dumps({'error': type(error).__name__ + ': ' + str(error)[:300]})}], 'isError': True})
         else:

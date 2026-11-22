@@ -1,11 +1,11 @@
 # IG提高觸及到個人檔案造訪率
 
 - **Goal id:** `G-IG-PROFILE-RATE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** instagram
 - **Metric:** `profile_visit_rate` = `profile_visits` / `reach`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), content (redo `A-ANGLES`), data (redo `C-IG-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `A-ANGLES`), data (the next round starts with `C-IG-METRICS`)
 
 ## Steps
 

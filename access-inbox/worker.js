@@ -44,6 +44,7 @@ export default {
     if (request.method !== 'POST' || url.pathname !== '/verify') return new Response('Nuluno Access inbox', { status: 200 });
     let claim; try { claim = await request.json(); } catch { return Response.json({ valid: false }, { status: 400 }); }
     const { stamp, digest, tag } = claim || {};
+    if (typeof stamp !== 'string' || typeof digest !== 'string' || typeof tag !== 'string') return Response.json({ valid: false });
     if (!/^\d{10,16}$/.test(stamp || '') || !/^[0-9a-f]{64}$/.test(digest || '') || !/^[0-9a-f]{64}$/.test(tag || '')) return Response.json({ valid: false });
     const expected = await tagFor(env.INBOX_SECRET, stamp, digest);
     let same = expected.length === tag.length ? 0 : 1; for (let i = 0; i < expected.length && i < tag.length; i++) same |= expected.charCodeAt(i) ^ tag.charCodeAt(i);

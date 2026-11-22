@@ -1,11 +1,13 @@
-# Threads增加合格買方對話
+# Threads: start qualified buyer conversations
+
+Threads增加合格買方對話
 
 - **Goal id:** `G-TH-REPLIES`
 - **Language:** English
 - **Channel:** threads
 - **Metric:** `qualified_conversations` = `qualified_conversations`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `C-TH-INTENT`), data (redo `C-TH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `C-TH-INTENT`), data (the next round starts with `C-TH-METRICS`)
 
 ## Steps
 

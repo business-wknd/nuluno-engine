@@ -7,7 +7,7 @@ Threads提高貼文到網站點擊率
 - **Channel:** threads
 - **Metric:** `link_rate` = `link_clicks` / `views`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `A-COPY`), data (redo `C-TH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-COPY`), data (the next round starts with `C-TH-METRICS`)
 
 ## Steps
 

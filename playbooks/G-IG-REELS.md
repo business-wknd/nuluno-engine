@@ -1,11 +1,11 @@
 # IG提高Reels觀看完成率
 
 - **Goal id:** `G-IG-REELS`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** instagram
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), hook (redo `C-IG-RESEARCH`), format (redo `S13`), data (redo `C-IG-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), hook (the next round starts with `C-IG-RESEARCH`), format (the next round starts with `S13`), data (the next round starts with `C-IG-METRICS`)
 
 ## Steps
 

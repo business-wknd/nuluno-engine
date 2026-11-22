@@ -1,11 +1,11 @@
 # Meta Ads提高全成本後每位外部客戶貢獻
 
 - **Goal id:** `G-META-NET-CONTRIBUTION`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** meta_ads
 - **Metric:** `net_per_customer` = `net_after_all_costs_minor` / `external_purchases`, should increase
 - **Observation window:** 72 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), creative (redo `C-META-CREATIVE`), delivery (redo `C-META_ADS-ACCESS`), data (redo `C-META-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `C-META-CREATIVE`), delivery (the next round starts with `C-META_ADS-ACCESS`), data (the next round starts with `C-META-METRICS`)
 
 ## Steps
 

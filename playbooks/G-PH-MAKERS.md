@@ -1,11 +1,11 @@
 # Product Hunt找到適配產品的Maker名單
 
 - **Goal id:** `G-PH-MAKERS`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** producthunt
 - **Metric:** `maker_fit_rate` = `qualified_makers` / `reviewed_makers`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `C-PH-MAKERS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `A-ANGLES`), data (redo `C-PH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-PH-MAKERS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-PH-METRICS`)
 
 ## Steps
 

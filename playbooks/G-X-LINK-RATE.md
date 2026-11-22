@@ -1,11 +1,11 @@
 # X提高串文網站點擊率
 
 - **Goal id:** `G-X-LINK-RATE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** x
 - **Metric:** `link_rate` = `url_clicks` / `impressions`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `C-X-INTENT`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), hook (redo `A-ANGLES`), data (redo `C-X-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-X-INTENT`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), hook (the next round starts with `A-ANGLES`), data (the next round starts with `C-X-METRICS`)
 
 ## Steps
 

@@ -4,7 +4,7 @@
 A scripted "agent" works one goal on a throwaway product. Nothing is published
 and nothing is saved outside a temporary folder. Watch what the engine refuses.
 """
-import json, sys, tempfile, time
+import atexit, json, shutil, sys, tempfile, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -12,7 +12,9 @@ import core
 from server import FileStore
 
 PRODUCT = 'https://example.com/'
-store = FileStore(tempfile.mkdtemp(prefix='nuluno-demo-'))
+FOLDER = tempfile.mkdtemp(prefix='nuluno-demo-')
+atexit.register(shutil.rmtree, FOLDER, ignore_errors=True)  # nothing is left behind
+store = FileStore(FOLDER)
 core._link_live = lambda url: True  # the demo does not touch the network
 
 

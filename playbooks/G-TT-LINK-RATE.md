@@ -1,11 +1,11 @@
 # TikTok提高profile到網站點擊率
 
 - **Goal id:** `G-TT-LINK-RATE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** tiktok
 - **Metric:** `profile_link_rate` = `website_clicks` / `profile_visits`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), content (redo `A-COPY`), link_eligibility (redo `C-TIKTOK-ACCESS`), data (redo `C-TT-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `A-COPY`), link_eligibility (the next round starts with `C-TIKTOK-ACCESS`), data (the next round starts with `C-TT-METRICS`)
 
 ## Steps
 

@@ -1,11 +1,13 @@
-# Threads增加淨追蹤人數
+# Threads: grow net followers
+
+Threads增加淨追蹤人數
 
 - **Goal id:** `G-TH-FOLLOWERS`
 - **Language:** English
 - **Channel:** threads
 - **Metric:** `net_followers` = `followers`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `A-ANGLES`), data (redo `C-TH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-TH-METRICS`)
 
 ## Steps
 

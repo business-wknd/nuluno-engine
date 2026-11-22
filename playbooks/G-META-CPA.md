@@ -1,11 +1,11 @@
 # Meta Ads將指定轉換CPA降低X%
 
 - **Goal id:** `G-META-CPA`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** meta_ads
 - **Metric:** `conversion_cpa` = `spend_minor` / `attributed_conversions`, should decrease
 - **Observation window:** 72 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), creative (redo `C-META-CREATIVE`), delivery (redo `C-META_ADS-ACCESS`), data (redo `C-META-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `C-META-CREATIVE`), delivery (the next round starts with `C-META_ADS-ACCESS`), data (the next round starts with `C-META-METRICS`)
 
 ## Steps
 

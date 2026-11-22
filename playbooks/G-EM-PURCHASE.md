@@ -1,11 +1,11 @@
 # 已同意Email提高外部付款率
 
 - **Goal id:** `G-EM-PURCHASE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** email
 - **Metric:** `purchase_rate` = `external_purchases` / `delivered`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `C-EM-SEGMENT`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), data (redo `C-EM-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-EM-SEGMENT`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), data (the next round starts with `C-EM-METRICS`)
 
 ## Steps
 

@@ -1,11 +1,11 @@
 # Google Ads提高既有網站付費率
 
 - **Goal id:** `G-GA-PURCHASE-RATE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** google_ads
 - **Metric:** `site_purchase_rate` = `external_purchases` / `attributed_sessions`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), query (redo `C-GA-KEYWORDS`), message (redo `A-ANGLES`), data (redo `C-GA-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), query (the next round starts with `C-GA-KEYWORDS`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-GA-METRICS`)
 
 ## Steps
 

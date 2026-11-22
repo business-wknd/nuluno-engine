@@ -1,11 +1,11 @@
 # TikTok提升既有網站流量付費率
 
 - **Goal id:** `G-TT-SITE-PURCHASE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** tiktok
 - **Metric:** `site_purchase_rate` = `external_purchases` / `attributed_sessions`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), content (redo `A-SEGMENTS`), link_eligibility (redo `C-TIKTOK-ACCESS`), data (redo `C-TT-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `A-SEGMENTS`), link_eligibility (the next round starts with `C-TIKTOK-ACCESS`), data (the next round starts with `C-TT-METRICS`)
 
 ## Steps
 

@@ -1,11 +1,11 @@
 # IG提高內容收藏率
 
 - **Goal id:** `G-IG-SAVES`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** instagram
 - **Metric:** `save_rate` = `saves` / `reach`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), content (redo `C-IG-RESEARCH`), data (redo `C-IG-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `C-IG-RESEARCH`), data (the next round starts with `C-IG-METRICS`)
 
 ## Steps
 

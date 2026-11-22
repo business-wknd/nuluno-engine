@@ -1,11 +1,11 @@
 # LinkedIn內容帶來合格產品詢問
 
 - **Goal id:** `G-LI-INQUIRIES`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** linkedin
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `C-LI-ROLES`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `A-ANGLES`), data (redo `C-LI-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-LI-ROLES`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-LI-METRICS`)
 
 ## Steps
 

@@ -1,11 +1,11 @@
 # YouTube提高影片觀看完成率
 
 - **Goal id:** `G-YT-COMPLETION`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** youtube
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), content (redo `A-ANGLES`), format (redo `S13`), data (redo `C-YT-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `A-ANGLES`), format (the next round starts with `S13`), data (the next round starts with `C-YT-METRICS`)
 
 ## Steps
 

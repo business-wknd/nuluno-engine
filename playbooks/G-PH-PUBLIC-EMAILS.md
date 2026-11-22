@@ -1,11 +1,11 @@
 # Product Hunt Maker找到有來源的商務Email
 
 - **Goal id:** `G-PH-PUBLIC-EMAILS`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** producthunt
 - **Metric:** `public_email_coverage` = `verified_public_emails` / `reviewed_makers`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `C-PH-MAKERS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), message (redo `A-ANGLES`), data (redo `C-PH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-PH-MAKERS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-PH-METRICS`)
 
 ## Steps
 

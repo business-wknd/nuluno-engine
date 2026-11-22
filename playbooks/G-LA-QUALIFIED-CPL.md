@@ -1,11 +1,11 @@
 # LinkedIn Ads降低合格買方名單成本
 
 - **Goal id:** `G-LA-QUALIFIED-CPL`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** linkedin_ads
 - **Metric:** `qualified_lead_cpl` = `spend_minor` / `qualified_leads`, should decrease
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), creative (redo `A-ANGLES`), data (redo `C-LA-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `A-ANGLES`), data (the next round starts with `C-LA-METRICS`)
 
 ## Steps
 

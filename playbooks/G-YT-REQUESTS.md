@@ -1,11 +1,11 @@
 # YouTube求工具／服務留言接成合格對話
 
 - **Goal id:** `G-YT-REQUESTS`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** youtube
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), query (redo `C-YT-INTENT`), message (redo `A-COPY`), data (redo `C-YT-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), query (the next round starts with `C-YT-INTENT`), message (the next round starts with `A-COPY`), data (the next round starts with `C-YT-METRICS`)
 
 ## Steps
 

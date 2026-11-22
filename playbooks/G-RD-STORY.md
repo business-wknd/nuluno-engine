@@ -1,11 +1,11 @@
 # Reddit真實創辦人故事帶來合格詢問
 
 - **Goal id:** `G-RD-STORY`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** reddit
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), rules (redo `C-REDDIT-ACCESS`), data (redo `C-RD-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), rules (the next round starts with `C-REDDIT-ACCESS`), data (the next round starts with `C-RD-METRICS`)
 
 ## Steps
 

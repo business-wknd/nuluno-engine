@@ -1,11 +1,11 @@
 # Meta Ads提高點擊到既有網站載入率
 
 - **Goal id:** `G-META-LANDING-RATE`
-- **Language:** 繁體中文
+- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
 - **Channel:** meta_ads
 - **Metric:** `landing_rate` = `landing_page_views` / `link_clicks`, should increase
 - **Observation window:** 72 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (redo `A-SEGMENTS`), motivation (redo `A-MOTIVES`), angle (redo `A-ANGLES`), creative (redo `C-META-CREATIVE`), delivery (redo `C-META_ADS-ACCESS`), data (redo `C-META-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `C-META-CREATIVE`), delivery (the next round starts with `C-META_ADS-ACCESS`), data (the next round starts with `C-META-METRICS`)
 
 ## Steps
 

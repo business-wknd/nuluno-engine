@@ -5,13 +5,13 @@
     "url": "https://engine.nuluno.com/?lang=en"
   },
   "metadata": {
-    "description": "Sales goals for AI agents: 99 measured playbooks and an engine that holds the agent to the number",
+    "description": "Sales goals for AI agents: 99 playbooks, each judged by one number, and an engine that holds the agent to it",
     "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "nuluno-engine",
-      "description": "24 sales skills (Instagram, TikTok, Threads, X, Reddit, LinkedIn, email, Meta ads, search ads, Product Hunt, search and AI answers, partners and more) holding 99 step-by-step playbooks, plus the Nuluno Engine MCP server: it refuses unfinished steps, waits for real numbers and, when a round misses, makes the agent change one thing and run again",
+      "description": "24 sales skills (Instagram, TikTok, Threads, X, Reddit, LinkedIn, email, Meta ads, search ads, Product Hunt, search and AI answers, partners and more) holding 99 step-by-step playbooks, plus the Nuluno Engine MCP server: it accepts only the current step with every hand-back item filled in, refuses a profile page or a link that does not exist in place of a published post, waits out the observation window and, when a round misses, makes the agent name one change and run another round",
       "source": "./"
     }
   ]

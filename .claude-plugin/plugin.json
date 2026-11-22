@@ -1,6 +1,6 @@
 {
   "name": "nuluno-engine",
-  "description": "Sales goals for AI agents: 99 measured playbooks and an engine that holds the agent to the number",
+  "description": "Sales goals for AI agents: 99 playbooks, each judged by one number, and an engine that holds the agent to it",
   "version": "0.2.0",
   "author": {
     "name": "Nuluno"

@@ -1,31 +1,33 @@
 ---
 name: reddit-marketing
-description: "Reddit: find people asking for what the product does, reply helpfully, and turn the conversations into inquiries and verified purchases. Use when the user wants these results. 5 measured goals: Reddit: find more posts from people with a matching need; Reddit: turn helpful replies into buyer conversations; Reddit: turn request replies into verified purchases in 48 hours; Reddit: get qualified inquiries from a true founder story; Reddit: turn buyer conversations into verified purchases in a week. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
+description: "Reddit: find people asking for what the product does, reply helpfully, and turn the conversations into inquiries and counted purchases. Use when the user wants these results. 5 goals, each judged by one number: Reddit: find more posts from people with a matching need; Reddit: turn helpful replies into buyer conversations; Reddit: turn request replies into counted purchases in 48 hours; Reddit: get qualified inquiries from a true founder story; Reddit: turn buyer conversations into counted purchases in a week. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
 metadata:
   version: 0.2.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
-# Reddit: measured goals
+# Reddit: sales goals
 
-Reddit: find people asking for what the product does, reply helpfully, and turn the conversations into inquiries and verified purchases. Each goal below is a playbook: ordered steps, what to hand back at each one, the number that decides success, and what to change when a round misses.
+Reddit: find people asking for what the product does, reply helpfully, and turn the conversations into inquiries and counted purchases. Each goal below is a playbook: ordered steps, what to hand back at each one, the number that decides success, and what to change when a round misses.
 
 ## How to run a goal
 
 1. Pick the goal below that matches what the owner wants. Decide yourself and say it in one sentence; do not ask the owner to choose from a list.
-2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine refuses unfinished steps, reads published links back, waits out the observation window and judges the round.
-3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py goal G-RD-QUALIFIED`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
+2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine accepts only the current step, only with every hand-back item filled in. A publishing step needs the public URL of the post itself; the engine opens it, and refuses a profile page or a link that does not exist. It then waits out the observation window and judges the round.
+3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py start <product url>`, then `... goal <your goal id>`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
 4. If neither can run, open the goal's playbook in `references/` and work it top to bottom under the rules below.
+
+If `read` (`read_page`) returns little text or a login page, ask the owner to paste the thread text. Never use the Reddit API or log in.
 
 ## Goals
 
 | Goal id | Goal | Metric | Wait before judging | Steps |
 |---|---|---|---|---|
-| `G-RD-QUALIFIED` | Reddit: find more posts from people with a matching need | `qualified_request_rate` | 48 h | [playbook](references/G-RD-QUALIFIED.md) |
+| `G-RD-QUALIFIED` | Reddit: find more posts from people with a matching need | `qualified_request_rate` | 1 h | [playbook](references/G-RD-QUALIFIED.md) |
 | `G-RD-REPLIES` | Reddit: turn helpful replies into buyer conversations | `qualified_reply_rate` | 48 h | [playbook](references/G-RD-REPLIES.md) |
-| `G-RD-PURCHASES` | Reddit: turn request replies into verified purchases in 48 hours | `external_purchases` | 48 h | [playbook](references/G-RD-PURCHASES.md) |
+| `G-RD-PURCHASES` | Reddit: turn request replies into counted purchases in 48 hours | `external_purchases` | 48 h | [playbook](references/G-RD-PURCHASES.md) |
 | `G-RD-STORY` | Reddit: get qualified inquiries from a true founder story | `qualified_inquiries` | 168 h | [playbook](references/G-RD-STORY.md) |
-| `G066` | Reddit: turn buyer conversations into verified purchases in a week | `external_purchases` | 168 h | [playbook](references/G066.md) |
+| `G066` | Reddit: turn buyer conversations into counted purchases in a week | `external_purchases` | 168 h | [playbook](references/G066.md) |
 
 ## Rules
 

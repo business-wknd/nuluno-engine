@@ -1,20 +1,20 @@
 ---
 name: meta-ads
-description: "Meta ads (Facebook and Instagram): lower cost per conversion, purchase and lead, more link clicks and page loads, higher return on ad spend and net profit per customer. Use when the user wants these results. 7 measured goals: Meta Ads: lower the cost per conversion; Meta Ads: lower the cost per verified outside purchase; Meta Ads: lower the cost per qualified lead; Meta Ads: raise the link click rate; Meta Ads: get more ad clicks to load the website; Meta Ads: raise return on ad spend after refunds; Meta Ads: raise net profit per customer after all costs. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
+description: "Meta ads (Facebook and Instagram): lower cost per conversion, purchase and lead, more link clicks and page loads, higher return on ad spend and net profit per customer. Use when the user wants these results. 7 goals, each judged by one number: Meta Ads: lower the cost per conversion; Meta Ads: lower the cost per counted outside purchase; Meta Ads: lower the cost per qualified lead; Meta Ads: raise the link click rate; Meta Ads: get more ad clicks to load the website; Meta Ads: raise return on ad spend after refunds; Meta Ads: raise net profit per customer after all costs. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
 metadata:
   version: 0.2.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
-# Meta ads (Facebook and Instagram): measured goals
+# Meta ads (Facebook and Instagram): sales goals
 
 Meta ads (Facebook and Instagram): lower cost per conversion, purchase and lead, more link clicks and page loads, higher return on ad spend and net profit per customer. Each goal below is a playbook: ordered steps, what to hand back at each one, the number that decides success, and what to change when a round misses.
 
 ## How to run a goal
 
 1. Pick the goal below that matches what the owner wants. Decide yourself and say it in one sentence; do not ask the owner to choose from a list.
-2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine refuses unfinished steps, reads published links back, waits out the observation window and judges the round.
-3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py goal G-META-CPA`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
+2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine accepts only the current step, only with every hand-back item filled in. A publishing step needs the public URL of the post itself; the engine opens it, and refuses a profile page or a link that does not exist. It then waits out the observation window and judges the round.
+3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py start <product url>`, then `... goal <your goal id>`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
 4. If neither can run, open the goal's playbook in `references/` and work it top to bottom under the rules below.
 
 ## Goals
@@ -22,7 +22,7 @@ Meta ads (Facebook and Instagram): lower cost per conversion, purchase and lead,
 | Goal id | Goal | Metric | Wait before judging | Steps |
 |---|---|---|---|---|
 | `G-META-CPA` | Meta Ads: lower the cost per conversion | `conversion_cpa` | 72 h | [playbook](references/G-META-CPA.md) |
-| `G-META-PURCHASE-CPA` | Meta Ads: lower the cost per verified outside purchase | `purchase_cpa` | 72 h | [playbook](references/G-META-PURCHASE-CPA.md) |
+| `G-META-PURCHASE-CPA` | Meta Ads: lower the cost per counted outside purchase | `purchase_cpa` | 72 h | [playbook](references/G-META-PURCHASE-CPA.md) |
 | `G-META-CPL` | Meta Ads: lower the cost per qualified lead | `qualified_lead_cpl` | 72 h | [playbook](references/G-META-CPL.md) |
 | `G-META-LINK-CTR` | Meta Ads: raise the link click rate | `link_ctr` | 72 h | [playbook](references/G-META-LINK-CTR.md) |
 | `G-META-LANDING-RATE` | Meta Ads: get more ad clicks to load the website | `landing_rate` | 72 h | [playbook](references/G-META-LANDING-RATE.md) |

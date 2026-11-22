@@ -101,9 +101,9 @@ def plan_for(goal_id):
 
 
 def goal_status(goal_id):
-    """running_on_a_live_product, english (every step in English) or english_and_chinese."""
+    """tried_on_a_live_product, english (every step in English) or english_and_chinese."""
     goal = goals()[goal_id]
-    if goal.get('live_test'): return 'running_on_a_live_product'
+    if goal.get('live_test'): return 'tried_on_a_live_product'
     return 'english' if all(skill(n['skill']).get('tested') for n in goal['plan']) else 'english_and_chinese'
 
 
@@ -308,6 +308,8 @@ def _strip_html(text):
         out.append(text[at:lt])
         if low.startswith('<!--', lt):
             end = text.find('-->', lt + 4); at = size if end < 0 else end + 3; continue
+        if low.startswith('<!', lt) or low.startswith('<?', lt):  # <!doctype ...>, <?xml ...?>: not text
+            end = text.find('>', lt + 2); at = size if end < 0 else end + 1; continue
         tag = _TAG.match(low, lt)
         if not tag: out.append('<'); at = lt + 1; continue
         gt = text.find('>', tag.end())
@@ -325,22 +327,94 @@ def _strip_html(text):
 def _readable(raw, kind):
     import html as _html
     text = raw.decode('utf-8', 'replace')
-    if 'html' in kind or '<html' in text[:2000].lower():
+    head = text[:2000].lower()
+    if 'html' in kind or '<html' in head or head.lstrip().startswith('<!doctype html'):
         title, text = _strip_html(text)
         text = (('# ' + _html.unescape(title).strip() + '\n') if title.strip() else '') + _html.unescape(text)
+    text = _DOCTYPE.sub('', text)
     lines = [' '.join(line.split()) for line in text.split('\n')]
     return '\n'.join(line for line in lines if line)
 
 
+_DOCTYPE = re.compile(r'\A\s*<?!doctype[^>\n]*>?', re.I)
+LITTLE_TEXT = 200  # fewer readable characters than this: a login wall or a page built by scripts
+
+# Where a single post lives on each platform. A link on one of these hosts that matches none of its patterns is a
+# profile, home, search or other page, not the post itself.
+POST_PATTERNS = [
+    (('threads.net', 'threads.com'), ('/post/',)),
+    (('x.com', 'twitter.com'), ('/status/',)),
+    (('reddit.com',), ('/comments/', '/s/')),
+    (('instagram.com',), ('/p/', '/reel/')),
+    (('tiktok.com',), ('/video/', '/photo/', '/t/')),
+    (('youtube.com',), ('watch?v=', '/shorts/')),
+    (('youtu.be',), ('/',)),
+    (('linkedin.com',), ('/posts/', '/feed/update/', '/pulse/')),
+    (('pinterest.com',), ('/pin/',)),
+    (('facebook.com',), ('/posts/', '/permalink', 'story_fbid', '/share/p/', '/share/r/', '/share/v/', '/reel/', '/videos/', '/watch/?v=')),
+    (('producthunt.com',), ('/posts/', '/products/')),
+]
+SHORT_POST_HOSTS = ('vm.tiktok.com', 'vt.tiktok.com', 'fb.watch')  # share links that each open a single post
+
+
+def _platform_of(host):
+    host = (host or '').lower().rstrip('.')
+    for hosts, patterns in POST_PATTERNS:
+        for name in hosts:
+            if host == name or host.endswith('.' + name): return name, patterns
+    return None, ()
+
+
+def _not_a_post(url):
+    """None when url can be a single post; otherwise the platform whose post pattern it misses. Each pattern must be
+    followed by the post's own id or slug, so a listing such as linkedin.com/company/x/posts/ is not a post."""
+    parts = urllib.parse.urlsplit(url)
+    platform, patterns = _platform_of(parts.hostname)
+    if not platform or (parts.hostname or '').lower().rstrip('.') in SHORT_POST_HOSTS: return None
+    path = parts.path.lower()
+    if platform == 'youtu.be': return None if re.match(r'/[\w-]+', path) else platform
+    if platform == 'youtube.com':
+        watch = path.rstrip('/') == '/watch' and any(urllib.parse.parse_qs(parts.query).get('v') or [])
+        return None if watch or re.search(r'/(shorts|live|post)/[\w-]', path) else platform
+    where = path + ('?' + parts.query.lower() if parts.query else '')
+    return None if any(re.search(re.escape(p) + r'[^/?#&]', where) for p in patterns) else platform
+
+
 def _link_live(url):
+    """Open a published link. True: the page loaded with readable text. 'blocked': the link exists but the platform
+    does not let robots read it (401, 403, 429, 999, a timeout, a redirect to a login page, a page built only by
+    scripts). False: the link does not exist (no such host, connection refused, HTTP 404 or 410) or is not public."""
+    parts = urllib.parse.urlsplit(url)
+    try: socket.getaddrinfo(parts.hostname or '', 443, proto=socket.IPPROTO_TCP)
+    except (OSError, UnicodeError): return False  # the host name does not exist
+    if not parts.hostname or not _public_host(parts.hostname): return False
     try:
-        status, _, _, _ = fetch_public(url, limit=2000)
-        return 200 <= status < 400
-    except Exception:
+        status, kind, raw, final = fetch_public(url, limit=200000)
+    except urllib.error.URLError as error:
+        reason = getattr(error, 'reason', None)
+        return False if isinstance(reason, (ConnectionRefusedError, socket.gaierror)) else 'blocked'
+    except (ConnectionRefusedError, socket.gaierror):
         return False
+    except Exception:
+        return 'blocked'  # a timeout, a reset, too many redirects: the link exists, the platform did not answer a robot
+    if status in (404, 410): return False
+    if not 200 <= status < 400: return 'blocked'
+    if final != url and re.search(r'/(log-?in|sign-?in|auth)\b', urllib.parse.urlsplit(final).path.lower()): return 'blocked'
+    return True if len(_readable(raw, kind)) >= LITTLE_TEXT else 'blocked'
 
 
 # ---------- steps ----------
+
+def _waiting(store, owner, state):
+    """The owner's to-do when the current step was submitted as blocked in this round and is still open, else None."""
+    if state['status'] not in ('working', 'observing') or not state.get('nodes'): return None
+    if state['status'] == 'observing' and time.time() < state.get('wait_until', 0): return None
+    blocked = store.last_blocked(owner)
+    if (blocked and blocked.get('round') == state['round'] and blocked['node'] == state['nodes'][state['cursor']]['node']
+            and blocked.get('created', 0) >= state['goal'].get('set_at', 0)):
+        return {'step': blocked['node'], 'needs': blocked['content'].get('needs'), 'since': blocked['created']}
+    return None
+
 
 def _step(store, owner, product, state):
     goal = goals()[state['goal']['id']]
@@ -356,7 +430,7 @@ def _step(store, owner, product, state):
     if state['status'] == 'diagnose':
         last = state['rounds'][-1]
         return {'state': 'target_missed_choose_one_change', 'step_id': 'diagnose:r%d' % state['round'], 'numbers': last,
-                'instruction': 'The target was not reached. Look at the numbers and everything delivered so far, pick the single most likely bottleneck, and say what one thing you will change next round. Do not repeat a variant that was already tried.',
+                'instruction': 'The target was not reached. Look at the numbers and everything delivered so far, pick the single most likely bottleneck, and say what one thing you will change next round. already_tried lists every change made so far; a change worded the same as one of them is refused.',
                 'choose_bottleneck_from': list(goal['bottleneck_routes'].keys()),
                 'what_each_bottleneck_looks_like': {k: BOTTLENECK_SIGNS.get(k, '') for k in goal['bottleneck_routes']},
                 'numbers_before_and_after': _changes(goal, state.get('baseline'), state.get('current')),
@@ -376,6 +450,8 @@ def _step(store, owner, product, state):
             step['counted_by_engine'] = _countable(goal, _in_place(store, owner, state, counted))
             step['instruction'] += ' The engine already counted these itself from the tracked link and sale counter, so leave them out (the count made by the engine is the one that is used): ' + ', '.join(step['counted_by_engine']) + '.'
             step['values_needed'] = [p for p in parts if p not in step['counted_by_engine']]
+        step['other_numbers'] = 'Only ' + ', '.join(parts) + ' are judged. Any other numbers you pass in values (followers, replies, ...) are stored as context and are not judged.'
+        step['if_blocked'] = [{'code': 'owner_must_read_numbers', 'do': 'If only the owner can read these numbers, call submit_step with this step_id, status "blocked" and needs saying exactly which numbers to read and where. Then call record_numbers when the owner gives them.'}]
     else:
         step.update(instruction='Do this step for the product now, in order, then call submit_step with the deliverables as a JSON object.',
                     checklist=info['steps'], deliver=info['deliver'] or ['result'], if_blocked=info['blockers'], publishes=info['needs_link'])
@@ -384,7 +460,8 @@ def _step(store, owner, product, state):
         if info['identity']:
             step['needs_a_person'] = 'This step is about the owner\'s own account. Ask the owner to confirm the account and that they are logged in; never ask for a password. If a new sign-up needs an email, inbox_address (hosted service) gives you one and inbox_latest returns the verification code.'
         if info['needs_link']:
-            step['publishing'] = 'This step puts something in public. Show the owner the exact text first. Publish with your own tools if you have them, otherwise the owner posts it. After it is live, pass the public URL in links so the engine can read it back.'
+            step['publishing'] = ('This step puts something in public. Show the owner the exact text first. Publish with your own tools if you have them, otherwise the owner posts it. '
+                                  'After it is live, pass the public https URL of the post itself (not the profile) as the first item in links. The engine opens it, and refuses a profile page or a link that does not exist.')
         elif info['writes']:
             step['publishing'] = 'This step changes or sends something outside. Show the owner exactly what will be sent before it goes out.'
         if not info['identity'] and hasattr(store, 'tracked_link'):
@@ -392,6 +469,11 @@ def _step(store, owner, product, state):
                                     'use': 'Whenever this round\'s copy, post or message points to the product, use this link instead of the bare URL, and keep it in what you deliver. It forwards to the product page and the engine counts the clicks itself (from browsers; known robots and link previews are left out). If you publish more than one version, give each its own label, for example ?v=A and ?v=B, and the engine counts clicks per version (the round is still judged on the total). Add ?p=/some/page to land on another page of the same site (combine with &). If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
     lessons = [{'round': r['round'], 'change': r.get('change'), 'metric': r.get('metric'), 'verdict': r.get('verdict')} for r in state['rounds']]
     step.update(delivered_so_far=_recent(store, owner), sources_read=state.get('sources', [])[-6:], lessons_from_earlier_rounds=lessons, rules=RULES)
+    waiting = _waiting(store, owner, state)
+    if waiting:
+        step.update(state='waiting_on_owner', tell_the_owner=waiting['needs'], since=waiting['since'],
+                    message='This step is waiting on the owner. Ask the owner for exactly this; when they answer, finish the step and submit it ('
+                            + ('record_numbers' if node['measure'] else 'submit_step with status "done"') + '). The step details below stay the same.')
     return step
 
 
@@ -406,13 +488,13 @@ def where_are_we(store, owner, product, args):
                 'good_first_goals': [{'goal_id': g, 'title': catalog[g]['title'], 'metric': catalog[g]['metric']['key'], 'status': goal_status(g)} for g in STARTERS if g in catalog],
                 'all_goals': [{'goal_id': gid, 'title': g['title']} for gid, g in catalog.items()], 'rules': RULES}
     goal = goals()[state['goal']['id']]
-    blocked = store.last_blocked(owner); waiting_on_owner = None
-    if (blocked and state['status'] == 'working' and blocked.get('round') == state['round'] and blocked['node'] == state['nodes'][state['cursor']]['node']
-            and blocked.get('created', 0) >= state['goal'].get('set_at', 0)):
-        waiting_on_owner = {'step': blocked['node'], 'needs': blocked['content'].get('needs'), 'since': blocked['created']}
-    return {'state': state['status'], 'product_url': product, 'goal': {'goal_id': state['goal']['id'], 'title': goal['title'], 'title_local': goal.get('title_zh'), 'metric': goal['metric'], 'target': state['goal'].get('target')},
-            'round': state['round'], 'steps_delivered': store.count_outputs(owner), 'baseline': state.get('baseline'), 'latest_numbers': state.get('current'), 'rounds': state['rounds'],
-            'waiting_on_owner': waiting_on_owner, 'next': _step(store, owner, product, state)}
+    waiting_on_owner = _waiting(store, owner, state)
+    result = {'state': 'waiting_on_owner' if waiting_on_owner else state['status'], 'product_url': product,
+              'goal': {'goal_id': state['goal']['id'], 'title': goal['title'], 'title_local': goal.get('title_zh'), 'metric': goal['metric'], 'target': state['goal'].get('target')},
+              'round': state['round'], 'steps_delivered': store.count_outputs(owner), 'baseline': state.get('baseline'), 'latest_numbers': state.get('current'), 'rounds': state['rounds'],
+              'waiting_on_owner': waiting_on_owner, 'next': _step(store, owner, product, state)}
+    if waiting_on_owner: result['tell_the_owner'] = waiting_on_owner['needs']
+    return result
 
 
 def set_goal(store, owner, product, args):
@@ -469,25 +551,34 @@ def submit_step(store, owner, product, args):
                      nodes=[{'node': 'fix.' + route, 'skill': route, 'measure': None}] + [n for n in stage if n['skill'] != route or n['measure']])
         store.save(owner, state)
         return {'accepted': True, 'message': 'Round %d opened with one change: %s' % (state['round'], state['rounds'][-1]['change']), 'next': _step(store, owner, product, state)}
-    if state['status'] != 'working': return {'accepted': False, 'error': 'Nothing to submit right now.', 'next': _step(store, owner, product, state)}
+    window_open = state['status'] == 'observing' and time.time() < state.get('wait_until', 0)
+    if state['status'] not in ('working', 'observing') or window_open:
+        return {'accepted': False, 'error': 'Nothing to submit right now.', 'next': _step(store, owner, product, state)}
     node = state['nodes'][state['cursor']]; info = skill(node['skill'])
     if step_id != '%s:r%d' % (node['node'], state['round']):
         return {'accepted': False, 'error': 'That step is not the current one (it may already be recorded). Continue with the step below.', 'next': _step(store, owner, product, state)}
-    if node['measure']: return {'accepted': False, 'error': 'This step needs numbers. Call record_numbers.', 'next': _step(store, owner, product, state)}
     if status == 'blocked':
-        needs = str(args.get('needs') or args.get('blocker') or '')[:1000]
-        if not needs: return {'accepted': False, 'error': 'Say in needs exactly what the owner must do, in one sentence.'}
+        needs = str(args.get('needs') or args.get('blocker') or '').strip()[:1000]
+        if not needs: return {'accepted': False, 'error': 'Say in needs exactly what the owner must do, in one sentence.', 'next': _step(store, owner, product, state)}
         store.log(owner, state['round'], node['node'], 'blocked', {'title': info['title'], 'needs': needs})
         return {'accepted': True, 'state': 'waiting_on_owner', 'tell_the_owner': needs,
-                'message': 'Recorded. The step stays open and nothing is lost. Ask the owner for exactly this one thing, then finish the step and submit it as done.'}
+                'message': 'Recorded. The step stays open and nothing is lost. Ask the owner for exactly this one thing, then finish the step and '
+                           + ('call record_numbers.' if node['measure'] else 'submit it as done.'),
+                'next': _step(store, owner, product, state)}
+    if node['measure']: return {'accepted': False, 'error': 'This step needs numbers. Call record_numbers. If only the owner can read them, submit this step with status "blocked" and needs.', 'next': _step(store, owner, product, state)}
     missing = [key for key in info['deliver'] if not (isinstance(output, dict) and output.get(key) not in (None, '', [], {}))]
     if missing: return {'accepted': False, 'error': 'Deliverables missing: ' + ', '.join(missing) + '. Submit output as a JSON object with these keys.', 'deliver': info['deliver']}
     links = args.get('links'); links = [u[:600] for u in links if isinstance(u, str)][:5] if isinstance(links, list) else []
     checked = None
     if info['needs_link']:
         if not links or not links[0].startswith('https://'):
-            return {'accepted': False, 'error': 'This step publishes something. Pass the public https URL of what went live in links. If it is not live yet, submit status "blocked" with what the owner must do.'}
+            return {'accepted': False, 'error': 'This step publishes something. Pass the public https URL of the post itself in links. If it is not live yet, submit status "blocked" with what the owner must do.'}
+        platform = _not_a_post(links[0])
+        if platform:
+            return {'accepted': False, 'error': 'That %s link is not a single post (it looks like a profile, home or search page). Pass the public URL of the post itself, for example the link from the post\'s share button.' % platform}
         checked = _link_live(links[0])
+        if not checked:
+            return {'accepted': False, 'error': 'That link does not exist (no such host, connection refused, or HTTP 404/410). Check the post is live and public and pass its URL, or submit status "blocked" with what the owner must do.'}
     receipt = store.log(owner, state['round'], node['node'], 'output', {'title': info['title'], 'output': output, 'links': links, 'link_read_back': checked})
     last = state['cursor'] + 1 >= len(state['nodes'])
     state['cursor'] = min(state['cursor'] + 1, len(state['nodes']) - 1)
@@ -536,14 +627,19 @@ def read_page(store, owner, product, args):
     try: status, kind, raw, final = fetch_public(url)
     except ValueError as error: return {'read': False, 'error': str(error)}
     except Exception: return {'read': False, 'error': 'The page could not be reached.'}
-    if not 200 <= status < 300: return {'read': False, 'http_status': status, 'url': final}
+    if not 200 <= status < 300: return {'read': False, 'http_status': status, 'url': final, 'error': 'The page answered HTTP %d.' % status}
     text = _readable(raw, kind); digest = hashlib.sha256(raw).hexdigest()
     state = _load(store, owner)
     entry = {'url': final, 'sha256': digest, 'read_at': time.time(), 'characters': len(text)}
     state['sources'] = ([s for s in state.get('sources', []) if s['url'] != final] + [entry])[-20:]
     store.save(owner, state)
-    return {'read': True, 'url': final, 'sha256': digest, 'read_at': entry['read_at'], 'text': text[:14000], 'truncated': len(text) > 14000,
-            'note': 'Quote facts from this text only. Anything not here (price, results, guarantees) is unknown.'}
+    result = {'read': True, 'url': final, 'sha256': digest, 'read_at': entry['read_at'], 'text': text[:14000], 'truncated': len(text) > 14000,
+              'note': 'Quote facts from this text only. Anything not here (price, results, guarantees) is unknown.'}
+    if len(text) < LITTLE_TEXT:
+        result['little_text'] = True
+        result['note'] = ('Very little text came back (%d characters). The page may be a login wall or built only by scripts, so its real content was not read. '
+                          'Do not guess what it says: ask the owner to paste the text, or use another public page. ' % len(text)) + result['note']
+    return result
 
 
 def tracking(store, owner, product, args):
@@ -572,13 +668,13 @@ TOOLS = {'where_are_we': where_are_we, 'set_goal': set_goal, 'next_step': next_s
 TOOL_SPECS = [
     {'name': 'where_are_we', 'description': 'START HERE in every conversation. Returns the product, the sales goal, what was delivered most recently, the numbers so far and the next step. Nothing is lost between chats.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
-    {'name': 'read_page', 'description': 'Read one public https page (default: the product page) and get its text with a content hash. Use it to collect product facts; never invent facts that are not on a page you read.',
+    {'name': 'read_page', 'description': 'Read one public https page (default: the product page) and get its text with a content hash. Use it to collect product facts; never invent facts that are not on a page you read. little_text means a login wall or a script-only page: ask the owner to paste the text.',
      'inputSchema': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'additionalProperties': False}},
     {'name': 'set_goal', 'description': 'Choose the sales goal (goal_id from where_are_we). Optional numeric target: for a rate or cost, the value to reach; for a count (followers, purchases), the increase over the baseline. Without one a round succeeds when a rate is 20% better than baseline or a count grows by 10. Calling it again with the same goal only changes the target.',
      'inputSchema': {'type': 'object', 'properties': {'goal_id': {'type': 'string'}, 'target': {'type': 'number'}, 'why': {'type': 'string'}}, 'required': ['goal_id'], 'additionalProperties': False}},
     {'name': 'next_step', 'description': 'Get the current step: what to do, the checklist, what to deliver, what was already delivered and lessons from earlier rounds. Call it whenever you are unsure what to do next.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
-    {'name': 'submit_step', 'description': 'Record the finished step and receive the following one. output is a JSON object with the deliverable keys the step listed. If a person is needed (login, approval), use status "blocked" and say in needs the one thing the owner must do. Publishing steps need the public URL in links.',
+    {'name': 'submit_step', 'description': 'Record the finished step and receive the following one. output is a JSON object with the deliverable keys the step listed. If a person is needed (login, approval, numbers only the owner can see), use status "blocked" and say in needs the one thing the owner must do. A publishing step needs the public URL of the post itself as the first item in links; the engine opens it and refuses a profile page or a link that does not exist.',
      'inputSchema': {'type': 'object', 'properties': {'step_id': {'type': 'string'}, 'status': {'type': 'string', 'enum': ['done', 'blocked']}, 'output': {'type': 'object'}, 'links': {'type': 'array', 'items': {'type': 'string'}}, 'needs': {'type': 'string'}}, 'required': ['step_id'], 'additionalProperties': False}},
     {'name': 'record_numbers', 'description': 'Record real numbers read from the platform (baseline before publishing, results after the observation window). values holds the metric components by name; source says where and when they were read. Numbers the engine counted itself (the step lists them) can be left out. The engine decides whether the target is reached; if not it opens another round.',
      'inputSchema': {'type': 'object', 'properties': {'values': {'type': 'object', 'additionalProperties': {'type': 'number'}}, 'source': {'type': 'string'}}, 'required': ['values', 'source'], 'additionalProperties': False}},

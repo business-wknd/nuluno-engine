@@ -1,6 +1,6 @@
 ---
 name: sales-goal
-description: "When the user wants to sell a product or get more clicks, sign-ups, customers or sales, and wants the work to keep going until a real number is reached: picks one of 99 measured sales goals, works it one step at a time, records numbers before and after, and when the target is missed names one bottleneck and changes one thing for the next round. Saves progress so a new chat continues. Includes a dependency-free engine (Python 3) that checks each step."
+description: "When the user wants to sell a product or get more clicks, sign-ups, customers or sales, and wants the work to keep going until a real number is reached: picks one of 99 sales goals, each judged by one number, works it one step at a time, records numbers before and after, and when the target is missed names one bottleneck and changes one thing for the next round. Saves progress so a new chat continues. Includes a dependency-free engine (Python 3) that checks each step."
 metadata:
   version: 0.2.0
   source: https://github.com/business-wknd/nuluno-engine
@@ -23,27 +23,31 @@ python3 scripts/nuluno.py next
 
 `start` remembers the product. `read` fetches the product page; quote facts only from what it returns. `goal` sets the goal: pick it yourself from the channel skills below and tell the owner in one sentence. `status` shows where things stand at any time.
 
+Global options, before or after the command: `--data <folder>` keeps progress in another folder (default `~/.nuluno-engine/`), and `--product <url>` works on a product other than the one given to `start`. For example `python3 scripts/nuluno.py --data ./nuluno-data next`.
+
 ## Loop
 
 1. `next` prints the current step: what to do, the checklist, the keys to hand back and lessons from earlier rounds.
 2. Do the work. Then hand it in:
    `python3 scripts/nuluno.py submit <step_id> --output '{"key": "value", ...}'`
-   Add `--link https://...` for a step that publishes something; the engine reads the page back. If a person is needed (login, approval), use `--blocked "the one thing the owner must do"` and ask the owner for exactly that.
+   Add `--link https://...` for a step that publishes something: the public URL of the post itself. The engine opens it, and refuses a profile page or a link that does not exist; a link the platform blocks robots from reading is accepted and recorded as `link_read_back: "blocked"`. If a person is needed (login, approval), use `--blocked "the one thing the owner must do"` and ask the owner for exactly that.
 3. When the step asks for numbers, read them on the platform and record them:
    `python3 scripts/nuluno.py numbers --values '{"link_clicks": 41, "views": 1200}' --source "Threads insights, 23 Nov 10:00"`
-   The first reading is the baseline. The result is judged after the observation window.
-4. If the target is missed, the engine asks for a diagnosis. Hand in `{"bottleneck": ..., "reason": ..., "one_change": ...}` with a bottleneck from its list. The next round starts with that one change; a change that was already tried is refused.
+   The first reading is the baseline. The result is judged after the observation window. If only the owner can see the numbers, hand the numbers step in as blocked, `python3 scripts/nuluno.py submit <step_id> --blocked "Read link clicks and views in Threads insights"`, and ask the owner for them.
+4. If the target is missed, the engine asks for a diagnosis. Hand in `{"bottleneck": ..., "reason": ..., "one_change": ...}` with a bottleneck from its list. Each round names one bottleneck and one change. The engine shows every change already tried and refuses one worded the same as an earlier one.
 5. Repeat until the engine says the goal is reached, or the owner says stop (`stop`).
 
-Every command prints JSON. Follow its `next` field; when unsure, run `next` again.
+Every command prints one JSON object. A refusal has an `error` field and exits with code 1 (2 for a mistake in the command line); read the error and its `next`, and carry on. `cli_names` maps any tool name in the text to its command. When unsure, run `next` again.
 
-The engine's messages use its tool names. On the command line they are: `where_are_we` = `status`, `read_page` = `read`, `set_goal` = `goal`, `next_step` = `next`, `submit_step` = `submit`, `record_numbers` = `numbers`, `stop_goal` = `stop`.
+While a blocked step is open, `next` and `status` report `state: "waiting_on_owner"` with `tell_the_owner`: the one thing to ask the owner. Ask for exactly that; when they answer, finish the step and submit it (or record the numbers). A new chat sees the same state.
+
+The engine's messages use its tool names. On the command line they are: `where_are_we` = `status`, `read_page` = `read`, `set_goal` = `goal`, `next_step` = `next`, `submit_step` = `submit` (its `links` = `--link`, its `status: "blocked"` with `needs` = `--blocked`), `record_numbers` = `numbers`, `tracking` = `tracking`, `stop_goal` = `stop`. Counting is hosted only: on the command line `tracking` says the engine does not count clicks or sales, so read them from the platform or the owner's site analytics. `inbox_address` and `inbox_latest` exist only on the hosted engine.
 
 ## Other ways to run the same engine
 
 - As MCP tools in Claude Code: `claude mcp add --scope user nuluno-engine -- python3 <this folder>/scripts/server.py`
 - Installed as the Claude Code plugin from https://github.com/business-wknd/nuluno-engine the tools are already there.
-- Hosted, for Claude.ai: one connection address from https://engine.nuluno.com/?lang=en. The hosted engine also counts clicks and sales itself through a tracked link, so the agent's own report is not what decides the round.
+- Hosted, for Claude.ai: one connection address from https://engine.nuluno.com/?lang=en. The hosted engine also gives a tracked link that counts clicks and a sale counter that counts purchases; those counts replace what the agent reports for link clicks and sales. Sales are counted once per buyer per day when the buyer reaches the page shown after payment. Other numbers, such as views and replies, are still read from the platform.
 
 ## Goals by skill
 

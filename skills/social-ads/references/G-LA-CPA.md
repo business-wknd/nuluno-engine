@@ -1,7 +1,6 @@
 # LinkedIn Ads: lower the cost per conversion
 
 - **Goal id:** `G-LA-CPA`
-- **Language:** English
 - **Channel:** linkedin_ads
 - **Metric:** `conversion_cpa` = `spend_minor` / `attributed_conversions`, should decrease
 - **Observation window:** 168 hours after publishing
@@ -158,7 +157,7 @@ Translate each real feature into the benefit and result a buyer cares about, and
 
 ### 7. Design the sales angle test
 
-Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.
+Write two or three ways to present the same true benefit, choose the one this round publishes, and write the win rule before posting, so the goal's own number, compared with the baseline, decides whether it works. The other angles are kept for later rounds.
 
 - **A-ANGLES.01** Name one buyer group in one situation, the quote that represents them, the motive, and the benefit the product can deliver.  
   _Done when:_ Group, quote, motive, and benefit written in four short lines.
@@ -166,17 +165,17 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
   _Done when:_ Two or three angles, each in one or two sentences.
 - **A-ANGLES.03** For each angle list the facts that support it, the promises that are still unknown, and the wording that must not be used.  
   _Done when:_ Each angle has supporting facts, unknowns, and banned wording next to it.
-- **A-ANGLES.04** Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.  
-  _Done when:_ A test plan written before the first post, showing the guess, the duration, the win number, and the cost.
-- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.  
-  _Done when:_ The main number, the rule for stopping, and the versions ready to be written as posts.
+- **A-ANGLES.04** Choose the one angle this round publishes. The round compares it with the baseline, not with the other angles; keep those unchanged for later rounds. Keep the same channel, audience, and destination link as the baseline. If a channel step later offers a second version (?v=B), it differs in one labeled thing only and is extra information; the verdict still comes from the round's total. Before posting, write the guess being tested, how long the round runs, the number that counts as a win, and the cost in time or money.  
+  _Done when:_ A test plan written before posting, showing the chosen angle, the guess, the duration, the win number, the cost, and the angles kept for later rounds.
+- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only. State when the number is read.  
+  _Done when:_ The main number, when it is read, and the chosen angle ready to be written as the post.
 
 **Hand back:** `test_guess`, `angles`, `facts_used`, `win_rule`
 
 **If stuck:**
 - `no_main_motive`: If no main motive has been chosen, go back and choose one before writing angles.
 - `angle_needs_unproven_claim`: If an angle only works with a claim that has no proof, rewrite it as an invitation to try or drop the angle.
-- `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
+- `too_few_views_expected`: If the post is unlikely to get enough views to compare with the baseline, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
 ### 8. Confirm the LinkedIn ad account, Page, and spending limits

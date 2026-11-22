@@ -1,11 +1,10 @@
 # Reddit: find more posts from people with a matching need
 
 - **Goal id:** `G-RD-QUALIFIED`
-- **Language:** English
 - **Channel:** reddit
 - **Metric:** `qualified_request_rate` = `qualified_requests` / `read_requests`, should increase
-- **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), query (the next round starts with `C-RD-INTENT`), message (the next round starts with `A-COPY`), data (the next round starts with `C-RD-METRICS`)
+- **Observation window:** 1 hours after publishing
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), query (the next round starts with `C-RD-INTENT`), data (the next round starts with `C-RD-METRICS`)
 
 ## Steps
 
@@ -158,7 +157,7 @@ Translate each real feature into the benefit and result a buyer cares about, and
 
 ### 7. Design the sales angle test
 
-Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.
+Write two or three ways to present the same true benefit, choose the one this round publishes, and write the win rule before posting, so the goal's own number, compared with the baseline, decides whether it works. The other angles are kept for later rounds.
 
 - **A-ANGLES.01** Name one buyer group in one situation, the quote that represents them, the motive, and the benefit the product can deliver.  
   _Done when:_ Group, quote, motive, and benefit written in four short lines.
@@ -166,17 +165,17 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
   _Done when:_ Two or three angles, each in one or two sentences.
 - **A-ANGLES.03** For each angle list the facts that support it, the promises that are still unknown, and the wording that must not be used.  
   _Done when:_ Each angle has supporting facts, unknowns, and banned wording next to it.
-- **A-ANGLES.04** Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.  
-  _Done when:_ A test plan written before the first post, showing the guess, the duration, the win number, and the cost.
-- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.  
-  _Done when:_ The main number, the rule for stopping, and the versions ready to be written as posts.
+- **A-ANGLES.04** Choose the one angle this round publishes. The round compares it with the baseline, not with the other angles; keep those unchanged for later rounds. Keep the same channel, audience, and destination link as the baseline. If a channel step later offers a second version (?v=B), it differs in one labeled thing only and is extra information; the verdict still comes from the round's total. Before posting, write the guess being tested, how long the round runs, the number that counts as a win, and the cost in time or money.  
+  _Done when:_ A test plan written before posting, showing the chosen angle, the guess, the duration, the win number, the cost, and the angles kept for later rounds.
+- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only. State when the number is read.  
+  _Done when:_ The main number, when it is read, and the chosen angle ready to be written as the post.
 
 **Hand back:** `test_guess`, `angles`, `facts_used`, `win_rule`
 
 **If stuck:**
 - `no_main_motive`: If no main motive has been chosen, go back and choose one before writing angles.
 - `angle_needs_unproven_claim`: If an angle only works with a claim that has no proof, rewrite it as an invitation to try or drop the angle.
-- `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
+- `too_few_views_expected`: If the post is unlikely to get enough views to compare with the baseline, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
 ### 8. Confirm the Reddit account and each subreddit's rules
@@ -195,8 +194,8 @@ Settle which Reddit account posts, who presses publish, and what each target sub
   _Done when:_ The owner's request and the new username, or a note that the existing account is used.
 - **C-REDDIT-ACCESS.06** Check the account's past comments in the target subreddits, and, if whoever is signed in can open it, the account's inbox, for removals, moderator warnings, bans, or people asking the brand to stop. Note any thread where the brand already replied, so it is not answered twice.  
   _Done when:_ A list of past brand activity, removals and stop requests, or 'none found'.
-- **C-REDDIT-ACCESS.07** Read Reddit pages one at a time with read_page or a browser. Do not scrape in bulk or pull data through Reddit's API for business use unless the owner already has permission for that.  
-  _Done when:_ A note of how Reddit pages will be read this round.
+- **C-REDDIT-ACCESS.07** Read Reddit pages one at a time with read_page or a browser. Do not scrape in bulk or pull data through Reddit's API for business use unless the owner already has permission for that. If read_page returns little text or a login page (for example only 'Welcome to Reddit'), the page was not read: ask the owner to paste the thread text into the conversation. Never use Reddit's API and never sign in to read a page.  
+  _Done when:_ A note of how Reddit pages will be read this round, including any thread the owner pasted because read_page met a login page.
 - **C-REDDIT-ACCESS.08** Agree a one-line disclosure with the owner, for example 'Disclosure: I built this.' Then confirm whoever publishes can open the comment box in each allowed subreddit.  
   _Done when:_ The approved disclosure line, and the subreddits where the comment box opens.
 
@@ -210,13 +209,39 @@ Settle which Reddit account posts, who presses publish, and what each target sub
 - `api_commercial_permission`: If the round needs Reddit data beyond reading pages one at a time, wait for the owner's existing permission; never buy access or claim free business use.
 - `wrong_account_signed_in`: If the signed-in account is not the agreed username, stop and ask the owner to switch or to post themselves.
 
-### 9. Find recent Reddit posts from people who need the product
+### 9. Read this goal's numbers from Reddit and sales records (baseline numbers)
+
+Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.
+
+- **C-RD-METRICS.01** Confirm the username, the list of this round's post and reply URLs, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days.  
+  _Done when:_ Username, the URLs measured, and the date range with time zone.
+- **C-RD-METRICS.02** Open each URL in a signed-out or private window and mark it 'visible', 'removed' or 'locked'. A removed reply can get no answers, so list it separately rather than hiding it.  
+  _Done when:_ Each URL with its visibility and the time it was checked.
+- **C-RD-METRICS.03** Count real responses only: a qualified reply or inquiry is a different person who asks for the link, a price or a demo, asks how to use the product, or says they will try it. Upvotes, thanks without a question, and the owner's or the agent's own comments never count. Count each person once and keep the URL of each one counted.  
+  _Done when:_ The list of counted responses, each with its URL and the person's username.
+- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept; when the baseline comes before this round's search, take them from the last search log of an earlier round, or record 0 with 'no history' in source. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
+  _Done when:_ Each component name with its number and a one-line note on how it was counted.
+- **C-RD-METRICS.05** For a purchase goal, count 'external_purchases' only from the round's sale counter in tracking or the owner's payment records, within the date range. Leave out the owner's or team's own test payments and refunded orders, and say plainly when a sale cannot be tied to Reddit.  
+  _Done when:_ Each purchase counted with its source and date, and the ones left out with the reason.
+- **C-RD-METRICS.06** Add website visits only if the owner already has a source for them, such as the tracked link or site analytics. If the owner already uses a CRM, check it for the same people; never turn a silent reader into a counted lead.  
+  _Done when:_ Each extra figure names its source, and unknown links between Reddit and the result are stated.
+- **C-RD-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
+
+**If stuck:**
+- `removed_by_automod`: If a reply or post was removed, keep its URL and the removal reason, count it as removed, and never post it again; if the subreddit offers a normal way to appeal, draft a short appeal and show it to the owner before anything is sent.
+- `no_sales_source`: If there is no sale counter and no payment record to read, record no purchases for this round, say there is no source, and ask the owner to add the tracking sale counter to the page shown after payment.
+- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `cannot_tell_who_responded`: If you cannot tell whether a response comes from a real prospect or from the owner's side, leave it out and say so.
+- `too_early_to_read`: If the replies or posts are less than 24 hours old, report the numbers as early and read them again later.
+
+### 10. Find recent Reddit posts from people who need the product
 
 Read recent posts in the allowed subreddits and keep only those where a real person asks for what the product does, because the share of matching requests and the replies that follow depend on picking the right posts.
 
 - **C-RD-INTENT.01** For each subreddit marked as allowed, write three to five searches from the buyer's own words, such as the problem in plain words, 'alternative to {category}', 'recommend {tool}' and 'looking for {solution}'. Search inside the subreddit, sorted by new, limited to the past month.  
   _Done when:_ Each subreddit with the searches and the time filter used.
-- **C-RD-INTENT.02** Open each result and read the full post and its comments. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.  
+- **C-RD-INTENT.02** Open each result and read the full post and its comments; if read_page returns a login page or little text, ask the owner to paste the thread text, as agreed in the account step. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.  
   _Done when:_ A log of every post read, with its URL, the poster's username and a one-line summary, and the total number of posts read.
 - **C-RD-INTENT.03** Drop job posts, self-promotion, posts from people who are not the buyer, deleted or removed posts, locked or archived posts, solved questions, and posts older than 30 days. Write the reason for each one.  
   _Done when:_ An excluded list, each with its URL and reason.
@@ -236,7 +261,7 @@ Read recent posts in the allowed subreddits and keep only those where a real per
 - `product_does_not_fit`: If the posts found ask for something the product does not do, drop them and go back to the buyer situation before searching again.
 - `api_commercial_permission`: If you would need bulk data or Reddit's API to continue, stop at what you have read page by page and wait for the owner's existing permission.
 
-### 10. Read this goal's numbers from Reddit and sales records (baseline numbers)
+### 11. Read this goal's numbers from Reddit and sales records (result numbers)
 
 Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.
 
@@ -246,62 +271,7 @@ Record the numbers this goal is judged on, for the same length of time before an
   _Done when:_ Each URL with its visibility and the time it was checked.
 - **C-RD-METRICS.03** Count real responses only: a qualified reply or inquiry is a different person who asks for the link, a price or a demo, asks how to use the product, or says they will try it. Upvotes, thanks without a question, and the owner's or the agent's own comments never count. Count each person once and keep the URL of each one counted.  
   _Done when:_ The list of counted responses, each with its URL and the person's username.
-- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
-  _Done when:_ Each component name with its number and a one-line note on how it was counted.
-- **C-RD-METRICS.05** For a purchase goal, count 'external_purchases' only from the round's sale counter in tracking or the owner's payment records, within the date range. Leave out the owner's or team's own test payments and refunded orders, and say plainly when a sale cannot be tied to Reddit.  
-  _Done when:_ Each purchase counted with its source and date, and the ones left out with the reason.
-- **C-RD-METRICS.06** Add website visits only if the owner already has a source for them, such as the tracked link or site analytics. If the owner already uses a CRM, check it for the same people; never turn a silent reader into a counted lead.  
-  _Done when:_ Each extra figure names its source, and unknown links between Reddit and the result are stated.
-- **C-RD-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
-  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
-
-**If stuck:**
-- `removed_by_automod`: If a reply or post was removed, keep its URL and the removal reason, count it as removed, and never post it again; if the subreddit offers a normal way to appeal, draft a short appeal and show it to the owner before anything is sent.
-- `no_sales_source`: If there is no sale counter and no payment record to read, record no purchases for this round, say there is no source, and ask the owner to add the tracking sale counter to the page shown after payment.
-- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
-- `cannot_tell_who_responded`: If you cannot tell whether a response comes from a real prospect or from the owner's side, leave it out and say so.
-- `too_early_to_read`: If the replies or posts are less than 24 hours old, report the numbers as early and read them again later.
-
-### 11. Reply in Reddit threads with a useful, disclosed answer
-
-Answer each listed request in its own thread with real help and an honest product mention that the subreddit's rules allow and the owner approved, because a useful reply is what makes the poster answer back or try the product.
-
-- **C-RD-REPLY.01** Reopen each kept thread. Confirm it is not locked, archived or removed, is not solved since, the brand has not replied, the poster has not asked people to stop, and the subreddit's rules still allow a product mention; if the owner already uses a CRM, also check it shows no earlier contact or opt-out for that person. Plan no more than three replies in one subreddit per day.  
-  _Done when:_ The threads still open for a reply, each with its URL and the rule that allows it, and the ones dropped with a reason.
-- **C-RD-REPLY.02** Draft one reply per thread. Answer the poster's actual question first with specific help that works even without the product. Then mention the product as one option, with the approved disclosure line, using only claims the product facts support. Write like a person in that subreddit, not like an ad, usually under 800 characters, and never reuse the same text in two threads.  
-  _Done when:_ One draft per thread, each with the facts it relies on and the disclosure line.
-- **C-RD-REPLY.03** Add the round's tracked link only if the subreddit allows links and the poster asked for a tool or a link; otherwise name the product without a link. If you test two versions, change one thing and give them ?v=A and ?v=B.  
-  _Done when:_ Each draft marked 'with link' or 'no link', and the tracked link with its version tag where used.
-- **C-RD-REPLY.04** Show the owner every reply word for word, next to the thread it answers and the rule that allows it. Nothing is posted until the owner says yes to that exact text.  
-  _Done when:_ The approved texts and the owner's approval message.
-- **C-RD-REPLY.05** Post each approved reply in its thread, under the post or the comment that asked, from the agreed username. The agent posts only if its browser is signed in to that account and the owner said yes; otherwise the owner posts. Leave at least 30 minutes between replies, never send it as a private message unless the poster asked for one, and press reply once.  
-  _Done when:_ Who posted each reply and when.
-- **C-RD-REPLY.06** Open each reply's link in a signed-out or private window to confirm it shows publicly, because a removed comment can still look normal to its author. If it does not show, record it as removed with any reason given, and never post it again.  
-  _Done when:_ The public URL of each reply, or its 'removed' status with the reason.
-- **C-RD-REPLY.07** Check each thread again after 24 and 48 hours. Draft answers to follow-up questions and show them to the owner before posting. Send no cold private messages and no follow-up to people who did not answer.  
-  _Done when:_ A list of who answered back, what they asked, and the approved follow-up replies.
-
-**Hand back:** `reply_urls`, `replied_text`, `removed_or_hidden`, `follow_ups`
-
-**If stuck:**
-- `owner_has_not_approved`: If the owner has not said yes to the exact text, do not post; show them the text and stop until they answer.
-- `community_no_promo`: If the rules forbid a product mention, either post a helpful answer with no product mention, if the owner wants that, or skip the thread; never move to private messages to get around it.
-- `removed_by_automod`: If a reply is removed, keep its URL and the reason, do not repost or reword it to slip past the filter, and if the subreddit offers a normal way to appeal, draft a short appeal and show it to the owner before anything is sent.
-- `old_or_resolved_thread`: If the thread is solved, locked or archived, drop it and never follow up on it to sell.
-- `poster_asked_to_stop`: If the poster says no thanks or asks not to be contacted, stop replying to them and remove them from the round.
-- `wrong_account_signed_in`: If the signed-in account is not the agreed username, stop and ask the owner to switch or to post themselves.
-
-### 12. Read this goal's numbers from Reddit and sales records (result numbers)
-
-Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.
-
-- **C-RD-METRICS.01** Confirm the username, the list of this round's post and reply URLs, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days.  
-  _Done when:_ Username, the URLs measured, and the date range with time zone.
-- **C-RD-METRICS.02** Open each URL in a signed-out or private window and mark it 'visible', 'removed' or 'locked'. A removed reply can get no answers, so list it separately rather than hiding it.  
-  _Done when:_ Each URL with its visibility and the time it was checked.
-- **C-RD-METRICS.03** Count real responses only: a qualified reply or inquiry is a different person who asks for the link, a price or a demo, asks how to use the product, or says they will try it. Upvotes, thanks without a question, and the owner's or the agent's own comments never count. Count each person once and keep the URL of each one counted.  
-  _Done when:_ The list of counted responses, each with its URL and the person's username.
-- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
+- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept; when the baseline comes before this round's search, take them from the last search log of an earlier round, or record 0 with 'no history' in source. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
   _Done when:_ Each component name with its number and a one-line note on how it was counted.
 - **C-RD-METRICS.05** For a purchase goal, count 'external_purchases' only from the round's sale counter in tracking or the owner's payment records, within the date range. Leave out the owner's or team's own test payments and refunded orders, and say plainly when a sale cannot be tied to Reddit.  
   _Done when:_ Each purchase counted with its source and date, and the ones left out with the reason.

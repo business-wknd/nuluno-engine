@@ -1,20 +1,20 @@
 ---
 name: x-growth
-description: "X (Twitter): more followers, profile visits, website clicks and buyer conversations. Use when the user wants these results. 4 measured goals: X: gain more net followers from threads; X: raise profile visits per thread impression; X: raise website clicks per thread impression; X: start more qualified buyer conversations. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
+description: "X (Twitter): more followers, profile visits, website clicks and buyer conversations. Use when the user wants these results. 4 goals, each judged by one number: X: gain more net followers from threads; X: raise profile visits per thread impression; X: raise website clicks per thread impression; X: start more qualified buyer conversations. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
 metadata:
   version: 0.2.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
-# X (Twitter): measured goals
+# X (Twitter): sales goals
 
 X (Twitter): more followers, profile visits, website clicks and buyer conversations. Each goal below is a playbook: ordered steps, what to hand back at each one, the number that decides success, and what to change when a round misses.
 
 ## How to run a goal
 
 1. Pick the goal below that matches what the owner wants. Decide yourself and say it in one sentence; do not ask the owner to choose from a list.
-2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine refuses unfinished steps, reads published links back, waits out the observation window and judges the round.
-3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py goal G-X-FOLLOWERS`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
+2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine accepts only the current step, only with every hand-back item filled in. A publishing step needs the public URL of the post itself; the engine opens it, and refuses a profile page or a link that does not exist. It then waits out the observation window and judges the round.
+3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py start <product url>`, then `... goal <your goal id>`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
 4. If neither can run, open the goal's playbook in `references/` and work it top to bottom under the rules below.
 
 ## Goals

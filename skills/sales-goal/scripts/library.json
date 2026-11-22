@@ -1,5 +1,5 @@
 {
- "version": "2026.11.22",
+ "version": "2026.11.23",
  "goals": {
   "G-IG-FOLLOWERS": {
    "title": "Instagram: grow net new followers",
@@ -2123,13 +2123,11 @@
     ],
     "direction": "increase"
    },
-   "observation_seconds": 172800,
+   "observation_seconds": 3600,
    "bottleneck_routes": {
     "audience": "A-SEGMENTS",
     "motivation": "A-MOTIVES",
-    "angle": "A-ANGLES",
     "query": "C-RD-INTENT",
-    "message": "A-COPY",
     "data": "C-RD-METRICS"
    },
    "plan": [
@@ -2174,18 +2172,13 @@
      "measure": null
     },
     {
-     "node": "flow.goal.reddit.01.C-RD-INTENT",
-     "skill": "C-RD-INTENT",
-     "measure": null
-    },
-    {
      "node": "flow.goal.reddit.baseline.C-RD-METRICS",
      "skill": "C-RD-METRICS",
      "measure": "baseline"
     },
     {
-     "node": "flow.goal.reddit.02.C-RD-REPLY",
-     "skill": "C-RD-REPLY",
+     "node": "flow.goal.reddit.01.C-RD-INTENT",
+     "skill": "C-RD-INTENT",
      "measure": null
     },
     {
@@ -2282,7 +2275,7 @@
    "title_zh": "Reddit需求回覆帶來有效買方對話"
   },
   "G-RD-PURCHASES": {
-   "title": "Reddit: turn request replies into verified purchases in 48 hours",
+   "title": "Reddit: turn request replies into counted purchases in 48 hours",
    "channel": "reddit",
    "metric": {
     "key": "external_purchases",
@@ -2363,7 +2356,7 @@
      "measure": "current"
     }
    ],
-   "title_zh": "Reddit對話接成已核對外部購買"
+   "title_zh": "Reddit對話接成計入的外部購買"
   },
   "G-RD-STORY": {
    "title": "Reddit: get qualified inquiries from a true founder story",
@@ -3311,7 +3304,7 @@
    "title_zh": "Meta Ads將指定轉換CPA降低X%"
   },
   "G-META-PURCHASE-CPA": {
-   "title": "Meta Ads: lower the cost per verified outside purchase",
+   "title": "Meta Ads: lower the cost per counted outside purchase",
    "channel": "meta_ads",
    "metric": {
     "key": "purchase_cpa",
@@ -3418,7 +3411,7 @@
      "measure": null
     }
    ],
-   "title_zh": "Meta Ads降低已核對外部購買成本"
+   "title_zh": "Meta Ads降低計入的外部購買成本"
   },
   "G-META-CPL": {
    "title": "Meta Ads: lower the cost per qualified lead",
@@ -6029,7 +6022,7 @@
    "title_zh": "公開需求原串接成有效對話"
   },
   "G066": {
-   "title": "Reddit: turn buyer conversations into verified purchases in a week",
+   "title": "Reddit: turn buyer conversations into counted purchases in a week",
    "channel": "reddit",
    "metric": {
     "key": "external_purchases",
@@ -6110,7 +6103,7 @@
      "measure": "current"
     }
    ],
-   "title_zh": "需求對話接成已核對外部購買"
+   "title_zh": "Reddit需求對話接成計入的外部購買"
   },
   "G067": {
    "title": "Search: raise the share of qualified visits from outside articles",
@@ -9549,7 +9542,7 @@
    "identity": false,
    "title_zh": "把功能變成買家好處",
    "deliver_help": {
-    "chosen_message": "The one true statement that best matches the main motive. Example: 'Paste a YouTube link and get a playable piano score in minutes'.",
+    "chosen_message": "The one true statement that best matches the main motive. Example: 'Photograph a receipt and the expense is filed for you'.",
     "message_options": "One to three short ways of saying it, for testing.",
     "facts_used": "The product facts and sources each option relies on.",
     "must_not_promise": "Results and numbers that have no proof and must stay out of the copy."
@@ -9558,7 +9551,7 @@
   },
   "A-ANGLES": {
    "title": "Design the sales angle test",
-   "purpose": "Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.",
+   "purpose": "Write two or three ways to present the same true benefit, choose the one this round publishes, and write the win rule before posting, so the goal's own number, compared with the baseline, decides whether it works. The other angles are kept for later rounds.",
    "steps": [
     {
      "id": "A-ANGLES.01",
@@ -9577,13 +9570,13 @@
     },
     {
      "id": "A-ANGLES.04",
-     "do": "Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.",
-     "evidence": "A test plan written before the first post, showing the guess, the duration, the win number, and the cost."
+     "do": "Choose the one angle this round publishes. The round compares it with the baseline, not with the other angles; keep those unchanged for later rounds. Keep the same channel, audience, and destination link as the baseline. If a channel step later offers a second version (?v=B), it differs in one labeled thing only and is extra information; the verdict still comes from the round's total. Before posting, write the guess being tested, how long the round runs, the number that counts as a win, and the cost in time or money.",
+     "evidence": "A test plan written before posting, showing the chosen angle, the guess, the duration, the win number, the cost, and the angles kept for later rounds."
     },
     {
      "id": "A-ANGLES.05",
-     "do": "Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.",
-     "evidence": "The main number, the rule for stopping, and the versions ready to be written as posts."
+     "do": "Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only. State when the number is read.",
+     "evidence": "The main number, when it is read, and the chosen angle ready to be written as the post."
     }
    ],
    "deliver": [
@@ -9603,7 +9596,7 @@
     },
     {
      "code": "too_few_views_expected",
-     "do": "If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof."
+     "do": "If the post is unlikely to get enough views to compare with the baseline, say so and report the result as an early signal, not as proof."
     },
     {
      "code": "cannot_measure_main_number",
@@ -9615,10 +9608,10 @@
    "identity": false,
    "title_zh": "設計銷售角度測試",
    "deliver_help": {
-    "test_guess": "One sentence. Example: 'Leading with the recital deadline gets a higher link click rate than leading with the price'.",
-    "angles": "The two or three angles, with the one thing that differs between them.",
+    "test_guess": "One sentence. Example: 'Leading with the recital deadline raises the link click rate above the baseline'.",
+    "angles": "The two or three angles, with the one this round publishes marked; the others are kept for later rounds.",
     "facts_used": "The product facts and buyer quotes each angle relies on.",
-    "win_rule": "The main number, how long the test runs, and the result that counts as a win. Example: 'Link clicks divided by views after 48 hours; the higher version wins if each has at least 300 views'."
+    "win_rule": "The main number, how long the round runs, and the result that counts as a win against the baseline. Example: 'Link clicks divided by views, read 48 hours after posting; the round wins if the post beats the baseline by 20% with at least 300 views'."
    },
    "tested": true
   },
@@ -11842,8 +11835,8 @@
     },
     {
      "id": "C-REDDIT-ACCESS.07",
-     "do": "Read Reddit pages one at a time with read_page or a browser. Do not scrape in bulk or pull data through Reddit's API for business use unless the owner already has permission for that.",
-     "evidence": "A note of how Reddit pages will be read this round."
+     "do": "Read Reddit pages one at a time with read_page or a browser. Do not scrape in bulk or pull data through Reddit's API for business use unless the owner already has permission for that. If read_page returns little text or a login page (for example only 'Welcome to Reddit'), the page was not read: ask the owner to paste the thread text into the conversation. Never use Reddit's API and never sign in to read a page.",
+     "evidence": "A note of how Reddit pages will be read this round, including any thread the owner pasted because read_page met a login page."
     },
     {
      "id": "C-REDDIT-ACCESS.08",
@@ -11906,7 +11899,7 @@
     },
     {
      "id": "C-RD-INTENT.02",
-     "do": "Open each result and read the full post and its comments. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.",
+     "do": "Open each result and read the full post and its comments; if read_page returns a login page or little text, ask the owner to paste the thread text, as agreed in the account step. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.",
      "evidence": "A log of every post read, with its URL, the poster's username and a one-line summary, and the total number of posts read."
     },
     {
@@ -11991,7 +11984,7 @@
     },
     {
      "id": "C-RD-METRICS.04",
-     "do": "Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.",
+     "do": "Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept; when the baseline comes before this round's search, take them from the last search log of an earlier round, or record 0 with 'no history' in source. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.",
      "evidence": "Each component name with its number and a one-line note on how it was counted."
     },
     {
@@ -12084,8 +12077,8 @@
     },
     {
      "id": "C-RD-REPLY.07",
-     "do": "Check each thread again after 24 and 48 hours. Draft answers to follow-up questions and show them to the owner before posting. Send no cold private messages and no follow-up to people who did not answer.",
-     "evidence": "A list of who answered back, what they asked, and the approved follow-up replies."
+     "do": "Plan when to look at each thread again: about 24 and 48 hours after each reply, during the observation window. With the plan, write how answers are handled then: draft replies to follow-up questions and show them to the owner before posting; send no cold private messages and no follow-up to people who did not answer. Hand back this plan as follow_ups; do not wait for the checks before submitting the step.",
+     "evidence": "Each thread with the times to look again, and the rule for answering follow-ups."
     }
    ],
    "deliver": [
@@ -12128,7 +12121,7 @@
     "reply_urls": "The public link of each reply that went live, opened signed out and confirmed to show.",
     "replied_text": "The exact text of each reply as it appears publicly, with the thread it answers.",
     "removed_or_hidden": "Replies that were removed or do not show publicly, with any reason given, or 'none'.",
-    "follow_ups": "Who answered back after 24 and 48 hours, what they asked, and what was replied, or 'none yet'."
+    "follow_ups": "The plan for looking again: each thread URL with the times to check it (about 24 and 48 hours after the reply), and the rule that follow-up answers are shown to the owner before posting."
    },
    "tested": true
   },

@@ -18,9 +18,14 @@ store = FileStore(FOLDER)
 core._link_live = lambda url: True  # the demo does not touch the network
 
 
+def short(value, room=60):
+    text = json.dumps(value, ensure_ascii=False)
+    return text if len(text) <= room else text[:room - 3] + '...'
+
+
 def call(tool, **args):
     result = core.TOOLS[tool](store, 'demo', PRODUCT, args)
-    print('\n> %s(%s)' % (tool, ', '.join('%s=%s' % (k, json.dumps(v, ensure_ascii=False)[:60]) for k, v in args.items())))
+    print('\n> %s(%s)' % (tool, ', '.join('%s=%s' % (k, short(v)) for k, v in args.items())))
     return result
 
 
@@ -31,7 +36,11 @@ def work_until_numbers(step):
     """Hand in every step with placeholder deliverables until the engine asks for numbers or waits."""
     while step.get('state') == 'work' and not step.get('call'):
         args = {'step_id': step['step_id'], 'output': {key: '(what the agent produced for %s)' % key for key in step['deliver']}}
-        if step.get('publishes'): args['links'] = [PRODUCT + 'post/1']
+        if step.get('publishes'):
+            args['links'] = ['https://www.threads.com/@yourbrand']
+            answer = call('submit_step', **args)
+            say('REFUSED: ' + answer['error'])
+            args['links'] = ['https://www.threads.com/@yourbrand/post/DEMO123']
         answer = call('submit_step', **args)
         say('accepted "%s", receipt %s' % (step['title'], answer['receipt']))
         step = answer['next']

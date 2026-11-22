@@ -1,20 +1,20 @@
 ---
 name: search-ads
-description: "Google Ads, Microsoft Ads and Google free listings: lower cost per purchase, search terms with buying intent, less wasted spend, more listing clicks and purchases. Use when the user wants these results. 8 measured goals: Google Ads: lower the cost per conversion; Google Ads: raise the share of search terms with buying intent; Google Ads: raise the purchase rate of ad visitors; Google Ads: cut spend on irrelevant searches; Google free listings: raise clicks per product impression; Google free listings: turn listing visits into purchases; Microsoft Ads: lower the cost per purchase; Microsoft Ads: raise the share of ad views that reach the site. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
+description: "Google Ads, Microsoft Ads and Google free listings: lower cost per purchase, search terms with buying intent, less wasted spend, more listing clicks and purchases. Use when the user wants these results. 8 goals, each judged by one number: Google Ads: lower the cost per conversion; Google Ads: raise the share of search terms with buying intent; Google Ads: raise the purchase rate of ad visitors; Google Ads: cut spend on irrelevant searches; Google free listings: raise clicks per product impression; Google free listings: turn listing visits into purchases; Microsoft Ads: lower the cost per purchase; Microsoft Ads: raise the share of ad views that reach the site. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
 metadata:
   version: 0.2.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
-# Google Ads, Microsoft Ads and Google free listings: measured goals
+# Google Ads, Microsoft Ads and Google free listings: sales goals
 
 Google Ads, Microsoft Ads and Google free listings: lower cost per purchase, search terms with buying intent, less wasted spend, more listing clicks and purchases. Each goal below is a playbook: ordered steps, what to hand back at each one, the number that decides success, and what to change when a round misses.
 
 ## How to run a goal
 
 1. Pick the goal below that matches what the owner wants. Decide yourself and say it in one sentence; do not ask the owner to choose from a list.
-2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine refuses unfinished steps, reads published links back, waits out the observation window and judges the round.
-3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py goal G-GA-CPA`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
+2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine accepts only the current step, only with every hand-back item filled in. A publishing step needs the public URL of the post itself; the engine opens it, and refuses a profile page or a link that does not exist. It then waits out the observation window and judges the round.
+3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py start <product url>`, then `... goal <your goal id>`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
 4. If neither can run, open the goal's playbook in `references/` and work it top to bottom under the rules below.
 
 ## Goals

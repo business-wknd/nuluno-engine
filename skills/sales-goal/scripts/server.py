@@ -61,7 +61,9 @@ class FileStore:
         rows = [row for row in self._read(owner)['log'] if row['kind'] == 'output']
         return list(reversed(rows))[:limit]
 
-    def count_outputs(self, owner): return sum(1 for row in self._read(owner)['log'] if row['kind'] == 'output')
+    def count_outputs(self, owner):  # outputs of the current goal only, as on the hosted service
+        data = self._read(owner); since = (data['state'].get('goal') or {}).get('set_at') or 0
+        return sum(1 for row in data['log'] if row['kind'] == 'output' and row.get('created', 0) >= since)
 
     def last_blocked(self, owner):
         rows = [row for row in self._read(owner)['log'] if row['kind'] == 'blocked']

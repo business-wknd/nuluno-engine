@@ -1,7 +1,7 @@
-# 已同意Email降低退訂率
+# Email: lower the unsubscribe rate
 
 - **Goal id:** `G-EM-UNSUBSCRIBE`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** email
 - **Metric:** `unsubscribe_rate` = `unsubscribes` / `delivered`, should decrease
 - **Observation window:** 168 hours after publishing
@@ -179,55 +179,64 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備已同意Email帳號、登入與授權
+### 8. Confirm the brand's sender address, sending tool and who sends
 
-準備已同意Email帳號、登入與授權
+Settle which brand address sends, through which tool the owner already uses, who presses send and how unsubscribes work, so the email goes out under the right name to people who agreed to it without the owner being stopped halfway.
 
-- **C-EMAIL-ACCESS.01** 核對品牌寄件地址、Reply-To與現有Gmail／寄送工具，不能跨品牌借寄件人  
-  _Done when:_ sender與reply-to讀回
-- **C-EMAIL-ACCESS.02** 沿現有OAuth與所需讀／寄scope，登入、MFA及新網域驗證交本人  
-  _Done when:_ 授權狀態
-- **C-EMAIL-ACCESS.03** 匯入名單前讀同意證據、目的、退訂／退件／抱怨與既有聯絡歷史  
-  _Done when:_ 各自的CRM欄位
-- **C-EMAIL-ACCESS.04** 核對本輪能送的數量、冷卻、既有退訂方式與寄件健康報表  
-  _Done when:_ send cap與退訂機制
-- **C-EMAIL-ACCESS.05** 附件／連結先讀回實物、收件人及品牌，測試僅用另授權測試對象  
-  _Done when:_ 附件雜湊與收件人核對
-- **C-EMAIL-ACCESS.06** 只將實際sent message ID與讀回當送出；draft及排程狀態分開  
-  _Done when:_ message ID與provider回執
+- **C-EMAIL-ACCESS.01** Ask the owner which brand address will send and which address replies should go to. Check both are on the brand's own domain. Never borrow another brand's or a personal sender address.  
+  _Done when:_ The From name, From address and Reply-To address, confirmed by the owner.
+- **C-EMAIL-ACCESS.02** Ask which tool the owner already uses to send email (for example the brand's mailbox or an email marketing tool), where the contact list and its unsubscribes are kept, and whether that list records how each contact signed up. Use that tool; do not sign up for a new one unless the owner asks in this conversation.  
+  _Done when:_ The name of the sending tool, where the list and unsubscribes live, and whether signup sources are recorded.
+- **C-EMAIL-ACCESS.03** Decide who presses send: the owner in their own tool, or the agent's own browser if it is already signed in to that account. If nobody is signed in, the owner signs in on the tool's official screen and enters any two-step code themselves. Never ask for a password.  
+  _Done when:_ Who will send, and the account name shown after sign-in.
+- **C-EMAIL-ACCESS.04** If the owner asks for a new sending tool, create one account only, in the brand's name, on a free plan, following the tool's rules. Sign up with the brand's own address and let the owner read the code; use inbox_address, with inbox_latest for the code, only if the owner prefers that. Terms screens, payment details and identity checks go to the owner.  
+  _Done when:_ The new account's name and sign-in address, or a note that no new account was needed.
+- **C-EMAIL-ACCESS.05** Check that the sending domain is verified where the sending tool shows domain authentication (SPF and DKIM passing), or ask the owner for a screenshot of it. If it is not verified, keep all emails as drafts and tell the owner which records their domain manager must add; do not switch to another sender.  
+  _Done when:_ The domain's verification status as the tool shows it, with the time it was checked.
+- **C-EMAIL-ACCESS.06** Find the limits for this round: the tool's daily sending limit, the most the owner wants sent per day, and the date of the last promotional email to this list. If the list got one in the last 72 hours, plan this send for later. When sending from the brand's normal mailbox instead of an email tool, keep to 50 emails a day, sent one by one.  
+  _Done when:_ The daily cap for this round, the last send date, and the earliest send date.
+- **C-EMAIL-ACCESS.07** Confirm how people unsubscribe: an unsubscribe link the tool adds automatically, or a 'reply STOP' line the owner will honour within 2 days. Check where unsubscribes are recorded, and that the footer can carry the sender's postal address where the law asks for it. Agree that only emails shown in Sent count as sent; drafts and scheduled emails do not.  
+  _Done when:_ The unsubscribe method, where unsubscribes are recorded, and the footer that will be used.
+- **C-EMAIL-ACCESS.08** Agree on test sends: tests go only to an address the owner names as their own, never to contacts on the list. Any link or attachment in the email must be the brand's own; open each one before the test to check it loads and is the right file.  
+  _Done when:_ The test address the owner named and the list of links and attachments checked.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `sender_unverified`: 保留草稿，等待品牌既有驗證，不擅自換寄件人。
-- `consent_unknown`: 名單保留但不寄促銷，等可用同意證據。
-- `hard_bounce`: 停止該地址舊序列，不換拼字重寄。
-- `send_unknown`: 用message ID／operation key查sent與provider，不重新寄。
-- `open_rate_unreliable`: 把open視輔助，回覆、點擊、付款另核對。
-
-### 9. 依來源與同意分已可聯絡Email名單
-
-依來源與同意分已可聯絡Email名單
-
-- **C-EM-SEGMENT.01** 只匯入品牌已獲准的名單，保存來源、用途、consent proof與原ID  
-  _Done when:_ leads sources
-- **C-EM-SEGMENT.02** 合併同Email／同人的既有狀態，不能匯入覆蓋退訂  
-  _Done when:_ dedupe與suppression
-- **C-EM-SEGMENT.03** 按需求、已買／試用／明確興趣分群，不推測敏感狀態  
-  _Done when:_ segments與reason
-- **C-EM-SEGMENT.04** 無同意、hard bounce或complaint放排除清單，不能直接寄  
-  _Done when:_ excluded
-- **C-EM-SEGMENT.05** 交合格leads與用途範圍，公開Email但不可寄者另列  
-  _Done when:_ leads及limitations
-
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
+**Hand back:** `sender_address`, `sending_tool`, `who_sends`, `send_limits`, `unsubscribe_method`
 
 **If stuck:**
-- `sender_unverified`: 保留草稿，等待品牌既有驗證，不擅自換寄件人。
-- `consent_unknown`: 名單保留但不寄促銷，等可用同意證據。
-- `hard_bounce`: 停止該地址舊序列，不換拼字重寄。
-- `send_unknown`: 用message ID／operation key查sent與provider，不重新寄。
-- `open_rate_unreliable`: 把open視輔助，回覆、點擊、付款另核對。
+- `sender_unverified`: If the sending domain is not verified, keep the emails as drafts, tell the owner which records are missing, and do not send from a different address.
+- `no_sending_tool`: If the owner has no way to send to their list, ask whether they want one sending tool set up in the brand's name; do not send bulk email from a personal mailbox.
+- `owner_action_needed`: If a two-step code, terms screen or identity check appears, stop and tell the owner which screen and which button; never enter their codes or accept terms for them.
+- `wrong_sender_account`: If the signed-in account is a personal address or another brand, stop and ask the owner to switch to the agreed brand account.
+- `list_location_unknown`: If nobody knows where the contact list and its unsubscribes are kept, ask the owner for an export before any segment or send step.
+- `plan_limit_reached`: If the tool's plan cannot send this round's volume, show the owner the limit and either send fewer or wait; never upgrade or pay without the owner's written yes.
+
+### 9. Pick the opted-in email contacts for this round
+
+Produce a clean group of contacts who agreed to hear from the brand and match this round's buyer situation, with everyone who must not be emailed removed, because the right readers move the goal's main number and the wrong ones only add unsubscribes and spam reports.
+
+- **C-EM-SEGMENT.01** Ask the owner for an export or a view of the contact list, and for where each group of contacts came from (signup form, purchase, free trial, event, inquiry). Use only contacts the brand collected itself; never bought, scraped or copied lists, and never addresses found on public pages. Use the export only for this round and do not paste it anywhere public.  
+  _Done when:_ Each source with its contact count and the date it was exported.
+- **C-EM-SEGMENT.02** For each source, write down what people agreed to receive, as stated on the form, checkbox or terms they saw. If a source has no record of what people agreed to, mark it 'consent unknown' and keep it out of this round.  
+  _Done when:_ Each source marked with what was agreed, or 'consent unknown'.
+- **C-EM-SEGMENT.03** Merge duplicates by email address, ignoring upper and lower case. If any copy of a person is unsubscribed, bounced or marked the brand as spam, that person stays out; an import never overrides an unsubscribe.  
+  _Done when:_ Contact counts before and after merging, and how many were kept out by an earlier unsubscribe.
+- **C-EM-SEGMENT.04** Build the exclusion list: unsubscribed, hard bounced, spam complaints, people who replied 'not interested', the owner, the team and test addresses. Leave out people who already bought this product when the email is an offer to buy it.  
+  _Done when:_ The exclusion list with a count per reason.
+- **C-EM-SEGMENT.05** Group the remaining contacts by what they actually did, matching the buyer groups from the earlier segment step: bought before, signed up or tried but did not buy, asked a question or showed clear interest, or subscribed only. Never guess sensitive traits such as health, money trouble, religion or politics.  
+  _Done when:_ Each group with its count and the action that put people in it.
+- **C-EM-SEGMENT.06** Pick the one group that fits this round's chosen angle. If two versions will be tested, split that group at random into two halves labeled A and B (use the tool's own A/B split if it has one, or sort the export at random and take alternate rows). If the group has fewer than 200 contacts, send one version only and note that the result will be noisy.  
+  _Done when:_ The chosen group, its count, and how it was split, if it was.
+- **C-EM-SEGMENT.07** Show the owner the chosen group, its count, the exclusion counts and the 'consent unknown' count, and get their confirmation before anything is written or sent to it. If the group has to be saved as a segment or tag in the owner's tool, do that only after their yes, and never re-subscribe anyone.  
+  _Done when:_ The owner's confirmation of the group to email this round, and the name of the saved segment if one was made.
+
+**Hand back:** `list_sources`, `chosen_segment`, `excluded`, `consent_unknown`
+
+**If stuck:**
+- `consent_unknown`: If you cannot tell what a group of contacts agreed to, keep them out of promotional email and ask the owner where the signup record is.
+- `list_not_available`: If the owner cannot export or show the list, ask for a screenshot of the tool's audience page with group counts and stop until it arrives.
+- `bought_or_scraped_list`: If any contacts come from a bought, rented or scraped list, leave them out entirely and tell the owner why.
+- `unsubscribes_not_visible`: If you cannot see who has unsubscribed or bounced, do not build the group; ask the owner to export the unsubscribe and bounce list first.
+- `segment_too_small`: If the chosen group has fewer than 50 contacts, tell the owner the result will not be readable as a rate and ask whether to merge it with the next closest group.
 
 ### 10. Write the post from proven facts
 
@@ -253,70 +262,87 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 11. Email回覆、退訂與付款結果核對 (baseline numbers)
+### 11. Read this goal's email numbers (baseline numbers)
 
-Email回覆、退訂與付款結果核對
+Record the numbers this goal is judged on, for the send before this round and for this round's send, so rounds are compared on real counts. record_numbers lists exactly which numbers it needs.
 
-- **C-EM-METRICS.01** 讀同sender／campaign／時間窗的sent、delivered、bounce、unsubscribe和新reply  
-  _Done when:_ 原始ID與window
-- **C-EM-METRICS.02** 移除自己測試與重複webhook事件，open僅輔助不當真人閱讀  
-  _Done when:_ dedupe與classification
-- **C-EM-METRICS.03** 把真實對話、示範、購買、退款按contact/order去重  
-  _Done when:_ economic IDs
-- **C-EM-METRICS.04** 按已投遞數計回覆／退訂率；未完整投遞資料就wait  
-  _Done when:_ denominators
-- **C-EM-METRICS.05** 核對寄送、軟體、人事與交付成本後報淨貢獻限制  
-  _Done when:_ goal_observation與money_events
-
-**If stuck:**
-- `sender_unverified`: 保留草稿，等待品牌既有驗證，不擅自換寄件人。
-- `consent_unknown`: 名單保留但不寄促銷，等可用同意證據。
-- `hard_bounce`: 停止該地址舊序列，不換拼字重寄。
-- `send_unknown`: 用message ID／operation key查sent與provider，不重新寄。
-- `open_rate_unreliable`: 把open視輔助，回覆、點擊、付款另核對。
-
-### 12. 已同意Email序列送出與停止
-
-已同意Email序列送出與停止
-
-- **C-EM-SEND.01** 核對sender、recipient與當前CRM同意／停止狀態，刷新最近事件  
-  _Done when:_ contact IDs與consent
-- **C-EM-SEND.02** 讀本輪due followup及trigger；新回覆／購買／拒絕取消舊序列  
-  _Done when:_ followup ID與trigger
-- **C-EM-SEND.03** 文案符合已確認方案和當次目的，附可用退訂方式  
-  _Done when:_ text與unsubscribe
-- **C-EM-SEND.04** prepare單筆send並核對間隔／日上限，不做群發旁路  
-  _Done when:_ operation key
-- **C-EM-SEND.05** 實際寄出後讀provider message ID、收件人、全文與時間；未知先對帳  
-  _Done when:_ messages與readback
-
-**Hand back:** `message_id`, `actual_recipient`, `reply_parent_if_reply`, `delivery_or_pending_state`, `readback`
+- **C-EM-METRICS.01** Confirm what you are measuring: the sender, which email or campaign, the date range and the time zone. For the baseline use the last comparable send to a similar group before this round; for the current reading use this round's send, read once the goal's observation window has passed (7 days after sending for these goals).  
+  _Done when:_ The email or campaign name, send date, date range with time zone, and whether this is the baseline or the current reading.
+- **C-EM-METRICS.02** Read the sending tool's report for that send: sent, bounced, delivered, unsubscribes, spam complaints and unique link clicks. If the tool does not show delivered, use sent minus bounced and say so. If you cannot open the report, ask the owner for a screenshot or an export. Do not use opens; they are not reliable and an open is not a reader.  
+  _Done when:_ The numbers exactly as the tool shows them, the screen or export they came from, and when they were read.
+- **C-EM-METRICS.03** Take out the owner's, the team's and test addresses, and count each person once for clicks, unsubscribes and replies. If many clicks arrive within a minute of delivery from the same company domain, note that mail security scanners may have made them.  
+  _Done when:_ What was removed and why, with counts before and after.
+- **C-EM-METRICS.04** Read the replies to this send in the mailbox for the same date range. Count a qualified reply once per person who asks about buying, price, fit or a demo. Do not count auto-replies, out-of-office notes, bounces, unsubscribe requests or the owner's own messages.  
+  _Done when:_ The number of qualified replies, with sender, date and one-line summary for each.
+- **C-EM-METRICS.05** Read clicks and sales for each version from the round's tracked link (per ?v= label) and its sale counter, and from the owner's payment records for the same dates. Count each order once, take out refunds and test or owner payments, and say plainly where you cannot tell whether a sale came from this email. For unique_link_clicks use the sending tool's unique clicks per recipient where it shows them, otherwise the tracked link's count; use the same source for the baseline and the current reading, and never add the two together.  
+  _Done when:_ Clicks and purchases per version, each with its source, and any sale whose link to the email is unclear.
+- **C-EM-METRICS.06** Write down what this send cost: the sending tool's fee for the period and any other cost the owner reports. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-EM-METRICS.07** Call record_numbers with the exact component names this goal lists: delivered plus one of qualified_replies, unique_link_clicks, external_purchases or unsubscribes. Give each value its source. If there is no earlier send, record 0 and say 'no history' in the source. If delivered is 0 or the delivery data is incomplete, do not work out a rate; report which number is missing. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
 
 **If stuck:**
-- `sender_unverified`: 保留草稿，等待品牌既有驗證，不擅自換寄件人。
-- `consent_unknown`: 名單保留但不寄促銷，等可用同意證據。
-- `hard_bounce`: 停止該地址舊序列，不換拼字重寄。
-- `send_unknown`: 用message ID／operation key查sent與provider，不重新寄。
-- `open_rate_unreliable`: 把open視輔助，回覆、點擊、付款另核對。
+- `cannot_open_report`: If you cannot open the sending tool's report, ask the owner for a screenshot or export of that send's report and wait for it.
+- `no_history`: If there is no earlier comparable send, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `delivery_data_incomplete`: If sent or delivered counts are missing or still changing, do not work out a rate; report the missing number and read again later.
+- `too_early_to_read`: If the goal's observation window has not passed since the send, report the numbers as early and read them again when it has.
+- `own_activity_mixed_in`: If you cannot separate the owner's or team's test clicks, replies or payments from real ones, say so in the source and do not count them.
+- `sales_not_traceable`: If payments cannot be matched to this send, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.
 
-### 13. Email回覆、退訂與付款結果核對 (result numbers)
+### 12. Send the approved email to the opted-in group once
 
-Email回覆、退訂與付款結果核對
+Send the owner-approved email, with the round's tracked link and a working unsubscribe, once to the chosen group, and stop follow-ups to anyone who replied, bought or opted out, because the goal's number can only be read on a send that went out exactly as approved.
 
-- **C-EM-METRICS.01** 讀同sender／campaign／時間窗的sent、delivered、bounce、unsubscribe和新reply  
-  _Done when:_ 原始ID與window
-- **C-EM-METRICS.02** 移除自己測試與重複webhook事件，open僅輔助不當真人閱讀  
-  _Done when:_ dedupe與classification
-- **C-EM-METRICS.03** 把真實對話、示範、購買、退款按contact/order去重  
-  _Done when:_ economic IDs
-- **C-EM-METRICS.04** 按已投遞數計回覆／退訂率；未完整投遞資料就wait  
-  _Done when:_ denominators
-- **C-EM-METRICS.05** 核對寄送、軟體、人事與交付成本後報淨貢獻限制  
-  _Done when:_ goal_observation與money_events
+- **C-EM-SEND.01** Gather the approved text from the copy step, the chosen group from the segment step, and the round's tracked link from tracking, with ?v=A and ?v=B if there are two versions. Open each link and see it load the product page.  
+  _Done when:_ The text, the group and its count, and each tracked link you opened.
+- **C-EM-SEND.02** Turn the text into an email: a subject under 60 characters, one main link (the tracked link), the sender name, and a footer with the unsubscribe link or line and the postal address where the law asks for it. Do not put 'Re:' or 'Fwd:' in the subject, and keep only claims the product facts support, with no invented deadlines, stock limits or guarantees.  
+  _Done when:_ The full email for each version: subject, body, link and footer.
+- **C-EM-SEND.03** Show the owner, word for word, the From and Reply-To, subject, body, links, footer, which group and how many people, and the send day and time with time zone. Nothing is sent without their clear yes to this exact email.  
+  _Done when:_ The exact email shown and the owner's approval message.
+- **C-EM-SEND.04** Send one test to the owner's own address only. Check the sender name, subject, that every link opens through the tracked link, that the unsubscribe link or line is there, and that it reads well on a phone. Fix and re-show the owner any change. The test is not counted.  
+  _Done when:_ The test result: what was checked and anything fixed.
+- **C-EM-SEND.05** Right before sending, read the latest unsubscribes, bounces, spam complaints, replies and purchases since the group was built. Remove anyone who unsubscribed, bounced, said no, has no record of agreeing to email, or already bought, and stop any older automatic follow-up to them. The approved count can only go down at this point, never up.  
+  _Done when:_ How many people were removed and why, and which older follow-ups were stopped.
+- **C-EM-SEND.06** The owner sends, or the agent sends with its own browser if it has the tool open and the owner said yes. Send once, only to the approved group, within the daily cap; split across days if needed. Never put many addresses in To or CC. If sending seems to fail, check Sent or the campaign status before trying again; never send twice and never resend through another channel.  
+  _Done when:_ Who sent, when, and to how many people.
+- **C-EM-SEND.07** Open the sent copy or the campaign page and copy the exact subject and body as sent, the number of recipients and the send time. Drafts and scheduled emails do not count as sent. If the tool gives a 'view in browser' link, keep it as the email's public URL.  
+  _Done when:_ The subject and body as sent, the recipient count, the send time, and the web view link if there is one.
+- **C-EM-SEND.08** Do not send a follow-up inside this round's 7-day reading window, so the round's numbers stay clean. If the owner wants one, plan at most one for after the reading, only to people who did not reply, click, buy or unsubscribe, with its own owner yes. Remove anyone who hard bounced and never retry them with a changed spelling.  
+  _Done when:_ The follow-up plan with date and audience, or a note that none will be sent, and the list of bounced addresses removed.
+
+**Hand back:** `sent_record`, `sent_text`, `owner_approval`, `tracked_links`, `stopped_contacts`
 
 **If stuck:**
-- `sender_unverified`: 保留草稿，等待品牌既有驗證，不擅自換寄件人。
-- `consent_unknown`: 名單保留但不寄促銷，等可用同意證據。
-- `hard_bounce`: 停止該地址舊序列，不換拼字重寄。
-- `send_unknown`: 用message ID／operation key查sent與provider，不重新寄。
-- `open_rate_unreliable`: 把open視輔助，回覆、點擊、付款另核對。
+- `owner_has_not_approved`: If the owner has not said yes to this exact email, do not send; show them the email and stop until they answer.
+- `sender_unverified`: If the sending domain is not verified, keep the email as a draft and do not switch to another sender address.
+- `send_status_unknown`: If you cannot tell whether the email went out, check Sent and the campaign status in the sending tool; never send again, or through another channel, until you know.
+- `hard_bounce`: If an address hard bounces, remove it from this and later sends; never retry it with a changed spelling.
+- `over_daily_limit`: If the group is larger than the daily cap, send the rest on the following days at the same time; never go over the cap the owner set.
+- `consent_unknown`: If someone in the group has no record of agreeing to email, take them out of this send and tell the owner.
+
+### 13. Read this goal's email numbers (result numbers)
+
+Record the numbers this goal is judged on, for the send before this round and for this round's send, so rounds are compared on real counts. record_numbers lists exactly which numbers it needs.
+
+- **C-EM-METRICS.01** Confirm what you are measuring: the sender, which email or campaign, the date range and the time zone. For the baseline use the last comparable send to a similar group before this round; for the current reading use this round's send, read once the goal's observation window has passed (7 days after sending for these goals).  
+  _Done when:_ The email or campaign name, send date, date range with time zone, and whether this is the baseline or the current reading.
+- **C-EM-METRICS.02** Read the sending tool's report for that send: sent, bounced, delivered, unsubscribes, spam complaints and unique link clicks. If the tool does not show delivered, use sent minus bounced and say so. If you cannot open the report, ask the owner for a screenshot or an export. Do not use opens; they are not reliable and an open is not a reader.  
+  _Done when:_ The numbers exactly as the tool shows them, the screen or export they came from, and when they were read.
+- **C-EM-METRICS.03** Take out the owner's, the team's and test addresses, and count each person once for clicks, unsubscribes and replies. If many clicks arrive within a minute of delivery from the same company domain, note that mail security scanners may have made them.  
+  _Done when:_ What was removed and why, with counts before and after.
+- **C-EM-METRICS.04** Read the replies to this send in the mailbox for the same date range. Count a qualified reply once per person who asks about buying, price, fit or a demo. Do not count auto-replies, out-of-office notes, bounces, unsubscribe requests or the owner's own messages.  
+  _Done when:_ The number of qualified replies, with sender, date and one-line summary for each.
+- **C-EM-METRICS.05** Read clicks and sales for each version from the round's tracked link (per ?v= label) and its sale counter, and from the owner's payment records for the same dates. Count each order once, take out refunds and test or owner payments, and say plainly where you cannot tell whether a sale came from this email. For unique_link_clicks use the sending tool's unique clicks per recipient where it shows them, otherwise the tracked link's count; use the same source for the baseline and the current reading, and never add the two together.  
+  _Done when:_ Clicks and purchases per version, each with its source, and any sale whose link to the email is unclear.
+- **C-EM-METRICS.06** Write down what this send cost: the sending tool's fee for the period and any other cost the owner reports. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-EM-METRICS.07** Call record_numbers with the exact component names this goal lists: delivered plus one of qualified_replies, unique_link_clicks, external_purchases or unsubscribes. Give each value its source. If there is no earlier send, record 0 and say 'no history' in the source. If delivered is 0 or the delivery data is incomplete, do not work out a rate; report which number is missing. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
+
+**If stuck:**
+- `cannot_open_report`: If you cannot open the sending tool's report, ask the owner for a screenshot or export of that send's report and wait for it.
+- `no_history`: If there is no earlier comparable send, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `delivery_data_incomplete`: If sent or delivered counts are missing or still changing, do not work out a rate; report the missing number and read again later.
+- `too_early_to_read`: If the goal's observation window has not passed since the send, report the numbers as early and read them again when it has.
+- `own_activity_mixed_in`: If you cannot separate the owner's or team's test clicks, replies or payments from real ones, say so in the source and do not count them.
+- `sales_not_traceable`: If payments cannot be matched to this send, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.

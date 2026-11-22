@@ -1,7 +1,7 @@
-# YouTube提高影片觀看完成率
+# YouTube: raise the share of viewers who finish a video
 
 - **Goal id:** `G-YT-COMPLETION`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** youtube
 - **Metric:** `completion_rate` = `completed_views` / `video_starts`, should increase
 - **Observation window:** 168 hours after publishing
@@ -179,31 +179,36 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備YouTube帳號、登入與授權
+### 8. Confirm the YouTube channel and who publishes
 
-準備YouTube帳號、登入與授權
+Settle which YouTube channel this round uses, who signs in and who presses publish or reply, and which features the channel can use, so the round's videos or replies go out under the right brand without stopping halfway.
 
-- **C-YOUTUBE-ACCESS.01** 列出登入Google帳號及可管理的頻道，核對channel ID而非只看顯示名稱  
-  _Done when:_ channel ID與管理角色
-- **C-YOUTUBE-ACCESS.02** 有品牌頻道時選正確Brand Account；先唯讀開Studio，不能以登入Gmail當頻道權限  
-  _Done when:_ Studio角色讀回
-- **C-YOUTUBE-ACCESS.03** OAuth僅要求當前工作已授權的範圍；雙重驗證由本人完成  
-  _Done when:_ scopes與登入checkpoint
-- **C-YOUTUBE-ACCESS.04** 分開上傳、留言、Analytics、外連資格；讀各自可用工具與配額  
-  _Done when:_ 功能／quota清單
-- **C-YOUTUBE-ACCESS.05** 新建頻道需明確授權且使用已確認名稱；真人驗證、外連資格與條款交本人  
-  _Done when:_ 頻道建立或pending狀態
-- **C-YOUTUBE-ACCESS.06** 核對時區、內容分類與留言可見性；公開影片／留言和Studio狀態都要讀回  
-  _Done when:_ 公開與管理頁對照
+- **C-YOUTUBE-ACCESS.01** Ask the owner for the URL of the YouTube channel this round will use. Open it as a public page and write down the handle and the channel ID (the part starting with 'UC' in a /channel/ URL, or the ID shown in the channel's About details). Go by the channel ID, not the display name, because several channels can share a name.  
+  _Done when:_ The channel URL, handle and channel ID, opened as a public page.
+- **C-YOUTUBE-ACCESS.02** Ask the owner which Google account manages that channel. If the channel belongs to a brand account, the owner must switch to that channel in the account menu; being signed in to Gmail does not mean you are acting as the channel. The owner signs in on the official Google page and does any two-step verification. Never ask for a password.  
+  _Done when:_ The Google account that manages the channel, and the owner's confirmation that the right channel is selected.
+- **C-YOUTUBE-ACCESS.03** Decide who publishes or replies: the owner on their own device, or the agent's own browser if it is already signed in as that channel. Have whoever publishes open YouTube Studio for this channel and check the channel name and picture at the top match the brand.  
+  _Done when:_ Who will publish, and a note or screenshot showing YouTube Studio open on the right channel.
+- **C-YOUTUBE-ACCESS.04** List what this round needs (upload a video, reply to comments, read analytics, a clickable link in a description) and check each one for this channel. Videos longer than 15 minutes and custom thumbnails need YouTube's extra features, which are usually unlocked by verifying the channel with a phone number; check the channel's feature eligibility in YouTube Studio settings. Links in Shorts descriptions and comments are not clickable, so a link-click goal needs a long video.  
+  _Done when:_ A short list of the actions this round needs, each marked 'works', 'needs the owner' or 'not available', with the reason.
+- **C-YOUTUBE-ACCESS.05** Create a new channel only if the owner asked for one in this conversation, with a name and handle the owner approved. The owner creates it from their own Google account, or the agent does it in a browser already signed in to that account after the owner says yes. Use one real account only, never extra or fake channels. If a new Google account is truly needed and the owner agrees, you may use inbox_address and read the verification code with inbox_latest; phone verification, identity checks and terms are left to the owner.  
+  _Done when:_ The owner's request and the approved channel name, or a note that the existing channel is used.
+- **C-YOUTUBE-ACCESS.06** If YouTube asks for a verification code the agent cannot read, a phone check, acceptance of terms or an identity check, stop and tell the owner exactly which screen needs it. Note where you stopped and return to the same channel once they are done.  
+  _Done when:_ What the owner needs to do, on which screen, and where to resume, or a note that nothing was needed.
+- **C-YOUTUBE-ACCESS.07** Check the channel's comment settings in YouTube Studio: whether comments are on, and whether comments are held for review. Note the time zone the channel's reports use, so later numbers are read for the right days.  
+  _Done when:_ The comment setting, the review setting and the report time zone.
+- **C-YOUTUBE-ACCESS.08** Finish by opening the public channel page again, and confirm whoever publishes can open the upload screen or the reply box on one of the channel's videos.  
+  _Done when:_ Channel URL, handle, confirmation that upload or reply can be started, and the time this was checked.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
+**Hand back:** `channel_url`, `channel_id`, `who_publishes`, `available_actions`
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `wrong_channel_selected`: If the signed-in account is acting as a different channel or a personal channel, stop and ask the owner to switch to the channel with the agreed channel ID.
+- `channel_does_not_exist`: If the URL shows no channel, tell the owner; a Google sign-in is not a channel, and a new one is created only if the owner asks.
+- `owner_action_needed`: If a phone check, terms screen or identity check appears, stop and tell the owner which screen and which button; never accept terms or verify on their behalf.
+- `agent_browser_not_signed_in`: If the agent's browser is not signed in as the right channel, set who_publishes to 'owner' and plan to hand them the final text and files.
+- `feature_not_available`: If a needed feature such as clickable links or long uploads is not available, or YouTube limits how much the channel can upload or reply today, say so, change the round to use what works (for example a long video instead of a Short) or wait for the limit to reset, never switch to another channel, and never claim the link drives visits.
+- `comments_disabled`: If comments are off on the channel or a video, do not change the setting yourself; tell the owner and leave that video out of any reply work.
 
 ### 9. Write the post from proven facts
 
@@ -229,93 +234,118 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. 製作不露臉影片與產品示範
+### 10. Make a faceless demo video from real product footage
 
-製作不露臉影片與產品示範
+Produce a finished, playable video that shows the real product working, with subtitles and the right format for the channel, because a clear demo people watch to the end is what moves the goal's main number.
 
-- **S13.01** 確認影片目的與格式：讀用途、長度、比例與示範要求。  
-  _Done when:_ 這支影片要說服誰清楚。
-- **S13.02** 盤點真實畫面與素材權：確認既有錄影、截圖、配音及素材可用。  
-  _Done when:_ 關鍵功能有真實畫面。
-- **S13.03** 準備腳本與鏡頭順序：由S11腳本安排開頭、操作、結果與行動入口。  
-  _Done when:_ 每段對得上現有素材。
-- **S13.04** 取得允許的示範畫面：用既有素材或已准許示範環境錄製；真人節點另記。  
-  _Done when:_ 畫面真實且不暴露客戶私密資料。
-- **S13.05** 製作配音與字幕：用可用且有權使用的方法完成。  
-  _Done when:_ 內容與腳本一致。
-- **S13.06** 剪輯完整影片：完成畫面、字幕、節奏與片尾。  
-  _Done when:_ 取得影片檔而非只有腳本。
-- **S13.07** 檢查影音與事實：實際播放，核對聲音、字幕、功能畫面與敏感內容。  
-  _Done when:_ 片頭、中段、結尾均正常。
-- **S13.08** 輸出與轉換格式：依支援渠道輸出長短與比例版本。  
-  _Done when:_ 格式、容量、長度符合要求。
-- **S13.09** 準備封面及發布資料：將封面需求交S12，標題與說明交S11。  
-  _Done when:_ S14或S31有完整發布包。
-- **S13.10** 保存並交接：記錄版本、來源、字幕、檔案與用途。  
-  _Done when:_ 下一步可讀取、播放與上傳。
+- **S13.01** Write down who the video must convince, the channel and placement, the length, and the shape; for example under 60 seconds and 1080x1920 vertical for short-form, or 16:9 for a longer video.  
+  _Done when:_ One line on the viewer and the goal of the video, plus length and size.
+- **S13.02** Collect real footage: screen recordings, screenshots, existing videos, music and voice the owner has the right to use. Every feature the video shows needs real footage of the product.  
+  _Done when:_ A list of footage with where each piece came from, and any feature still missing footage.
+- **S13.03** Turn the approved script into a shot list: a hook in the first 2 seconds, the product being used, the result, and one call to action. Replace any claim you cannot show on screen with one you can.  
+  _Done when:_ A shot list where each line names the footage it uses.
+- **S13.04** Record missing demo footage only in a demo account or test setup the owner approved, or cut it from existing material. Hide customer names, emails and private data. If a shot needs a real person's face or voice or a change to the live product, list it for the owner and make the rest.  
+  _Done when:_ The new footage, checked for private data, and a list of any shots left for the owner.
+- **S13.05** Add subtitles that match the script word for word, and a voice-over only with a voice the owner has the right to use. Check every number, product name and spelling in the subtitles.  
+  _Done when:_ The subtitle file or burned-in subtitles, checked against the script.
+- **S13.06** Edit the full video with footage, subtitles, pacing and an end card that shows the call to action. A script alone is not a finished video. If the only available editing or voice tool charges money, ask the owner before using it.  
+  _Done when:_ A video file that plays.
+- **S13.07** Play the whole video and check the start, middle and end: sound, subtitles, that each product screen is real, and that no private data or misleading scene appears.  
+  _Done when:_ A note that the full video was played, with any fixes made.
+- **S13.08** Export the versions each channel needs, checking length, size, shape and file size against the channel's limits. If a file fails, fix and export it again; never hand over the same broken file twice.  
+  _Done when:_ Each exported file with its length, pixel size and file size.
+- **S13.09** Prepare what publishing needs: a cover image, a title and a caption from the approved copy. If several versions are tested, label them A, B and so on, with one difference between them.  
+  _Done when:_ The cover, title and caption for each version, labelled.
+- **S13.10** Save the final files with clear names and a note of version, purpose, sources and subtitles, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open and play, with the note for each file.
 
-**Hand back:** `actual_file`, `decoded_duration`, `dimensions`, `sha256`, `playback_readback`
-
-### 11. YouTube訂閱與既有網站引流核對 (baseline numbers)
-
-YouTube訂閱與既有網站引流核對
-
-- **C-YT-METRICS.01** 按channel ID在Studio／Analytics取同窗影片與觀眾資料  
-  _Done when:_ channel/window
-- **C-YT-METRICS.02** 分views、watch time、subscribers gained/lost及可用外連報表  
-  _Done when:_ raw metrics
-- **C-YT-METRICS.03** Shorts與長片分開比較，留言互動不能替代外連clicks  
-  _Done when:_ content type
-- **C-YT-METRICS.04** 對既有網站來源與交易去重，報表延遲保留未知  
-  _Done when:_ attribution與limitations
+**Hand back:** `video_files`, `versions`, `sources`, `publish_kit`
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `no_real_footage`: If there is no real footage of a feature, ask the owner for a screen recording of it and drop that claim from the video until it arrives.
+- `private_data_on_screen`: If any frame shows customer names, emails or other private data, blur or recut it before going further.
+- `needs_live_product_change`: If recording would change the live product or real customer data, stop that recording and ask the owner for a safe demo account or existing footage.
+- `voice_rights_unclear`: If you cannot confirm the right to use a voice or music track, use subtitles only or a track the owner confirms they may use.
+- `export_fails_limits`: If an export is over the channel's length or file size limit, shorten or compress it and check again before handing it over.
 
-### 12. YouTube影片／Shorts上傳與公開核對
+### 11. Read this goal's numbers on YouTube (baseline numbers)
 
-YouTube影片／Shorts上傳與公開核對
+Record the numbers this goal is judged on, for the same channel and the same length of time before and after the round, so rounds are compared on real YouTube and link numbers. record_numbers lists exactly which numbers it needs.
 
-- **C-YT-VIDEO.01** 核對channel ID、影片／Shorts格式和版權聲明  
-  _Done when:_ channel與asset sha256
-- **C-YT-VIDEO.02** 逐項核對標題、封面、說明、字幕與既有網站連結  
-  _Done when:_ metadata manifest
-- **C-YT-VIDEO.03** 讀目前受眾／兒童內容等必填欄位，無已確認答案則保存待本人  
-  _Done when:_ required fields
-- **C-YT-VIDEO.04** prepare後上傳保留video ID；processing、checks與visibility分開  
-  _Done when:_ operation_key與video ID
-- **C-YT-VIDEO.05** 按授權發布，讀公開watch URL、頻道、標題與連結，排程另標  
-  _Done when:_ publications
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
-
-**If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
-
-### 13. YouTube訂閱與既有網站引流核對 (result numbers)
-
-YouTube訂閱與既有網站引流核對
-
-- **C-YT-METRICS.01** 按channel ID在Studio／Analytics取同窗影片與觀眾資料  
-  _Done when:_ channel/window
-- **C-YT-METRICS.02** 分views、watch time、subscribers gained/lost及可用外連報表  
-  _Done when:_ raw metrics
-- **C-YT-METRICS.03** Shorts與長片分開比較，留言互動不能替代外連clicks  
-  _Done when:_ content type
-- **C-YT-METRICS.04** 對既有網站來源與交易去重，報表延遲保留未知  
-  _Done when:_ attribution與limitations
+- **C-YT-METRICS.01** Confirm the channel ID, the videos or comment threads you are measuring, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days. If you cannot open YouTube Studio analytics, ask the owner for screenshots or the numbers.  
+  _Done when:_ Channel ID, video or comment URLs, date range with time zone, and how the numbers will be obtained.
+- **C-YT-METRICS.02** Read the numbers exactly as YouTube Studio shows them for those videos and days: views, watch time, average view duration, subscribers gained and subscribers lost. Read Shorts and long videos separately and never add them into one figure without saying so.  
+  _Done when:_ The numbers as displayed, split by Shorts and long videos, with the screen they came from and the time they were read.
+- **C-YT-METRICS.03** Fill the goal's components by their exact names. For a subscriber goal, 'subscribers' is subscribers gained minus subscribers lost in the range. For a completion goal, 'video_starts' is the views of the measured videos; for 'completed_views', use a count of viewers who reached the end only if YouTube shows one. If it shows only the video's audience retention chart, multiply the views by the percentage still watching at the last moment of the video, round down, use the same method for the baseline and the current reading, and say in source that it was calculated from the retention chart. If the chart cannot be read at the end, leave 'completed_views' out and name it as missing.  
+  _Done when:_ Each component name with its number and a one-line note on how it was read.
+- **C-YT-METRICS.04** For a link-click goal, take 'link_clicks' from the round's tracked link (from tracking), not from YouTube, and 'views' from YouTube Studio for the same videos and days. Comments and likes never stand in for clicks.  
+  _Done when:_ The tracked link's click count and the matching views, each with its source.
+- **C-YT-METRICS.05** For a comment-request goal, 'eligible_requests' is the number of different request comments the round replied to, and 'qualified_replies' is the number of those commenters who answered back with a real next step (asked for the link, a price or a demo, or said they will try it). Count each person once, and never count likes or the owner's or the agent's own replies.  
+  _Done when:_ Both counts, with the URL of each reply that was counted as qualified.
+- **C-YT-METRICS.06** Add website visits or sales only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which video or reply led to a visit or a sale, say so plainly.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links between video and sale are stated.
+- **C-YT-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `cannot_open_analytics`: If you cannot open YouTube Studio analytics for this channel, ask the owner for screenshots of the screens that show the numbers this goal needs.
+- `numbers_from_wrong_channel`: If a screen or screenshot shows a different channel from the agreed channel ID, do not use those numbers and ask again.
+- `no_history`: If the channel has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `link_clicks_not_tracked`: If the description had no tracked link, say that link clicks cannot be read for this round, record nothing for clicks, and make sure the next round uses the tracked link.
+- `too_early_to_read`: If the videos or replies are less than 48 hours old, YouTube figures may still be filling in; report the numbers as early and read them again later.
+
+### 12. Upload the approved video to the right YouTube channel
+
+Upload and publish the approved video or Short once, on the brand's own channel, with honest settings and the tracked link, and hand back its public URL, because only a live, correctly set video can move the goal's main number.
+
+- **C-YT-VIDEO.01** Ask the owner for the URL of the brand's YouTube channel. The owner signs in to Google themselves. In YouTube Studio, confirm the channel selected is that brand channel and not a personal one.  
+  _Done when:_ The channel URL, the channel name shown in YouTube Studio, and who will upload.
+- **C-YT-VIDEO.02** Check the video file. A Short is vertical and up to 3 minutes; a regular video is usually horizontal. Confirm with the owner that they own or have licensed all footage, music and images in it.  
+  _Done when:_ The file name, its length and shape, and the owner's confirmation of rights.
+- **C-YT-VIDEO.03** Write the title (under 100 characters) and description (under 5,000 characters). Put the round's tracked link in the first two lines of the description; if there are two versions of the video, use ?v=A and ?v=B. Prepare a thumbnail for a regular video and a captions file if one exists.  
+  _Done when:_ The title and description with character counts, the link with its version label, and the thumbnail and captions files if any.
+- **C-YT-VIDEO.04** Check every claim in the title, description and video against the product fact sheet; remove anything you cannot support.  
+  _Done when:_ A list of the claims in the video and text, each with its fact source.
+- **C-YT-VIDEO.05** Ask the owner the required answers: whether the video is made for kids, whether it contains realistic altered or synthetic content if YouTube Studio asks, and whether it includes paid promotion. Never guess these answers.  
+  _Done when:_ The owner's answer to each required setting.
+- **C-YT-VIDEO.06** Show the owner the title, description, thumbnail, settings and the planned visibility (public now or scheduled) and get a clear yes.  
+  _Done when:_ Everything that will go live, and the owner's approval message.
+- **C-YT-VIDEO.07** Upload once as private or unlisted, by the owner or by the agent's own browser if it is signed in and the owner said yes. Wait until processing and YouTube's checks finish, then set it to public or schedule it as approved. If the upload seems to fail, check the channel's content list before uploading again.  
+  _Done when:_ The video's status after checks, any copyright or restriction notice, and the time it went public or the scheduled time.
+- **C-YT-VIDEO.08** Once the video is public, open its watch URL in a signed-out or private browser window. Check the channel name, title, description and that the link opens the product. If it is scheduled, record the scheduled time and do this check after it goes public. If the link is not clickable, as can happen with Shorts, tell the owner and do not claim the video sends visitors to the site.  
+  _Done when:_ The public video URL, the title and description as they appear, and whether the link is clickable, or the scheduled time if it is not public yet.
+
+**Hand back:** `video_url`, `published_text`, `visibility`
+
+**If stuck:**
+- `brand_channel_mismatch`: If YouTube Studio shows a different channel from the brand's, stop and ask the owner to switch to the right channel before uploading.
+- `owner_has_not_approved`: If the owner has not said yes to the title, description and settings, do not make the video public; show them and wait.
+- `copyright_claim`: If YouTube flags a copyright claim during checks, keep the video private and show the owner the notice; do not publish around it.
+- `verification_needed`: If YouTube asks for phone verification or another identity check, tell the owner which screen needs them and wait.
+- `external_link_unavailable`: If the description link is not clickable for this video, tell the owner and do not count the video as a source of site visits.
+
+### 13. Read this goal's numbers on YouTube (result numbers)
+
+Record the numbers this goal is judged on, for the same channel and the same length of time before and after the round, so rounds are compared on real YouTube and link numbers. record_numbers lists exactly which numbers it needs.
+
+- **C-YT-METRICS.01** Confirm the channel ID, the videos or comment threads you are measuring, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days. If you cannot open YouTube Studio analytics, ask the owner for screenshots or the numbers.  
+  _Done when:_ Channel ID, video or comment URLs, date range with time zone, and how the numbers will be obtained.
+- **C-YT-METRICS.02** Read the numbers exactly as YouTube Studio shows them for those videos and days: views, watch time, average view duration, subscribers gained and subscribers lost. Read Shorts and long videos separately and never add them into one figure without saying so.  
+  _Done when:_ The numbers as displayed, split by Shorts and long videos, with the screen they came from and the time they were read.
+- **C-YT-METRICS.03** Fill the goal's components by their exact names. For a subscriber goal, 'subscribers' is subscribers gained minus subscribers lost in the range. For a completion goal, 'video_starts' is the views of the measured videos; for 'completed_views', use a count of viewers who reached the end only if YouTube shows one. If it shows only the video's audience retention chart, multiply the views by the percentage still watching at the last moment of the video, round down, use the same method for the baseline and the current reading, and say in source that it was calculated from the retention chart. If the chart cannot be read at the end, leave 'completed_views' out and name it as missing.  
+  _Done when:_ Each component name with its number and a one-line note on how it was read.
+- **C-YT-METRICS.04** For a link-click goal, take 'link_clicks' from the round's tracked link (from tracking), not from YouTube, and 'views' from YouTube Studio for the same videos and days. Comments and likes never stand in for clicks.  
+  _Done when:_ The tracked link's click count and the matching views, each with its source.
+- **C-YT-METRICS.05** For a comment-request goal, 'eligible_requests' is the number of different request comments the round replied to, and 'qualified_replies' is the number of those commenters who answered back with a real next step (asked for the link, a price or a demo, or said they will try it). Count each person once, and never count likes or the owner's or the agent's own replies.  
+  _Done when:_ Both counts, with the URL of each reply that was counted as qualified.
+- **C-YT-METRICS.06** Add website visits or sales only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which video or reply led to a visit or a sale, say so plainly.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links between video and sale are stated.
+- **C-YT-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
+
+**If stuck:**
+- `cannot_open_analytics`: If you cannot open YouTube Studio analytics for this channel, ask the owner for screenshots of the screens that show the numbers this goal needs.
+- `numbers_from_wrong_channel`: If a screen or screenshot shows a different channel from the agreed channel ID, do not use those numbers and ask again.
+- `no_history`: If the channel has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `link_clicks_not_tracked`: If the description had no tracked link, say that link clicks cannot be read for this round, record nothing for clicks, and make sure the next round uses the tracked link.
+- `too_early_to_read`: If the videos or replies are less than 48 hours old, YouTube figures may still be filling in; report the numbers as early and read them again later.

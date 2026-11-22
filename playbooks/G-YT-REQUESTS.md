@@ -1,7 +1,7 @@
-# YouTube求工具／服務留言接成合格對話
+# YouTube: turn request comments into real conversations
 
 - **Goal id:** `G-YT-REQUESTS`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** youtube
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing
@@ -179,116 +179,142 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備YouTube帳號、登入與授權
+### 8. Confirm the YouTube channel and who publishes
 
-準備YouTube帳號、登入與授權
+Settle which YouTube channel this round uses, who signs in and who presses publish or reply, and which features the channel can use, so the round's videos or replies go out under the right brand without stopping halfway.
 
-- **C-YOUTUBE-ACCESS.01** 列出登入Google帳號及可管理的頻道，核對channel ID而非只看顯示名稱  
-  _Done when:_ channel ID與管理角色
-- **C-YOUTUBE-ACCESS.02** 有品牌頻道時選正確Brand Account；先唯讀開Studio，不能以登入Gmail當頻道權限  
-  _Done when:_ Studio角色讀回
-- **C-YOUTUBE-ACCESS.03** OAuth僅要求當前工作已授權的範圍；雙重驗證由本人完成  
-  _Done when:_ scopes與登入checkpoint
-- **C-YOUTUBE-ACCESS.04** 分開上傳、留言、Analytics、外連資格；讀各自可用工具與配額  
-  _Done when:_ 功能／quota清單
-- **C-YOUTUBE-ACCESS.05** 新建頻道需明確授權且使用已確認名稱；真人驗證、外連資格與條款交本人  
-  _Done when:_ 頻道建立或pending狀態
-- **C-YOUTUBE-ACCESS.06** 核對時區、內容分類與留言可見性；公開影片／留言和Studio狀態都要讀回  
-  _Done when:_ 公開與管理頁對照
+- **C-YOUTUBE-ACCESS.01** Ask the owner for the URL of the YouTube channel this round will use. Open it as a public page and write down the handle and the channel ID (the part starting with 'UC' in a /channel/ URL, or the ID shown in the channel's About details). Go by the channel ID, not the display name, because several channels can share a name.  
+  _Done when:_ The channel URL, handle and channel ID, opened as a public page.
+- **C-YOUTUBE-ACCESS.02** Ask the owner which Google account manages that channel. If the channel belongs to a brand account, the owner must switch to that channel in the account menu; being signed in to Gmail does not mean you are acting as the channel. The owner signs in on the official Google page and does any two-step verification. Never ask for a password.  
+  _Done when:_ The Google account that manages the channel, and the owner's confirmation that the right channel is selected.
+- **C-YOUTUBE-ACCESS.03** Decide who publishes or replies: the owner on their own device, or the agent's own browser if it is already signed in as that channel. Have whoever publishes open YouTube Studio for this channel and check the channel name and picture at the top match the brand.  
+  _Done when:_ Who will publish, and a note or screenshot showing YouTube Studio open on the right channel.
+- **C-YOUTUBE-ACCESS.04** List what this round needs (upload a video, reply to comments, read analytics, a clickable link in a description) and check each one for this channel. Videos longer than 15 minutes and custom thumbnails need YouTube's extra features, which are usually unlocked by verifying the channel with a phone number; check the channel's feature eligibility in YouTube Studio settings. Links in Shorts descriptions and comments are not clickable, so a link-click goal needs a long video.  
+  _Done when:_ A short list of the actions this round needs, each marked 'works', 'needs the owner' or 'not available', with the reason.
+- **C-YOUTUBE-ACCESS.05** Create a new channel only if the owner asked for one in this conversation, with a name and handle the owner approved. The owner creates it from their own Google account, or the agent does it in a browser already signed in to that account after the owner says yes. Use one real account only, never extra or fake channels. If a new Google account is truly needed and the owner agrees, you may use inbox_address and read the verification code with inbox_latest; phone verification, identity checks and terms are left to the owner.  
+  _Done when:_ The owner's request and the approved channel name, or a note that the existing channel is used.
+- **C-YOUTUBE-ACCESS.06** If YouTube asks for a verification code the agent cannot read, a phone check, acceptance of terms or an identity check, stop and tell the owner exactly which screen needs it. Note where you stopped and return to the same channel once they are done.  
+  _Done when:_ What the owner needs to do, on which screen, and where to resume, or a note that nothing was needed.
+- **C-YOUTUBE-ACCESS.07** Check the channel's comment settings in YouTube Studio: whether comments are on, and whether comments are held for review. Note the time zone the channel's reports use, so later numbers are read for the right days.  
+  _Done when:_ The comment setting, the review setting and the report time zone.
+- **C-YOUTUBE-ACCESS.08** Finish by opening the public channel page again, and confirm whoever publishes can open the upload screen or the reply box on one of the channel's videos.  
+  _Done when:_ Channel URL, handle, confirmation that upload or reply can be started, and the time this was checked.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
-
-### 9. YouTube留言原串需求查找
-
-YouTube留言原串需求查找
-
-- **C-YT-INTENT.01** 由買家情境找相關影片，先看影片與說明確認主題及產品適配  
-  _Done when:_ video_id與來源
-- **C-YT-INTENT.02** 用允許工具讀comment threads與回覆，保存comment ID及原作者  
-  _Done when:_ comment_id／author_channel_id
-- **C-YT-INTENT.03** 找明確求工具／服務／內容原話，不能把所有觀眾當買家  
-  _Done when:_ evidence_quote與排除
-- **C-YT-INTENT.04** 核對發文時間與回覆是否已提供答案；留言關閉或審核不可見標等待  
-  _Done when:_ published_at與resolved
-- **C-YT-INTENT.05** 組原留言永久連結並交demand_posts，保持影片與comment關係  
-  _Done when:_ demand_posts
-
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
+**Hand back:** `channel_url`, `channel_id`, `who_publishes`, `available_actions`
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `wrong_channel_selected`: If the signed-in account is acting as a different channel or a personal channel, stop and ask the owner to switch to the channel with the agreed channel ID.
+- `channel_does_not_exist`: If the URL shows no channel, tell the owner; a Google sign-in is not a channel, and a new one is created only if the owner asks.
+- `owner_action_needed`: If a phone check, terms screen or identity check appears, stop and tell the owner which screen and which button; never accept terms or verify on their behalf.
+- `agent_browser_not_signed_in`: If the agent's browser is not signed in as the right channel, set who_publishes to 'owner' and plan to hand them the final text and files.
+- `feature_not_available`: If a needed feature such as clickable links or long uploads is not available, or YouTube limits how much the channel can upload or reply today, say so, change the round to use what works (for example a long video instead of a Short) or wait for the limit to reset, never switch to another channel, and never claim the link drives visits.
+- `comments_disabled`: If comments are off on the channel or a video, do not change the setting yourself; tell the owner and leave that video out of any reply work.
 
-### 10. YouTube訂閱與既有網站引流核對 (baseline numbers)
+### 9. Find YouTube comments asking for what the product does
 
-YouTube訂閱與既有網站引流核對
+Build a short list of recent YouTube comments where a real person asks, in their own words, for the tool, service or help the product gives, because only answering those people can turn replies into conversations.
 
-- **C-YT-METRICS.01** 按channel ID在Studio／Analytics取同窗影片與觀眾資料  
-  _Done when:_ channel/window
-- **C-YT-METRICS.02** 分views、watch time、subscribers gained/lost及可用外連報表  
-  _Done when:_ raw metrics
-- **C-YT-METRICS.03** Shorts與長片分開比較，留言互動不能替代外連clicks  
-  _Done when:_ content type
-- **C-YT-METRICS.04** 對既有網站來源與交易去重，報表延遲保留未知  
-  _Done when:_ attribution與limitations
+- **C-YT-INTENT.01** From the chosen buyer situation, write three to five YouTube searches, such as '{task} how to', '{category} comparison', '{problem} solution' and 'best {tool} for {situation}', using the product's words and the buyer's words. Look at results sorted by relevance as well as recent uploads, because older popular videos often still get new comments.  
+  _Done when:_ The list of searches used and the filter applied.
+- **C-YT-INTENT.02** Open the top results and pick at least ten videos whose topic matches the product and whose viewers are the buyer. Read each title and description, and skip videos with comments turned off.  
+  _Done when:_ The chosen video URLs, each with one line on why its viewers match.
+- **C-YT-INTENT.03** Read each video's comments sorted by newest, including the replies under them. Keep only comments that ask for a tool, service, template or help the product actually gives. General praise, jokes and questions about the video itself are not requests.  
+  _Done when:_ Every request comment found, with the commenter's channel name and channel link, and the shortest exact quote that shows the need.
+- **C-YT-INTENT.04** For each request, get its own link by clicking the comment's date (the URL then contains '&lc=' and the comment ID). Note when it was posted as YouTube shows it, for example '2 weeks ago', and drop it if it is older than 30 days.  
+  _Done when:_ Each request's comment link and posting date.
+- **C-YT-INTENT.05** Read the replies under each request. Drop it if the person says it is solved, if the brand already replied, or if the person asked not to be contacted. If the same person asked more than once, keep only their newest comment. Write the reason for every comment you drop.  
+  _Done when:_ An excluded list, each item with its link and the reason.
+- **C-YT-INTENT.06** For each request you keep, write one line on why the product fits, citing the product fact it relies on. Keep this separate from the quote, and mark the fit 'unsure' when the comment does not say enough.  
+  _Done when:_ Each kept request with its quote and a separate fit line marked 'fits' or 'unsure'.
+- **C-YT-INTENT.07** Hand over the kept requests, the excluded list and the counts. Never pad the list to reach a number; if nothing qualifies, report a real zero and suggest which searches to change next.  
+  _Done when:_ The final list with counts of comments read, kept and excluded.
 
-**If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
-
-### 11. YouTube指定留言回覆
-
-YouTube指定留言回覆
-
-- **C-YT-REPLY.01** 核對video ID、comment ID與author channel，不發成另一則頂層廣告  
-  _Done when:_ 原對象與原串ID
-- **C-YT-REPLY.02** 重讀需求原話、時間及CRM已回／停止狀態  
-  _Done when:_ source_event_id與contact_id
-- **C-YT-REPLY.03** 用已核對事實先解決眼前問題，揭露品牌關係；未提出要求不轉冷郵件  
-  _Done when:_ text與fact_ids
-- **C-YT-REPLY.04** 先準備單筆reply意圖，核對目的地與冷卻限制  
-  _Done when:_ operation_key
-- **C-YT-REPLY.05** 讀回平台message/comment ID、全文與時間；未知先對帳，更新CRM  
-  _Done when:_ messages
-
-**Hand back:** `message_id`, `actual_recipient`, `reply_parent_if_reply`, `delivery_or_pending_state`, `readback`
+**Hand back:** `requests`, `excluded`, `searches_used`
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `no_results`: If no comment qualifies, report a real zero, change the searches toward the buyer's own words, and never count general viewers as buyers.
+- `comments_disabled`: If comments are off on a video, skip it and note it; never move to private messages instead.
+- `comment_not_visible`: If a comment link does not show the comment, mark it unknown and leave it out of the list.
+- `product_does_not_fit`: If the requests found ask for something the product does not do, drop them and go back to the buyer situation before searching again.
+- `search_limited`: If YouTube limits or blocks your searching, stop for the day and report what you have; do not switch accounts or tools to get around the limit.
 
-### 12. YouTube訂閱與既有網站引流核對 (result numbers)
+### 10. Read this goal's numbers on YouTube (baseline numbers)
 
-YouTube訂閱與既有網站引流核對
+Record the numbers this goal is judged on, for the same channel and the same length of time before and after the round, so rounds are compared on real YouTube and link numbers. record_numbers lists exactly which numbers it needs.
 
-- **C-YT-METRICS.01** 按channel ID在Studio／Analytics取同窗影片與觀眾資料  
-  _Done when:_ channel/window
-- **C-YT-METRICS.02** 分views、watch time、subscribers gained/lost及可用外連報表  
-  _Done when:_ raw metrics
-- **C-YT-METRICS.03** Shorts與長片分開比較，留言互動不能替代外連clicks  
-  _Done when:_ content type
-- **C-YT-METRICS.04** 對既有網站來源與交易去重，報表延遲保留未知  
-  _Done when:_ attribution與limitations
+- **C-YT-METRICS.01** Confirm the channel ID, the videos or comment threads you are measuring, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days. If you cannot open YouTube Studio analytics, ask the owner for screenshots or the numbers.  
+  _Done when:_ Channel ID, video or comment URLs, date range with time zone, and how the numbers will be obtained.
+- **C-YT-METRICS.02** Read the numbers exactly as YouTube Studio shows them for those videos and days: views, watch time, average view duration, subscribers gained and subscribers lost. Read Shorts and long videos separately and never add them into one figure without saying so.  
+  _Done when:_ The numbers as displayed, split by Shorts and long videos, with the screen they came from and the time they were read.
+- **C-YT-METRICS.03** Fill the goal's components by their exact names. For a subscriber goal, 'subscribers' is subscribers gained minus subscribers lost in the range. For a completion goal, 'video_starts' is the views of the measured videos; for 'completed_views', use a count of viewers who reached the end only if YouTube shows one. If it shows only the video's audience retention chart, multiply the views by the percentage still watching at the last moment of the video, round down, use the same method for the baseline and the current reading, and say in source that it was calculated from the retention chart. If the chart cannot be read at the end, leave 'completed_views' out and name it as missing.  
+  _Done when:_ Each component name with its number and a one-line note on how it was read.
+- **C-YT-METRICS.04** For a link-click goal, take 'link_clicks' from the round's tracked link (from tracking), not from YouTube, and 'views' from YouTube Studio for the same videos and days. Comments and likes never stand in for clicks.  
+  _Done when:_ The tracked link's click count and the matching views, each with its source.
+- **C-YT-METRICS.05** For a comment-request goal, 'eligible_requests' is the number of different request comments the round replied to, and 'qualified_replies' is the number of those commenters who answered back with a real next step (asked for the link, a price or a demo, or said they will try it). Count each person once, and never count likes or the owner's or the agent's own replies.  
+  _Done when:_ Both counts, with the URL of each reply that was counted as qualified.
+- **C-YT-METRICS.06** Add website visits or sales only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which video or reply led to a visit or a sale, say so plainly.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links between video and sale are stated.
+- **C-YT-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
 
 **If stuck:**
-- `brand_channel_mismatch`: 切回精確channel ID；保留Google登入，不操作其他品牌。
-- `comments_disabled`: 不強行改設定或改私訊；記錄此影片不適合接觸。
-- `comment_not_visible`: 對帳原串、held for review與公開頁，不重貼留言。
-- `quota_exceeded`: 依配額窗口等待，不換project逃限。
-- `external_link_unavailable`: 使用目前合法可用入口，外連尚未取得則不宣稱已導站。
+- `cannot_open_analytics`: If you cannot open YouTube Studio analytics for this channel, ask the owner for screenshots of the screens that show the numbers this goal needs.
+- `numbers_from_wrong_channel`: If a screen or screenshot shows a different channel from the agreed channel ID, do not use those numbers and ask again.
+- `no_history`: If the channel has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `link_clicks_not_tracked`: If the description had no tracked link, say that link clicks cannot be read for this round, record nothing for clicks, and make sure the next round uses the tracked link.
+- `too_early_to_read`: If the videos or replies are less than 48 hours old, YouTube figures may still be filling in; report the numbers as early and read them again later.
+
+### 11. Reply to YouTube request comments with a useful answer
+
+Answer each listed request in its own comment thread with real help and an honest product mention, approved by the owner, because a useful reply in the right place is what makes the commenter answer back.
+
+- **C-YT-REPLY.01** Take the request list and reopen each comment link. Confirm the comment is still visible, comments are still on, the brand has not already replied, and the person has not said it is solved or asked not to be contacted; if the owner already uses a CRM, also check it shows no earlier contact or opt-out for that person. Plan no more than ten replies in one round.  
+  _Done when:_ The requests still open for a reply, each with its comment link, and the ones dropped with a reason.
+- **C-YT-REPLY.02** Draft one reply per comment. Answer the person's actual question first in one to three sentences that help even without the product. Then mention the product as one option, say plainly that you make it or work on it, and use only claims the product facts support. Keep each reply under 500 characters, and do not paste the same text under different comments.  
+  _Done when:_ One draft per request, each with the facts it relies on.
+- **C-YT-REPLY.03** Add the round's tracked link only when the person asked for a tool or a link; otherwise name the product and offer to share the link. Replies with links may be held for review more often. If you test two versions, change one thing and give them ?v=A and ?v=B.  
+  _Done when:_ Each draft marked 'with link' or 'no link', and the tracked link with its version tag where used.
+- **C-YT-REPLY.04** Show the owner every reply word for word, next to the comment it answers. Nothing is posted until the owner says yes to that exact text.  
+  _Done when:_ The approved texts and the owner's approval message.
+- **C-YT-REPLY.05** Post each approved reply under its comment, from the agreed channel, never as a new top-level comment or on another video. The agent posts only if its browser is signed in as that channel and the owner said yes; otherwise the owner posts. Leave at least 10 minutes between replies. Press reply once; if it seems to fail, check the thread before trying again.  
+  _Done when:_ Who posted each reply and when.
+- **C-YT-REPLY.06** Open each comment link in a signed-out or private window and confirm the reply shows under the right comment, as the right channel, with the approved text. Copy the reply's own link. If it does not show, mark it 'held or missing' and never post it again.  
+  _Done when:_ The public URL of each reply, or its 'held or missing' status.
+- **C-YT-REPLY.07** Check each thread again after 24 and 48 hours. Draft answers to any follow-up questions and show them to the owner before posting. Do not move anyone to email or private messages unless they ask, and send no follow-up to people who did not answer.  
+  _Done when:_ A list of who answered back, what they asked, and the approved follow-up replies.
+
+**Hand back:** `reply_urls`, `replied_text`, `held_or_missing`, `follow_ups`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not said yes to the exact text, do not post; show them the text and stop until they answer.
+- `wrong_channel_signed_in`: If the reply box shows a channel other than the agreed one, stop and ask the owner to switch channels or post it themselves.
+- `comments_disabled`: If comments have been turned off, drop that request and never contact the person another way instead.
+- `reply_not_visible`: If a posted reply does not show publicly, mark it held or missing, check again after a few hours, and never post it twice.
+- `person_asked_to_stop`: If the person says no thanks or asks not to be contacted, stop replying to them and remove them from the round.
+- `posting_limited`: If YouTube blocks or limits replies from the channel, stop for the day, tell the owner, and never switch channels or accounts to get around it.
+
+### 12. Read this goal's numbers on YouTube (result numbers)
+
+Record the numbers this goal is judged on, for the same channel and the same length of time before and after the round, so rounds are compared on real YouTube and link numbers. record_numbers lists exactly which numbers it needs.
+
+- **C-YT-METRICS.01** Confirm the channel ID, the videos or comment threads you are measuring, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days. If you cannot open YouTube Studio analytics, ask the owner for screenshots or the numbers.  
+  _Done when:_ Channel ID, video or comment URLs, date range with time zone, and how the numbers will be obtained.
+- **C-YT-METRICS.02** Read the numbers exactly as YouTube Studio shows them for those videos and days: views, watch time, average view duration, subscribers gained and subscribers lost. Read Shorts and long videos separately and never add them into one figure without saying so.  
+  _Done when:_ The numbers as displayed, split by Shorts and long videos, with the screen they came from and the time they were read.
+- **C-YT-METRICS.03** Fill the goal's components by their exact names. For a subscriber goal, 'subscribers' is subscribers gained minus subscribers lost in the range. For a completion goal, 'video_starts' is the views of the measured videos; for 'completed_views', use a count of viewers who reached the end only if YouTube shows one. If it shows only the video's audience retention chart, multiply the views by the percentage still watching at the last moment of the video, round down, use the same method for the baseline and the current reading, and say in source that it was calculated from the retention chart. If the chart cannot be read at the end, leave 'completed_views' out and name it as missing.  
+  _Done when:_ Each component name with its number and a one-line note on how it was read.
+- **C-YT-METRICS.04** For a link-click goal, take 'link_clicks' from the round's tracked link (from tracking), not from YouTube, and 'views' from YouTube Studio for the same videos and days. Comments and likes never stand in for clicks.  
+  _Done when:_ The tracked link's click count and the matching views, each with its source.
+- **C-YT-METRICS.05** For a comment-request goal, 'eligible_requests' is the number of different request comments the round replied to, and 'qualified_replies' is the number of those commenters who answered back with a real next step (asked for the link, a price or a demo, or said they will try it). Count each person once, and never count likes or the owner's or the agent's own replies.  
+  _Done when:_ Both counts, with the URL of each reply that was counted as qualified.
+- **C-YT-METRICS.06** Add website visits or sales only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which video or reply led to a visit or a sale, say so plainly.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links between video and sale are stated.
+- **C-YT-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
+
+**If stuck:**
+- `cannot_open_analytics`: If you cannot open YouTube Studio analytics for this channel, ask the owner for screenshots of the screens that show the numbers this goal needs.
+- `numbers_from_wrong_channel`: If a screen or screenshot shows a different channel from the agreed channel ID, do not use those numbers and ask again.
+- `no_history`: If the channel has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `link_clicks_not_tracked`: If the description had no tracked link, say that link clicks cannot be read for this round, record nothing for clicks, and make sure the next round uses the tracked link.
+- `too_early_to_read`: If the videos or replies are less than 48 hours old, YouTube figures may still be filling in; report the numbers as early and read them again later.

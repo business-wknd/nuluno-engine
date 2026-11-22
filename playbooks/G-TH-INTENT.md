@@ -1,7 +1,7 @@
-# Threads公開需求轉成有效回覆
+# Threads: turn public requests for help into useful replies
 
 - **Goal id:** `G-TH-INTENT`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** threads
 - **Metric:** `qualified_reply_rate` = `qualified_replies` / `eligible_requests`, should increase
 - **Observation window:** 48 hours after publishing
@@ -205,29 +205,31 @@ Settle which Threads account will post and who presses publish (the owner, or th
 - `agent_browser_not_signed_in`: If the agent's browser is not signed in to the right account, set who_publishes to 'owner' and plan to hand them the final text to post.
 - `handle_not_the_brand`: If the signed-in account is a personal account or a different brand, stop before any posting and ask the owner which account to use.
 
-### 9. Threads公開需求原串搜尋
+### 9. Find recent Threads posts where people ask for help
 
-Threads公開需求原串搜尋
+Produce a checked list of recent public Threads posts where real people ask for a recommendation or describe the problem the product solves, because these posts are the round's eligible requests and the only places a reply can help.
 
-- **C-TH-INTENT.01** 用問題詞／替代品詞搜尋Threads當前可用搜尋，記查詢與日期條件  
-  _Done when:_ query和cursor
-- **C-TH-INTENT.02** 開每則原串讀作者、時間、上下文及後續是否已解決  
-  _Done when:_ url／author／published_at
-- **C-TH-INTENT.03** 挑實際求推薦／喊痛原話，排除賣家自推與只有熱門話題  
-  _Done when:_ evidence_quote與排除原因
-- **C-TH-INTENT.04** 核對可否回覆及產品fact_ids適配，不把搜尋摘要當已讀原文  
-  _Done when:_ rules與fit
-- **C-TH-INTENT.05** 交demand_posts供共用qualify再篩選；可讀不足照實交  
-  _Done when:_ demand_posts與cursor
+- **C-TH-INTENT.01** Write 5 to 10 search phrases from the buyer quotes, in the words buyers use: '<task> recommend', 'any alternative to <tool>', 'how do I <problem>'. Use the buyers' language, not product terms.  
+  _Done when:_ The list of phrases, each with the date it was run.
+- **C-TH-INTENT.02** Search with Threads search in the agent's browser, or with a web search limited to threads.com or threads.net. Prefer posts from the last 7 days and drop anything older than 30 days.  
+  _Done when:_ For each phrase, the candidate post URLs found and how they were found.
+- **C-TH-INTENT.03** Open each candidate post itself. Read the author's handle, the date, the full text and the replies below it. A search snippet is not a read post.  
+  _Done when:_ For each post: URL, author handle, date, and whether you read the full post and its replies.
+- **C-TH-INTENT.04** Keep only posts where the author asks for a recommendation or describes the problem in their own words. Exclude sellers promoting themselves, trend or joke posts, posts already solved in the replies, and posts that limit who can reply.  
+  _Done when:_ For each kept post, the exact quote that shows the need; for each excluded post, the reason.
+- **C-TH-INTENT.05** Check each kept post against the product fact sheet: does the product truly solve what this person asked? Write the fit as your inference, separate from what they said. Also check whether the brand account already replied in that thread.  
+  _Done when:_ Each kept post marked fits, partly fits, or does not fit, plus whether the brand already replied.
+- **C-TH-INTENT.06** Hand back the qualified posts, the excluded ones and the unknown ones, each with a reason. The count of qualified posts is this round's number of eligible requests for the goal. If fewer than three qualify, report the true number; never invent a need.  
+  _Done when:_ The qualified list with its count, and the excluded and unknown lists with reasons.
 
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
+**Hand back:** `demand_posts`, `exclusions`, `search_phrases`
 
 **If stuck:**
-- `ig_threads_mismatch`: 返回帳號選擇器核對兩個handle，不用另一個IG建立錯profile。
-- `profile_not_created`: 登入成功不當建立成功；回profile建立入口讀狀態。
-- `token_subject_mismatch`: 停止寫入，核對Threads user ID，不能用IG token冒充。
-- `container_pending`: 保留container ID，讀處理狀態直到可發布或有界超時。
-- `search_unavailable`: 使用已授權官方搜尋或公開搜尋線索；原文不可讀則等待，不捏造需求。
+- `search_unavailable`: If Threads search does not work in your browser, use a web search limited to threads.com or threads.net; if a post cannot be opened, leave it out rather than guessing its content.
+- `not_signed_in`: If Threads asks you to sign in to search, ask the owner to sign in in your browser or to run the phrases and send you the post URLs.
+- `no_results`: If no post qualifies, rewrite the phrases once using different buyer words, then report the true zero.
+- `already_replied`: If the brand already replied in a thread, exclude it; never reply to the same person twice in one round.
+- `replies_restricted`: If the author limits who can reply, exclude the post and do not reach out by DM instead.
 
 ### 10. Read this goal's numbers on Threads (baseline numbers)
 
@@ -249,29 +251,35 @@ Record the numbers this goal is judged on, for the account's posts before and af
 - `numbers_from_wrong_account`: If the screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
 - `too_early_to_read`: If the post is less than 24 hours old, report the numbers as early and read them again later.
 
-### 11. Threads需求原串相關回覆
+### 11. Reply helpfully to Threads posts that ask for help
 
-Threads需求原串相關回覆
+Post one honest, useful reply under each qualified request, with the owner's approval, because a reply that solves the person's problem first is what turns a public request into a real conversation.
 
-- **C-TH-REPLY.01** 核對Threads reply_to_id及原作者，讀最後一則更新  
-  _Done when:_ 原對象與原串ID
-- **C-TH-REPLY.02** 重讀需求原話、時間及CRM已回／停止狀態  
-  _Done when:_ source_event_id與contact_id
-- **C-TH-REPLY.03** 用已核對事實先解決眼前問題，揭露品牌關係；未提出要求不轉冷郵件  
-  _Done when:_ text與fact_ids
-- **C-TH-REPLY.04** 先準備單筆reply意圖，核對目的地與冷卻限制  
-  _Done when:_ operation_key
-- **C-TH-REPLY.05** 讀回平台message/comment ID、全文與時間；未知先對帳，更新CRM  
-  _Done when:_ messages
+- **C-TH-REPLY.01** Reopen each post on the qualified list just before writing. Confirm the author, that the post is still up and still open to replies, that it was not solved, that the brand has not replied, and that the author has not asked people to stop.  
+  _Done when:_ Each post marked still eligible or skipped, with the reason and the time checked.
+- **C-TH-REPLY.02** Write one reply per post, under 500 characters. Answer the question first with something useful even if they never buy. Mention the product only if it truly fits, and say plainly that you make it, for example 'I'm the founder of ...'.  
+  _Done when:_ One draft per post, its character count, and the line that states the relationship to the product.
+- **C-TH-REPLY.03** If the reply includes a link, use the round's tracked link. If you are testing two reply angles, add ?v=A to one and ?v=B to the other, and change only the angle.  
+  _Done when:_ Each draft's link and version label, or a note that it has no link.
+- **C-TH-REPLY.04** Check each claim against the product fact sheet; remove any number, result or promise you cannot support. Do not move the person to DM or email unless they ask for it.  
+  _Done when:_ Each draft with its claims and the fact each one rests on.
+- **C-TH-REPLY.05** Show the owner every reply word for word, with the post it answers. Post at most 10 replies in a round, never the same text twice. Nothing goes out without the owner's yes.  
+  _Done when:_ The approved replies and the owner's approval message.
+- **C-TH-REPLY.06** Confirm the signed-in account is the agreed brand handle. Post each approved reply once, directly under the original post. The owner posts it, or the agent's own browser does if it is signed in and the owner said yes. Leave at least 10 minutes between replies.  
+  _Done when:_ For each reply: who posted it and the time.
+- **C-TH-REPLY.07** Open each reply's public URL. Check the text, the author handle and that it sits under the right post. If posting seemed to fail, look for the reply before trying again so nothing is posted twice.  
+  _Done when:_ The public URL of each reply and its text as it appears there.
+- **C-TH-REPLY.08** Over the next 48 hours, check each thread for answers. Draft short responses to real questions for the owner to approve, and stop at once if someone says no thanks.  
+  _Done when:_ For each reply: no answer, answered with interest, or declined, with the URL of any answer.
 
-**Hand back:** `message_id`, `actual_recipient`, `reply_parent_if_reply`, `delivery_or_pending_state`, `readback`
+**Hand back:** `reply_urls`, `published_text`, `author_responses`
 
 **If stuck:**
-- `ig_threads_mismatch`: 返回帳號選擇器核對兩個handle，不用另一個IG建立錯profile。
-- `profile_not_created`: 登入成功不當建立成功；回profile建立入口讀狀態。
-- `token_subject_mismatch`: 停止寫入，核對Threads user ID，不能用IG token冒充。
-- `container_pending`: 保留container ID，讀處理狀態直到可發布或有界超時。
-- `search_unavailable`: 使用已授權官方搜尋或公開搜尋線索；原文不可讀則等待，不捏造需求。
+- `owner_has_not_approved`: If the owner has not said yes to a reply's exact text, do not post it; show it to them and wait.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed brand handle, stop and ask the owner to switch accounts or post the replies themselves.
+- `thread_solved_or_closed`: If the post was deleted, solved, or closed to replies, skip it and do not contact the author another way.
+- `author_asked_to_stop`: If the author or anyone in the thread asks the brand to stop, do not reply again and record it.
+- `reply_not_visible`: If a reply does not appear after posting, check again after a few minutes before any retry, and never post the same text twice.
 
 ### 12. Read this goal's numbers on Threads (result numbers)
 

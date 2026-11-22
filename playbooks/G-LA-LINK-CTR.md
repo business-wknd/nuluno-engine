@@ -1,11 +1,11 @@
-# LinkedIn Ads提高連結點擊率
+# LinkedIn Ads: raise the link click rate
 
 - **Goal id:** `G-LA-LINK-CTR`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** linkedin_ads
 - **Metric:** `link_ctr` = `link_clicks` / `impressions`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `A-ANGLES`), data (the next round starts with `C-LA-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `S12`), data (the next round starts with `C-LA-METRICS`)
 
 ## Steps
 
@@ -179,30 +179,34 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備LinkedIn Ads帳號、登入與授權
+### 8. Confirm the LinkedIn ad account, Page, and spending limits
 
-準備LinkedIn Ads帳號、登入與授權
+Settle which LinkedIn ad account and Company Page this goal uses, who works in Campaign Manager, and the owner's written spending limits, so ads can be drafted, run and measured without stopping halfway.
 
-- **C-LINKEDIN_ADS-ACCESS.01** 核對Campaign Manager帳號ID、Company Page與廣告管理角色  
-  _Done when:_ 三者ID及角色
-- **C-LINKEDIN_ADS-ACCESS.02** 沿官方登入與既有Marketing API權限，權限審查未過則等待  
-  _Done when:_ 實際可用API與scope
-- **C-LINKEDIN_ADS-ACCESS.03** 核對帳單幣別、時區、每日／總額與現有conversion sources  
-  _Done when:_ 預算與資料來源
-- **C-LINKEDIN_ADS-ACCESS.04** Lead Gen Form讀隱私連結、表單擁有權與下載權；表單提交不當同意所有後續  
-  _Done when:_ 表單範圍與同意欄位
-- **C-LINKEDIN_ADS-ACCESS.05** 讀目前受眾條件與可用選項；不套第三方舊指南的固定受眾功能或CPC  
-  _Done when:_ 目前schema與實際估計
-- **C-LINKEDIN_ADS-ACCESS.06** 只變更本輪指定的campaign/ad；不開自動擴量或批次啟用  
-  _Done when:_ 物件allowlist與scope
+- **C-LINKEDIN_ADS-ACCESS.01** Ask the owner for the URL of the LinkedIn Company Page the ads will run under and the ad account they want to use. Open the Page URL as a public page and confirm it is the owner's brand. If an ad account already exists, use it; do not create a second one.  
+  _Done when:_ The Company Page URL, the ad account name and ID as Campaign Manager shows them, and the owner's confirmation that both are theirs.
+- **C-LINKEDIN_ADS-ACCESS.02** Decide who works in Campaign Manager: the owner, or the agent in a browser where the owner is already signed in, if the owner allows it. If nobody is signed in, the owner signs in themselves on LinkedIn's own sign-in screen and handles any code or identity check. Never ask for a password. If the owner already reaches the ad account through a tool that uses LinkedIn's advertising API, use only the access it already has; if that access is still waiting for LinkedIn's review, wait and work in Campaign Manager instead.  
+  _Done when:_ Who will operate the ad account, and how sign-in was done.
+- **C-LINKEDIN_ADS-ACCESS.03** Check the role the operator has on the ad account (it must allow creating and editing campaigns, for example Account manager or Campaign manager) and that the operator is allowed to run ads under the Company Page. If either is missing, the owner adds it from a Page or ad account admin login.  
+  _Done when:_ The operator's role on the ad account, and whether ads can run under the Company Page.
+- **C-LINKEDIN_ADS-ACCESS.04** Read the ad account's currency, time zone, and whether a payment method is already set up. Ask the owner to write down the daily budget and the total budget for this round in that currency. The agent never enters card details; if billing is missing, the owner adds it.  
+  _Done when:_ Currency, time zone, billing status, and the owner's written daily and total limits.
+- **C-LINKEDIN_ADS-ACCESS.05** List the conversions already set up in the ad account, what each one counts, and its attribution window, and whether the product site already has LinkedIn's Insight Tag. Do not add a tag or a new conversion here; if one is needed, write down exactly what and ask the owner.  
+  _Done when:_ Each existing conversion with what it counts and its window, or a note that none exist.
+- **C-LINKEDIN_ADS-ACCESS.06** If the round will use a Lead Gen Form, confirm the form will belong to this ad account, that the owner has a privacy policy URL for it, and who can download the leads. A filled form only allows a reply about that request, not adding the person to every mailing.  
+  _Done when:_ The privacy policy URL opened and confirmed, who can download leads, or a note that the round sends people to the product site instead.
+- **C-LINKEDIN_ADS-ACCESS.07** Write down the round's limits: the one campaign group and campaign this round may create or change, and that nothing else in the account will be switched on, paused or edited. Leave audience expansion and any automatic budget increase off unless the owner asks for them.  
+  _Done when:_ The list of what this round may touch, with the owner's okay in writing.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
+**Hand back:** `ad_account_id`, `company_page_url`, `who_operates`, `budget_limits`, `conversion_sources`
 
 **If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
+- `page_role_missing`: If the operator cannot run ads for the Company Page, ask the owner to add the role from a Page admin login, and keep working on the copy meanwhile.
+- `owner_action_needed`: If LinkedIn asks for a verification code, terms, or an identity check, stop and tell the owner which screen needs them; never enter codes or accept terms for them.
+- `no_billing`: If the ad account has no payment method, ask the owner to add one themselves; never type card details.
+- `no_written_budget`: If the owner has not written down both a daily and a total budget, do not prepare any campaign and ask for both numbers in the account's currency.
+- `lead_download_not_allowed`: If nobody can download the form's leads, say so and plan to send people to the product site with the round's tracked link; never guess email addresses.
+- `conversion_unknown`: If no conversion is set up, mark it unknown and rely on the round's tracked link and sale counter; add nothing to the site without the owner's yes.
 
 ### 9. Write the post from proven facts
 
@@ -228,138 +232,173 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. 製作與改版圖片素材
+### 10. Make the marketing images from real product visuals
 
-製作與改版圖片素材
+Produce finished image files in the exact size the channel needs, built from real product visuals and approved copy, because a clear image that matches the product is what stops the scroll and moves the goal's main number.
 
-- **S12.01** 讀取用途與規格：確認渠道、圖片類型、尺寸與數量。  
-  _Done when:_ 每張圖的用途明確。
-- **S12.02** 盤點可用視覺：讀品牌、產品畫面、照片及使用權。  
-  _Done when:_ 素材來源可追查。
-- **S12.03** 核對文字與主張：使用S11已核對文案。  
-  _Done when:_ 價格與產品畫面一致。
-- **S12.04** 安排資訊層次：決定標題、示範、證據與行動提示的位置。  
-  _Done when:_ 一眼能理解重點。
-- **S12.05** 實際製作圖片：使用可用圖片工具產出檔案。  
-  _Done when:_ 取得可開啟的實際圖片。
-- **S12.06** 檢查文字與細節：查看字形、裁切、產品畫面及是否有生成錯字。  
-  _Done when:_ 關鍵文字與畫面正確。
-- **S12.07** 檢查尺寸與格式：核對檔案類型、像素、容量與可讀性。  
-  _Done when:_ 符合當前渠道需求。
-- **S12.08** 製作必要版本：依測試需求裁切、改版或改比例。  
-  _Done when:_ 版本各有用途與識別。
-- **S12.09** 保存檔案與使用紀錄：交S14或S31可讀的檔案參照。  
-  _Done when:_ 來源、版本、用途可查。
+- **S12.01** Write down what images this round needs: the channel and placement, the image type (single image, carousel, cover or ad), the pixel size, and how many. If the size is unknown, check the channel's current help page; for example 1080x1350 for a portrait feed image and 1080x1920 for a full-screen vertical one.  
+  _Done when:_ A list of images with channel, placement, size and purpose for each.
+- **S12.02** Collect the real visuals: product screenshots, product photos, logo and brand colours. Use only material the owner made or has the right to use; never copy other brands' images or stock photos without a licence.  
+  _Done when:_ Each visual with where it came from and who owns it.
+- **S12.03** Take the words only from the approved copy. For feed and ad images keep the text to at most two short lines, around 10 words, placed where it stays readable and clear of the channel's own buttons and captions; follow the channel's own text rules for covers and store screenshots. Do not let an image tool add numbers, prices, ratings or badges.  
+  _Done when:_ The exact text for each image, matching the approved copy.
+- **S12.04** Lay out each image with one headline, the product shown working, and one call to action. If there is more to say, split it into carousel slides instead of crowding one image.  
+  _Done when:_ A short layout note or sketch for each image.
+- **S12.05** Make the actual image files with the image or design tool available. Place the text as a real text layer, not generated lettering. A prompt or description is not a finished image. If the only available tool charges money, ask the owner before using it.  
+  _Done when:_ Image files that open.
+- **S12.06** Open each file at full size and check spelling, cropping, faces, and that any product screen shown is the real product. Fix any garbled or wrong text by rebuilding it, never by handing over a flawed image.  
+  _Done when:_ A checked list of each image with any fixes made.
+- **S12.07** Check each file's type (JPG or PNG), pixel size and file size against the channel's limits, and view it at phone width to confirm the text is readable.  
+  _Done when:_ Type, pixel size and file size for each image, all within the channel's limits.
+- **S12.08** If the round tests versions, make only the versions the test needs and change one thing between them, labelled A, B and so on. Do not make extra variations for channels not in this round.  
+  _Done when:_ Each version labelled with the single thing that differs.
+- **S12.09** Save the final files with clear names and a note of version, purpose and sources, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open, with the note for each file.
 
-**Hand back:** `actual_file`, `mime_type`, `dimensions`, `sha256`, `visual_readback`
-
-### 11. LinkedIn Ads表單到合格商機核對 (baseline numbers)
-
-LinkedIn Ads表單到合格商機核對
-
-- **C-LA-METRICS.01** 以LinkedIn Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-LA-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-LA-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-LA-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-LA-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+**Hand back:** `image_files`, `image_text`, `versions`, `sources`
 
 **If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
+- `no_real_product_visuals`: If there are no screenshots or photos of the real product, ask the owner for two or three, and meanwhile make a text-and-brand-colour design without fake product screens.
+- `size_unknown`: If the channel's required size is unclear, check its current help page; if still unclear, ask the owner where the image will run.
+- `text_garbled`: If the image tool produces wrong or garbled text, rebuild the text as a real text layer before handing over the file.
+- `rights_unclear`: If you cannot tell who owns a visual, leave it out and use one the owner confirms they own.
+- `image_tool_failed`: If the image tool fails, try another available tool with the same brief; do not start the whole brief over or create duplicate charges.
 
-### 12. LinkedIn Ads名單或導站PAUSED測試
+### 11. Read this goal's numbers from LinkedIn Ads (baseline numbers)
 
-LinkedIn Ads名單或導站PAUSED測試
+Record the numbers this goal is judged on, from the ad account's reporting and the owner's own lead or sales records, for a fixed date range, so the baseline and the current round are compared on real numbers.
 
-- **C-LA-DRAFT.01** 核對Campaign Manager ID、Company Page與權限  
-  _Done when:_ identity
-- **C-LA-DRAFT.02** 讀當前受眾欄位、Lead Gen Form／conversion可用性及隱私入口  
-  _Done when:_ schema與forms
-- **C-LA-DRAFT.03** 核對文案、職務情境、既有目的地、預算與PAUSED狀態  
-  _Done when:_ draft manifest
-- **C-LA-DRAFT.04** prepare後只建本輪campaign/ad，保存ID  
-  _Done when:_ operation keys
-- **C-LA-DRAFT.05** 讀回身份、受眾、表單或link、budget及狀態，不能標已拿到leads  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
-
-**If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
-
-### 13. LinkedIn Ads單組啟用
-
-LinkedIn Ads單組啟用
-
-- **C-LA-ACTIVATE.01** 重讀Campaign Manager ID、Company Page及form／ad IDs，只選本輪allowlist物件  
-  _Done when:_ identity manifest
-- **C-LA-ACTIVATE.02** 核對有效activate_ads範圍、原幣每日／總額及到期，零預算不能啟用  
-  _Done when:_ grant與budget
-- **C-LA-ACTIVATE.03** 確認草稿已通過素材／目的地核對；平台審核中另標，不繞審核  
-  _Done when:_ draft/readback
-- **C-LA-ACTIVATE.04** prepare後只啟用本輪ID，不啟動其他草稿或自動加預算  
-  _Done when:_ operation_key
-- **C-LA-ACTIVATE.05** 讀回status、effective delivery與budget，安排授權到期停止  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+- **C-LA-METRICS.01** Confirm the ad account ID, the campaigns being measured, the date range, the time zone, and the currency. For the baseline, use the account's earlier campaigns with the same objective over a range of the same length. For the current reading, start when this round's ads went live and cover at least the goal's 168 hours.  
+  _Done when:_ Ad account ID, campaign names and IDs, date range with time zone, and currency.
+- **C-LA-METRICS.02** Find this goal's metric components and use those exact names with record_numbers: spend_minor and attributed_conversions for cost per conversion, spend_minor and qualified_leads for cost per qualified lead, link_clicks and impressions for link click rate.  
+  _Done when:_ The list of component names this goal needs, copied exactly.
+- **C-LA-METRICS.03** In the ad account's reporting, filter to only the measured campaigns and the date range, then read spend, impressions, and landing page clicks. Write spend in the currency's smallest unit: USD 123.45 is 12345; for a currency without cents, such as JPY, 1 yen is 1.  
+  _Done when:_ Each figure as shown, with the filter used and the time it was read.
+- **C-LA-METRICS.04** For attributed_conversions, read the chosen conversion and note its attribution window. Check it against the sale counter and the owner's payment records; never count the owner's or the agent's test purchases, and leave out refunded orders. If the window is still open, mark the number as early.  
+  _Done when:_ The conversion count, its window, and how it matches the sales records.
+- **C-LA-METRICS.05** For qualified_leads, take the leads from the form download or the site form and count only those that meet the rule written before the round, such as job role, company size, or stated need. Count each person once. A lead is not a sale, and no lead is ever invented.  
+  _Done when:_ The qualified count, the rule used, and how many leads were left out and why.
+- **C-LA-METRICS.06** For link_clicks, use landing page clicks from the reporting or the round's tracked link count, and name which one. Use the same source for the baseline and the current reading.  
+  _Done when:_ The click count and its source, the same as in the other reading.
+- **C-LA-METRICS.07** Write down refunds and the round's other costs if known, such as tools or the owner's hours, or 'unknown'. The return the ad account reports is not the owner's net income. Use the same definitions and sources for the baseline and the current reading, and never borrow a number from another goal.  
+  _Done when:_ Refunds and other costs, or 'unknown', and a note that both readings use the same definitions.
+- **C-LA-METRICS.08** Call record_numbers with each component by its exact name and a source naming the screen, export, or file and the read time. If there is no history, record 0 and say so in source. Never estimate a missing number, and change nothing in the ads while reading.  
+  _Done when:_ The recorded numbers, each with its source, and any number left out with the reason.
 
 **If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for an export or a screenshot filtered to the measured campaigns and date range.
+- `no_history`: If the account has no earlier campaigns for this metric, record 0, say in source that there is no history, and let this round set the baseline.
+- `conversion_unknown`: If no conversion is set up, use the sale counter and payment records only, and say in source that the ad account has no conversion.
+- `lead_download_not_allowed`: If the leads cannot be downloaded, ask the owner to export them; never count qualified leads you cannot see.
+- `too_early_to_read`: If the ads have run less than 168 hours or conversions may still arrive, record the numbers as early and read them again later.
+- `numbers_from_wrong_account`: If an export or screenshot shows a different ad account or campaigns from the agreed ones, do not use it and ask again.
 
-### 14. LinkedIn Ads表單到合格商機核對 (result numbers)
+### 12. Build this round's LinkedIn ads as drafts, not running
 
-LinkedIn Ads表單到合格商機核對
+Set up this round's campaign and ads in Campaign Manager without switching them on, so the owner can check every word, the audience, and the budget before any money is spent.
 
-- **C-LA-METRICS.01** 以LinkedIn Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-LA-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-LA-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-LA-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-LA-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+- **C-LA-DRAFT.01** Re-check the ad account ID, the Company Page, the operator's role, and the owner's written daily and total budget. If any of these is missing, stop here.  
+  _Done when:_ The four items, confirmed on the day of drafting.
+- **C-LA-DRAFT.02** Pick the objective that fits the goal's main number: website visits or conversions when people should reach the product page, lead generation when the goal counts leads. Read the audience options the ad account shows today; do not copy audience settings or typical costs from old guides.  
+  _Done when:_ The objective chosen and why, and the audience options available today.
+- **C-LA-DRAFT.03** Build the audience from the chosen buyer group: one job situation, such as a job function plus seniority and company size. Note the audience size estimate shown. If it is too small to run, adjust within the same buyer group; never widen to people who do not fit.  
+  _Done when:_ The audience settings and the size estimate shown.
+- **C-LA-DRAFT.04** Prepare each ad from the approved copy and image. The destination is the round's tracked link, with ?v=A, ?v=B for each version, and only one thing differs between versions. For a Lead Gen Form, keep it to at most four fields, add one question that tests the qualification rule, and add the privacy policy URL. Check every claim against the product facts; no invented numbers, testimonials, scarcity, or guarantees.  
+  _Done when:_ Each ad's text, image, and link or form, with what differs between versions.
+- **C-LA-DRAFT.05** Show the owner, word for word: each ad's text, headline, image, destination link or form questions, the audience, the objective, the daily and total budget, and the start and end dates. Get a clear yes before saving.  
+  _Done when:_ The full draft as shown, and the owner's approval message.
+- **C-LA-DRAFT.06** The operator agreed in the account step creates only this round's campaign and ads, saved as draft or paused. Set a daily budget and a total budget at or below the owner's limits, and an end date. Do not edit any other campaign. If saving seemed to fail, check the campaign list before trying again so nothing is created twice.  
+  _Done when:_ One campaign and its ads in draft or paused status, and their IDs.
+- **C-LA-DRAFT.07** Open the campaign again and check that the status, audience, budget, end date, and each ad's link or form match the approved draft. Report no leads or clicks yet; nothing has run.  
+  _Done when:_ Campaign and ad IDs, their status, and a line-by-line match with the approved draft.
 
-**If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
-
-### 15. LinkedIn Ads觀察後只暫停本輪測試物件
-
-LinkedIn Ads觀察後只暫停本輪測試物件
-
-- **C-LA-STOP.01** 從本輪成功activate操作讀campaign／ad group／ad IDs，不用帳號全部物件清單當範圍  
-  _Done when:_ owned active object IDs
-- **C-LA-STOP.02** 核對本輪觀察窗及已存報表，保留原素材、預算和版本  
-  _Done when:_ observation evidence
-- **C-LA-STOP.03** prepare後只pause本輪已核對IDs；不取消訂單、刪campaign或動其他品牌  
-  _Done when:_ scoped pause operation
-- **C-LA-STOP.04** 讀effective status已不配送；逾時先對帳，不能標已停止  
-  _Done when:_ ad_objects與delivery_state
-- **C-LA-STOP.05** 下一輪另用單一變數測試與原範圍，暫停不擴大預算或授權  
-  _Done when:_ changes與next-test boundary
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+**Hand back:** `campaign_id`, `ad_ids`, `draft_status`, `budget_set`, `owner_approval`
 
 **If stuck:**
-- `page_role_missing`: 等正確Page角色，研究和草稿繼續。
-- `lead_download_scope`: 保存缺少權限，不用猜Email代替真實lead。
-- `audience_too_small`: 依本輪ICP調整假設，不擅自擴至不適合客群。
-- `conversion_unknown`: 保留未知並讀現有來源，不加tag。
+- `no_written_budget`: If the owner has not written a daily and a total budget, do not create anything and ask for both numbers.
+- `owner_has_not_approved`: If the owner has not said yes to this exact draft, do not save it in the ad account; show it and wait.
+- `audience_too_small`: If the audience is too small to run, adjust it within the same buyer group or tell the owner; never widen to people who do not fit.
+- `page_role_missing`: If the ads cannot run under the Company Page, ask the owner to fix the role, and keep the draft text ready.
+- `link_does_not_open`: If the tracked link does not open the product page, fix it before saving the draft.
+- `lead_download_not_allowed`: If leads from the form cannot be downloaded, switch to the product page with the tracked link and tell the owner.
+
+### 13. Switch on only this round's LinkedIn ads
+
+Start delivery of the approved draft ads, and nothing else, within the owner's written budget, so the round collects real numbers for the goal.
+
+- **C-LA-ACTIVATE.01** Open the campaign and ads by the IDs from the draft step. Confirm the text, image, audience, link or form, and budget are the same as approved. If anything changed, show the owner again before going on.  
+  _Done when:_ Campaign and ad IDs, and a check that each matches the approved draft.
+- **C-LA-ACTIVATE.02** Get the owner's written yes to switch on, naming the daily budget, the total budget, and the end date in the account's currency. With no budget, a zero budget, or no yes, nothing is switched on.  
+  _Done when:_ The owner's message approving the switch-on with the amounts and end date.
+- **C-LA-ACTIVATE.03** Open the tracked link of each ad and confirm it reaches the product page, or preview the Lead Gen Form and confirm its questions and privacy link.  
+  _Done when:_ Each link or form checked, with the page or form it showed.
+- **C-LA-ACTIVATE.04** Switch on only this round's campaign and ads, by the operator agreed earlier. Do not switch on any other draft, raise the budget, or turn on audience expansion.  
+  _Done when:_ Who switched on what, and when.
+- **C-LA-ACTIVATE.05** Open the campaign again and read each ad's status and review state. If an ad is in review, wait; do not edit it to get around review. If an ad is rejected, read the reason and bring a fix to the owner.  
+  _Done when:_ Status and review state of each ad, with the time read.
+- **C-LA-ACTIVATE.06** Write down the start time and the planned stop: after the goal's 168 hours or when the total budget is spent, whichever comes first. Set the campaign's end date to match if the owner agreed.  
+  _Done when:_ Start time, planned stop time, and whether an end date is set in the campaign.
+
+**Hand back:** `campaign_id`, `ad_ids`, `live_status`, `started_at`, `planned_stop`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not approved switching on with a budget and end date, do not switch anything on; ask and wait.
+- `ads_differ_from_draft`: If the ads no longer match the approved draft, show the owner the difference and get a new yes.
+- `ad_in_review`: If an ad is still in review, wait and check again later; do not edit it to get around review.
+- `ad_rejected`: If an ad is rejected, read the reason, draft a fix that keeps to the facts, and show the owner before resubmitting.
+- `payment_failed`: If the ad account shows a billing problem, ask the owner to fix it themselves; never enter card details.
+
+### 14. Read this goal's numbers from LinkedIn Ads (result numbers)
+
+Record the numbers this goal is judged on, from the ad account's reporting and the owner's own lead or sales records, for a fixed date range, so the baseline and the current round are compared on real numbers.
+
+- **C-LA-METRICS.01** Confirm the ad account ID, the campaigns being measured, the date range, the time zone, and the currency. For the baseline, use the account's earlier campaigns with the same objective over a range of the same length. For the current reading, start when this round's ads went live and cover at least the goal's 168 hours.  
+  _Done when:_ Ad account ID, campaign names and IDs, date range with time zone, and currency.
+- **C-LA-METRICS.02** Find this goal's metric components and use those exact names with record_numbers: spend_minor and attributed_conversions for cost per conversion, spend_minor and qualified_leads for cost per qualified lead, link_clicks and impressions for link click rate.  
+  _Done when:_ The list of component names this goal needs, copied exactly.
+- **C-LA-METRICS.03** In the ad account's reporting, filter to only the measured campaigns and the date range, then read spend, impressions, and landing page clicks. Write spend in the currency's smallest unit: USD 123.45 is 12345; for a currency without cents, such as JPY, 1 yen is 1.  
+  _Done when:_ Each figure as shown, with the filter used and the time it was read.
+- **C-LA-METRICS.04** For attributed_conversions, read the chosen conversion and note its attribution window. Check it against the sale counter and the owner's payment records; never count the owner's or the agent's test purchases, and leave out refunded orders. If the window is still open, mark the number as early.  
+  _Done when:_ The conversion count, its window, and how it matches the sales records.
+- **C-LA-METRICS.05** For qualified_leads, take the leads from the form download or the site form and count only those that meet the rule written before the round, such as job role, company size, or stated need. Count each person once. A lead is not a sale, and no lead is ever invented.  
+  _Done when:_ The qualified count, the rule used, and how many leads were left out and why.
+- **C-LA-METRICS.06** For link_clicks, use landing page clicks from the reporting or the round's tracked link count, and name which one. Use the same source for the baseline and the current reading.  
+  _Done when:_ The click count and its source, the same as in the other reading.
+- **C-LA-METRICS.07** Write down refunds and the round's other costs if known, such as tools or the owner's hours, or 'unknown'. The return the ad account reports is not the owner's net income. Use the same definitions and sources for the baseline and the current reading, and never borrow a number from another goal.  
+  _Done when:_ Refunds and other costs, or 'unknown', and a note that both readings use the same definitions.
+- **C-LA-METRICS.08** Call record_numbers with each component by its exact name and a source naming the screen, export, or file and the read time. If there is no history, record 0 and say so in source. Never estimate a missing number, and change nothing in the ads while reading.  
+  _Done when:_ The recorded numbers, each with its source, and any number left out with the reason.
+
+**If stuck:**
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for an export or a screenshot filtered to the measured campaigns and date range.
+- `no_history`: If the account has no earlier campaigns for this metric, record 0, say in source that there is no history, and let this round set the baseline.
+- `conversion_unknown`: If no conversion is set up, use the sale counter and payment records only, and say in source that the ad account has no conversion.
+- `lead_download_not_allowed`: If the leads cannot be downloaded, ask the owner to export them; never count qualified leads you cannot see.
+- `too_early_to_read`: If the ads have run less than 168 hours or conversions may still arrive, record the numbers as early and read them again later.
+- `numbers_from_wrong_account`: If an export or screenshot shows a different ad account or campaigns from the agreed ones, do not use it and ask again.
+
+### 15. Pause only this round's LinkedIn ads after the test
+
+Stop spending on this round's ads once the observation time is over, without touching anything else in the account, so the result is fixed and the next round starts clean.
+
+- **C-LA-STOP.01** List the campaign and ad IDs that this round switched on, taken from the switch-on step. Use only these; never take the whole account's campaign list.  
+  _Done when:_ The IDs this round switched on.
+- **C-LA-STOP.02** Confirm the round is over: at least 168 hours since start, or the total budget is spent. Confirm this round's numbers have been read and recorded; if not, read them first.  
+  _Done when:_ Start time, time now or budget reached, and a note that the numbers were recorded.
+- **C-LA-STOP.03** Tell the owner which campaign and ads will be paused, then pause only those. Do not delete or archive them, and do not change text, images, audience, or budget, so the round stays on record. Do not touch other campaigns or other brands.  
+  _Done when:_ The IDs paused, who paused them, and when.
+- **C-LA-STOP.04** Open each campaign and ad again and confirm the status shows paused and nothing is still delivering. If the pause seemed to fail, check the status before trying again, and do not call it stopped until the screen shows it.  
+  _Done when:_ Status of each ID as shown after pausing, with the time read.
+- **C-LA-STOP.05** Read the round's final spend from the ad account's reporting, in the currency's smallest unit, and compare it with the owner's total limit. If it went over, tell the owner the exact amount.  
+  _Done when:_ Final spend in the smallest unit, and whether it stayed within the owner's limit.
+- **C-LA-STOP.06** Write the one change the next round will test, such as a different job function or one different form question, with the same budget and qualification rule. Pausing does not give permission for a bigger budget.  
+  _Done when:_ The single change planned for the next round.
+
+**Hand back:** `paused_ids`, `status_shown`, `final_spend_minor`, `next_change`
+
+**If stuck:**
+- `ids_unknown`: If you do not know which IDs this round switched on, ask the owner or check the switch-on step; never pause by guessing.
+- `numbers_not_recorded`: If this round's numbers are not recorded yet, read and record them first, then pause.
+- `pause_not_confirmed`: If the status does not show paused, check again after a few minutes and ask the owner to pause it by hand if it still runs.
+- `over_budget`: If spend went over the owner's total limit, pause at once and tell the owner the exact amount.
+- `owner_wants_to_continue`: If the owner wants to keep the ads running, get a new written daily budget, total budget, and end date instead of pausing.

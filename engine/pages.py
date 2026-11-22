@@ -59,7 +59,7 @@ def index(library):
     rows = ['| [%s](%s.md) | %s | %s | %d | %s |' % (goals[g]['title'], g, goals[g]['channel'], goals[g]['metric']['key'], len(goals[g]['plan']), language(goals[g], skills)) for g in order]
     return '\n'.join(['# Playbooks', '',
                       'Each playbook is one sales goal: an ordered list of steps, the number that decides success, and what to change when a round misses.', '',
-                      'Playbooks marked English are in English end to end. The others mix steps in English with steps in Traditional Chinese.', '',
+                      ('Every playbook is written in English.' if all(language(goals[g], skills).startswith('English') and 'and' not in language(goals[g], skills) for g in goals) else 'Playbooks marked English are in English end to end. The others mix steps in English with steps in Traditional Chinese.'), '',
                       'The pages are written from [`engine/library.json`](../engine/library.json) by `python3 engine/pages.py`; edit the library, then run it.', '',
                       '| Goal | Channel | Metric | Steps | Language |', '|---|---|---|---|---|'] + rows) + '\n'
 

@@ -42,6 +42,43 @@ ENGINE_COUNTS = {'link_clicks': 'clicks', 'unique_link_clicks': 'clicks', 'url_c
                  'attributed_sessions': 'clicks', 'external_purchases': 'sales'}
 
 
+# What each bottleneck usually looks like in the numbers, so the diagnosis rests on evidence rather than taste.
+BOTTLENECK_SIGNS = {
+    'audience': 'The wrong people, or too few of the right people, saw it: reach or views fell, or the people who replied are not buyers.',
+    'motivation': 'The right people saw it but the want was weak: they read or watched but few acted, and replies talk about curiosity rather than need.',
+    'angle': 'People saw it and did not care about this way of framing the benefit: views held while the action rate fell.',
+    'message': 'The angle was right but the words did not land: people opened or read but did not act, or replies show they misunderstood.',
+    'creative': 'The image or video did not stop people: low click-through or thumb-stop rate while targeting stayed the same.',
+    'hook': 'The first seconds or first line lost people: views started but completion or read-through dropped early.',
+    'format': 'The format did not suit the channel: the same message did better in another format before.',
+    'content': 'The substance did not answer what people searched or asked for: they arrived and left quickly.',
+    'query': 'The searches or keywords that triggered it were the wrong ones: impressions came from queries with no buying intent.',
+    'delivery': 'It did not get delivered: low impressions, the ad or message was limited, held for review, or landed in spam.',
+    'link_eligibility': 'People could not act: the link was missing, not clickable on this surface, or broken.',
+    'fit': 'The people reached do not match what the product does for them.',
+    'invite': 'The invitation itself put people off: too long, unclear time or value, or sent at the wrong moment.',
+    'followup': 'Interest was there but nobody followed up in time, or the follow-up asked for too much.',
+    'proof': 'People doubted it would work for them: questions about results, trust or quality went unanswered.',
+    'partner': 'The partner or channel owner was the wrong fit or did not promote it.',
+    'editor': 'The editor or journalist was the wrong one for the story.',
+    'proposal': 'The offer to the partner was unclear or not worth it to them.',
+    'program': 'The terms of the program (commission, payout, rules) did not motivate people.',
+    'rules': 'Platform or community rules limited it: removed, hidden or restricted.',
+    'data': 'The numbers themselves are doubtful: read from the wrong account or period, missing, or too few to compare. Fix the measurement before changing anything else.',
+}
+
+
+def _changes(goal, before, after):
+    """Each metric component before and after, with the percentage change, as plain lines for the diagnosis."""
+    lines = []
+    for part in goal['metric']['components']:
+        old = ((before or {}).get('values') or {}).get(part); new = ((after or {}).get('values') or {}).get(part)
+        if old is None or new is None: continue
+        change = ' (%+.0f%%)' % ((new - old) / old * 100) if old else ''
+        lines.append('%s: %g -> %g%s' % (part, old, new, change))
+    return lines
+
+
 # ---------- library ----------
 
 @lru_cache(maxsize=1)
@@ -321,6 +358,8 @@ def _step(store, owner, product, state):
         return {'state': 'target_missed_choose_one_change', 'step_id': 'diagnose:r%d' % state['round'], 'numbers': last,
                 'instruction': 'The target was not reached. Look at the numbers and everything delivered so far, pick the single most likely bottleneck, and say what one thing you will change next round. Do not repeat a variant that was already tried.',
                 'choose_bottleneck_from': list(goal['bottleneck_routes'].keys()),
+                'what_each_bottleneck_looks_like': {k: BOTTLENECK_SIGNS.get(k, '') for k in goal['bottleneck_routes']},
+                'numbers_before_and_after': _changes(goal, state.get('baseline'), state.get('current')),
                 'deliver': {'bottleneck': 'one of the keys above', 'reason': 'evidence from the numbers', 'one_change': 'the single variable that changes next round'},
                 'already_tried': [r.get('change') for r in state['rounds'] if r.get('change')], 'delivered_so_far': _recent(store, owner, 6000), 'rules': RULES}
     node = state['nodes'][state['cursor']]; info = skill(node['skill'])

@@ -1,11 +1,11 @@
-# LinkedIn增加淨追蹤
+# LinkedIn: grow net followers with posts
 
 - **Goal id:** `G-LI-FOLLOWERS`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** linkedin
 - **Metric:** `net_followers` = `followers`, should increase
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `C-LI-ROLES`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-ANGLES`), data (the next round starts with `C-LI-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-COPY`), data (the next round starts with `C-LI-METRICS`)
 
 ## Steps
 
@@ -179,31 +179,34 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備LinkedIn帳號、登入與授權
+### 8. Confirm the LinkedIn identity, sign-in, and who does what
 
-準備LinkedIn帳號、登入與授權
+Settle which LinkedIn profile or Company Page this goal works under, who signs in and publishes, and how research is done within LinkedIn's rules, so the round can run without fake accounts, blocked searches, or the owner being stopped halfway.
 
-- **C-LINKEDIN-ACCESS.01** 核對LinkedIn個人／Company Page身分與可管理角色；記錄已授權API或使用者合法匯出  
-  _Done when:_ 帳號URL、Page角色及工具來源
-- **C-LINKEDIN-ACCESS.02** LinkedIn限制抓取和網站自動操作；這裡優先用允許的API、使用者匯出或需本人操作的入口  
-  _Done when:_ 資料路徑與許可證據
-- **C-LINKEDIN-ACCESS.03** 官方登入／SSO、驗證由本人完成；不安裝抓資料擴充、不讀session cookies  
-  _Done when:_ 登入checkpoint
-- **C-LINKEDIN-ACCESS.04** 角色／公司／產業搜尋各自保存條件與來源；登入牆不能改用假帳號或繞牆  
-  _Done when:_ 搜尋來源與scope
-- **C-LINKEDIN-ACCESS.05** Email僅記錄本人公開商務聯絡資訊或公司官網證據；平台沒提供就填null，職稱不當採購權  
-  _Done when:_ Contact Info／官網URL及證據
-- **C-LINKEDIN-ACCESS.06** 有Email不代表同意收信；聯絡同意與停止狀態交CRM另核對  
-  _Done when:_ 來源、用途、同意三欄分開
+- **C-LINKEDIN-ACCESS.01** Ask the owner which LinkedIn identity this goal uses: their personal profile, the Company Page, or both. Get the public URL of each and open it with read_page to confirm it exists and matches the brand. Use the existing profile or Page; do not create a second one.  
+  _Done when:_ The profile and Page URLs, the names shown on them, and the owner's confirmation that they are theirs.
+- **C-LINKEDIN-ACCESS.02** If the goal posts as the Company Page, ask the owner to confirm they are an admin of that Page who can post and see its analytics. If they are not, research and drafting go on, and only posting as the Page waits until an existing admin adds them.  
+  _Done when:_ The owner's role on the Page as they stated it or as shown in their screenshot, or a note that the role is missing.
+- **C-LINKEDIN-ACCESS.03** The owner signs in to LinkedIn themselves, on the official LinkedIn sign-in screen or their company's single sign-on, and completes any verification code, identity check, or terms screen. Never ask for a password, never copy browser cookies, and never install extensions or tools that pull data from LinkedIn.  
+  _Done when:_ A note of which account the owner is signed in as, and the time it was checked.
+- **C-LINKEDIN-ACCESS.04** Agree who does each kind of work. LinkedIn forbids scraping and bots on its site, so the signed-in work inside LinkedIn is done by the owner by hand: searching, posting, sending messages, and opening analytics. The agent drafts, reads single public pages with read_page, checks company websites, and works from the owner's screenshots, pasted URLs, or LinkedIn's own data export. The agent posts or sends only through an official LinkedIn tool the owner has already set up.  
+  _Done when:_ A short plan naming 'owner' or 'agent' for searching, publishing, messaging, and reading numbers, with the route for each.
+- **C-LINKEDIN-ACCESS.05** Test the plan once. If the goal needs people research, ask the owner to run one sample search on LinkedIn, such as a job title plus an industry, and send a screenshot of the results. Then use read_page on one public company page or profile URL to see what loads without sign-in.  
+  _Done when:_ The sample search terms, what the screenshot and the public page showed, and the exact text of any limit message.
+- **C-LINKEDIN-ACCESS.06** If a sign-in wall or search limit appears, do not switch to another account, create a new one, or try any workaround. Keep the owner's searches few and specific, wait for the limit to clear, or move the research to public company websites and team pages.  
+  _Done when:_ The chosen route for research, with the reason, or a note that no limit appeared.
+- **C-LINKEDIN-ACCESS.07** Write down the record rules for the rest of the round: every search keeps its exact terms, date, and URL; an email is recorded only if the person or their company published it, with the source URL, otherwise it stays empty; a job title is a hint, not proof of buying power; a public email is not permission to send marketing, so source, consent, and opt-outs are kept in separate columns of this round's list, or in that tool if the owner already uses a CRM.  
+  _Done when:_ The rules as written, ready for the research and outreach steps.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
+**Hand back:** `linkedin_identity`, `page_admin_role`, `who_does_what`, `research_access`, `record_rules`
 
 **If stuck:**
-- `automation_prohibited`: 改用已允許API或使用者合法匯出／本人操作，不重試網站腳本。
-- `contact_email_hidden`: 保留email=null，轉查公司正式公開聯絡頁，不猜地址。
-- `job_title_uncertain`: 標決策角色hypothesis，等買方回答。
-- `page_role_missing`: 只卡Page發布；研究與草稿繼續。
-- `restriction_notice`: 保存原通知與官方復原入口，停止自動接觸。
+- `owner_action_needed`: If a verification code, identity check, or terms screen appears, stop and tell the owner which screen needs them; never enter codes or accept terms for them.
+- `page_role_missing`: If the owner is not an admin of the Company Page, continue research and drafts, and ask the owner to have an existing admin add them before anything is posted as the Page.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed profile, stop and ask the owner to switch accounts or to do the work on their own device.
+- `automation_prohibited`: If a route would need scraping, bulk extraction, a browser extension, or the agent clicking through LinkedIn while signed in, do not use it; ask the owner to do it by hand or to send LinkedIn's own data export.
+- `search_limit_reached`: If LinkedIn shows a sign-in wall or a search limit, never use or create another account; keep the owner's searches small or research on public company websites.
+- `restriction_notice`: If LinkedIn shows a warning or restriction on the account, stop all outreach and automation, save the notice word for word with its official link, and tell the owner.
 
 ### 9. Write the post from proven facts
 
@@ -229,66 +232,83 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. LinkedIn關係、內容與商機結果 (baseline numbers)
+### 10. Read this goal's numbers on LinkedIn (baseline numbers)
 
-LinkedIn關係、內容與商機結果
+Record the exact numbers this goal is judged on, for one LinkedIn identity and one fixed date range, so each round is compared with the last on real counts. record_numbers lists exactly which numbers it needs.
 
-- **C-LI-METRICS.01** 用允許匯出／API讀同個人或Page的Analytics，不能混身分  
-  _Done when:_ author/window
-- **C-LI-METRICS.02** 分followers、impressions、clicks及真實對話／預約／付款  
-  _Done when:_ raw counts與sources
-- **C-LI-METRICS.03** 小樣本格式差異只列假設；跨月季節差異不當內容因果  
-  _Done when:_ sample/comparability
-- **C-LI-METRICS.04** 買方角色、Email來源與可聯絡名單分開計，成交回帳本核對  
-  _Done when:_ business outcomes與limitations
-
-**If stuck:**
-- `automation_prohibited`: 改用已允許API或使用者合法匯出／本人操作，不重試網站腳本。
-- `contact_email_hidden`: 保留email=null，轉查公司正式公開聯絡頁，不猜地址。
-- `job_title_uncertain`: 標決策角色hypothesis，等買方回答。
-- `page_role_missing`: 只卡Page發布；研究與草稿繼續。
-- `restriction_notice`: 保存原通知與官方復原入口，停止自動接觸。
-
-### 11. LinkedIn個人／Page內容發布
-
-LinkedIn個人／Page內容發布
-
-- **C-LI-POST.01** 核對要用個人還是Company Page及管理權，API author URN須吻合  
-  _Done when:_ author URN與角色
-- **C-LI-POST.02** 讀當前允許的發文API或由本人提交準備成果，不用網站腳本  
-  _Done when:_ approved route
-- **C-LI-POST.03** 核對文案、文件或圖片的可讀性、fact_ids與既有CTA  
-  _Done when:_ content manifest
-- **C-LI-POST.04** prepare單篇發布，保存post URN；不能因403換其他Page  
-  _Done when:_ operation_key
-- **C-LI-POST.05** 用公開post URL讀回作者、全文及素材；缺讀回不能標完成  
-  _Done when:_ publications
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
+- **C-LI-METRICS.01** Confirm what you are measuring: the goal's metric component names exactly as record_numbers lists them, the one LinkedIn identity (personal profile or Company Page, never both mixed), and the date range with its time zone. The range is the goal's observation window and the same length as the baseline.  
+  _Done when:_ The component names, the profile or Page URL, and the date range with time zone.
+- **C-LI-METRICS.02** Find where each of this goal's components lives. Follower totals and post numbers are in the profile's or Page's analytics, which the owner opens and sends as a screenshot or LinkedIn's own export. Inquiries come from comments on the round's posts (read public posts with read_page), LinkedIn messages the owner shares, and any email or form the owner already receives. Meetings come from the owner's calendar or booking tool; roles and emails from the round's reviewed lists.  
+  _Done when:_ A list of each component with the screenshot, export, page, or list it will be read from.
+- **C-LI-METRICS.03** Count only the components this goal lists, by their plain meaning. followers: the follower total, read as close to the end of the date range as possible. qualified_inquiries: different people in the range who asked about buying or using the product and fit the buyer definition. confirmed_meetings: demos where the prospect accepted an invite or confirmed a date and time in writing. reviewed_people or reviewed_roles: every unique person checked this round, rejected ones included. verified_public_emails: people whose own business email was published by them or their company, with a source URL. qualified_roles: people whose confirmed current role matches the buyer definition.  
+  _Done when:_ Each count, with the list of items behind it (URLs or names) so it can be checked.
+- **C-LI-METRICS.04** Count each person once. Leave out the owner, their team, the agent, test accounts, and bots. For rate goals, never drop rejected people from the reviewed total to lift the rate; if nobody was reviewed, record 0 and say so.  
+  _Done when:_ A note of who was left out and why, and the reviewed total used.
+- **C-LI-METRICS.05** Read supporting numbers where LinkedIn or tracking shows them: impressions and reactions from the post's analytics, and clicks per version (?v=A, ?v=B) from tracking. Write 'not shown' for anything not displayed. Treat a difference based on fewer than 20 clicks or inquiries per version as a hint, not a result, and do not credit a change across months to the content alone.  
+  _Done when:_ The supporting numbers as displayed, with 'not shown' where missing and a note on sample size.
+- **C-LI-METRICS.06** Add sales only if the owner already has payment records or the round's sale counter. Do not count the owner's own test payments. Where you cannot tell which post or conversation led to a sale, say so plainly.  
+  _Done when:_ Any sales figure with its source, or a note that there is none.
+- **C-LI-METRICS.07** Call record_numbers with each of this goal's components under its exact name, and a source that says where and when you read it. For a rate goal, pass both components separately, not the rate. If there is no history for a number, record 0 and say in the source that there is no history. Never estimate a number that you could not read.  
+  _Done when:_ The record_numbers call as sent, with every component name, value, and source.
 
 **If stuck:**
-- `automation_prohibited`: 改用已允許API或使用者合法匯出／本人操作，不重試網站腳本。
-- `contact_email_hidden`: 保留email=null，轉查公司正式公開聯絡頁，不猜地址。
-- `job_title_uncertain`: 標決策角色hypothesis，等買方回答。
-- `page_role_missing`: 只卡Page發布；研究與草稿繼續。
-- `restriction_notice`: 保存原通知與官方復原入口，停止自動接觸。
+- `cannot_open_analytics`: If the analytics cannot be opened, ask the owner for a screenshot or LinkedIn's own export showing the numbers this goal needs, for the agreed identity and date range.
+- `no_history`: If there is no history for a number, record 0 and say in source that there is no history; this round then sets the baseline.
+- `numbers_from_wrong_identity`: If the screenshot or screen shows a different profile or Page from the agreed one, do not use those numbers and ask again.
+- `inquiry_fit_unclear`: If you cannot tell whether a person fits the buyer definition, list them as unclear, do not count them, and ask the owner to decide.
+- `too_early_to_read`: If the post or outreach is less than 24 hours old, report the numbers as early and read them again at the end of the range.
 
-### 12. LinkedIn關係、內容與商機結果 (result numbers)
+### 11. Publish one approved LinkedIn post and confirm it
 
-LinkedIn關係、內容與商機結果
+Publish the approved post once, under the agreed profile or Company Page, with the round's tracked link, and hand back its public URL, because the post must be live and exactly as approved before followers or inquiries can be measured.
 
-- **C-LI-METRICS.01** 用允許匯出／API讀同個人或Page的Analytics，不能混身分  
-  _Done when:_ author/window
-- **C-LI-METRICS.02** 分followers、impressions、clicks及真實對話／預約／付款  
-  _Done when:_ raw counts與sources
-- **C-LI-METRICS.03** 小樣本格式差異只列假設；跨月季節差異不當內容因果  
-  _Done when:_ sample/comparability
-- **C-LI-METRICS.04** 買方角色、Email來源與可聯絡名單分開計，成交回帳本核對  
-  _Done when:_ business outcomes與limitations
+- **C-LI-POST.01** Confirm the author is the identity agreed in the access step: the personal profile or the Company Page. Read its last 10 posts, with read_page if they are public or from the owner's screenshot, so this one does not repeat the same content or link.  
+  _Done when:_ The profile or Page URL, and a note on the recent posts you checked.
+- **C-LI-POST.02** Read the final text from the writing step. Check it is under 3,000 characters and that the hook sits in the first two lines, since LinkedIn cuts longer posts off with a 'see more'. Check every claim against the product facts.  
+  _Done when:_ The final text, its character count, and a note that each claim matches a product fact.
+- **C-LI-POST.03** Use the round's tracked link from tracking, with ?v=A, ?v=B when there are several versions. Open each link and check it forwards to the product page. If there is an image or PDF, check it reads clearly on a phone and that its text matches the product facts.  
+  _Done when:_ Each tracked link with its version label, confirmation it opened the product page, and any media file.
+- **C-LI-POST.04** Show the owner the exact text, link, media, and the author it will be posted as, for each version, and get a clear yes. If the plan has two versions, follow its order and spacing; if it gives none, publish them at least 48 hours apart at the same time of day.  
+  _Done when:_ The owner's approval message for each version, the author named in it, and the planned publish times.
+- **C-LI-POST.05** The owner pastes the approved text, link, and media into LinkedIn's post box, checks the preview and the selected author match, and presses Post once. The agent posts itself only through an official LinkedIn posting tool the owner has already set up, never by clicking through the site. If posting as the Page fails, do not post from another Page or the personal profile instead.  
+  _Done when:_ Who posted and how, when, and confirmation that the preview matched the approved text.
+- **C-LI-POST.06** Get the post's public URL from the owner or the posting tool, open it with read_page, and check the full text, author name, link, and media. If publishing seemed to fail, ask the owner to check the profile or Page activity before trying again so nothing is posted twice.  
+  _Done when:_ The public URL, the text as it appears there, and the author name shown.
+- **C-LI-POST.07** After 24 hours, read the post's comments again and list those that ask about the product, with their URLs, for the measuring step. Draft any replies and show them to the owner word for word; nothing is posted without their yes, and the owner posts it.  
+  _Done when:_ The list of product questions in the comments with URLs, and any draft replies awaiting approval.
+
+**Hand back:** `post_url`, `published_text`, `posted_as`, `tracked_link`
 
 **If stuck:**
-- `automation_prohibited`: 改用已允許API或使用者合法匯出／本人操作，不重試網站腳本。
-- `contact_email_hidden`: 保留email=null，轉查公司正式公開聯絡頁，不猜地址。
-- `job_title_uncertain`: 標決策角色hypothesis，等買方回答。
-- `page_role_missing`: 只卡Page發布；研究與草稿繼續。
-- `restriction_notice`: 保存原通知與官方復原入口，停止自動接觸。
+- `owner_has_not_approved`: If the owner has not said yes to this exact text, do not publish; show them the text and stop until they answer.
+- `wrong_identity_signed_in`: If the signed-in account or the author selected in the post box is not the agreed profile or Page, stop and ask the owner to switch before posting.
+- `page_role_missing`: If the account cannot post as the Company Page, do not post elsewhere instead; ask the owner to get admin access from an existing admin.
+- `agent_cannot_publish`: If the agent has no official LinkedIn posting tool, give the owner the final text, link, and media to paste, and ask them to send back the post URL.
+- `post_not_visible`: If the post does not show after publishing, check the activity again after a few minutes before any retry, and never post the same text twice.
+- `link_does_not_open`: If the tracked link does not open the product page, stop before publishing and fix the link with the owner.
+
+### 12. Read this goal's numbers on LinkedIn (result numbers)
+
+Record the exact numbers this goal is judged on, for one LinkedIn identity and one fixed date range, so each round is compared with the last on real counts. record_numbers lists exactly which numbers it needs.
+
+- **C-LI-METRICS.01** Confirm what you are measuring: the goal's metric component names exactly as record_numbers lists them, the one LinkedIn identity (personal profile or Company Page, never both mixed), and the date range with its time zone. The range is the goal's observation window and the same length as the baseline.  
+  _Done when:_ The component names, the profile or Page URL, and the date range with time zone.
+- **C-LI-METRICS.02** Find where each of this goal's components lives. Follower totals and post numbers are in the profile's or Page's analytics, which the owner opens and sends as a screenshot or LinkedIn's own export. Inquiries come from comments on the round's posts (read public posts with read_page), LinkedIn messages the owner shares, and any email or form the owner already receives. Meetings come from the owner's calendar or booking tool; roles and emails from the round's reviewed lists.  
+  _Done when:_ A list of each component with the screenshot, export, page, or list it will be read from.
+- **C-LI-METRICS.03** Count only the components this goal lists, by their plain meaning. followers: the follower total, read as close to the end of the date range as possible. qualified_inquiries: different people in the range who asked about buying or using the product and fit the buyer definition. confirmed_meetings: demos where the prospect accepted an invite or confirmed a date and time in writing. reviewed_people or reviewed_roles: every unique person checked this round, rejected ones included. verified_public_emails: people whose own business email was published by them or their company, with a source URL. qualified_roles: people whose confirmed current role matches the buyer definition.  
+  _Done when:_ Each count, with the list of items behind it (URLs or names) so it can be checked.
+- **C-LI-METRICS.04** Count each person once. Leave out the owner, their team, the agent, test accounts, and bots. For rate goals, never drop rejected people from the reviewed total to lift the rate; if nobody was reviewed, record 0 and say so.  
+  _Done when:_ A note of who was left out and why, and the reviewed total used.
+- **C-LI-METRICS.05** Read supporting numbers where LinkedIn or tracking shows them: impressions and reactions from the post's analytics, and clicks per version (?v=A, ?v=B) from tracking. Write 'not shown' for anything not displayed. Treat a difference based on fewer than 20 clicks or inquiries per version as a hint, not a result, and do not credit a change across months to the content alone.  
+  _Done when:_ The supporting numbers as displayed, with 'not shown' where missing and a note on sample size.
+- **C-LI-METRICS.06** Add sales only if the owner already has payment records or the round's sale counter. Do not count the owner's own test payments. Where you cannot tell which post or conversation led to a sale, say so plainly.  
+  _Done when:_ Any sales figure with its source, or a note that there is none.
+- **C-LI-METRICS.07** Call record_numbers with each of this goal's components under its exact name, and a source that says where and when you read it. For a rate goal, pass both components separately, not the rate. If there is no history for a number, record 0 and say in the source that there is no history. Never estimate a number that you could not read.  
+  _Done when:_ The record_numbers call as sent, with every component name, value, and source.
+
+**If stuck:**
+- `cannot_open_analytics`: If the analytics cannot be opened, ask the owner for a screenshot or LinkedIn's own export showing the numbers this goal needs, for the agreed identity and date range.
+- `no_history`: If there is no history for a number, record 0 and say in source that there is no history; this round then sets the baseline.
+- `numbers_from_wrong_identity`: If the screenshot or screen shows a different profile or Page from the agreed one, do not use those numbers and ask again.
+- `inquiry_fit_unclear`: If you cannot tell whether a person fits the buyer definition, list them as unclear, do not count them, and ask the owner to decide.
+- `too_early_to_read`: If the post or outreach is less than 24 hours old, report the numbers as early and read them again at the end of the range.

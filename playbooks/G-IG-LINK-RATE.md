@@ -1,7 +1,7 @@
-# IG提高個人檔案到網站點擊率
+# Instagram: raise bio link clicks per profile visit
 
 - **Goal id:** `G-IG-LINK-RATE`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** instagram
 - **Metric:** `profile_link_rate` = `link_clicks` / `profile_visits`, should increase
 - **Observation window:** 48 hours after publishing
@@ -179,82 +179,97 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備Instagram帳號、登入與授權
+### 8. Confirm the Instagram account and who publishes
 
-準備Instagram帳號、登入與授權
+Settle which Instagram account posts, whether its insights can be read, and who presses Share, so every post and every number in this goal comes from the right brand account.
 
-- **C-INSTAGRAM-ACCESS.01** 先讀本品牌IG URL、帳號ID與既有工具；列出目前登入的個人／專業帳號，不能用前一品牌  
-  _Done when:_ 目標handle、可用工具與帳號讀回
-- **C-INSTAGRAM-ACCESS.02** 開目標profile核對handle、品牌網址與管理權；登入別的帳號就切換到已授權品牌，不登出全部帳號  
-  _Done when:_ profile URL及管理入口
-- **C-INSTAGRAM-ACCESS.03** 未登入時走官方登入或連接器OAuth；續用本人已登入的瀏覽器，不讀cookie或把token貼進文件  
-  _Done when:_ 登入狀態與授權範圍，無秘密
-- **C-INSTAGRAM-ACCESS.04** Graph路徑先讀目前schema及權限，核對專業IG與Page連結；只支援個人帳號時保留官方可用路徑  
-  _Done when:_ 支援發布／insights的能力讀回
-- **C-INSTAGRAM-ACCESS.05** 只有新增帳號明確授權才填已確認的名稱／聯絡資料；OTP、CAPTCHA、條款確認交本人，保存返回頁面  
-  _Done when:_ 既有帳號或待本人步驟
-- **C-INSTAGRAM-ACCESS.06** 讀出本帳號可用的貼文格式、排程、insights與時區；不自行切換帳號類型  
-  _Done when:_ 能力矩陣與觀察時區
+- **C-INSTAGRAM-ACCESS.01** Ask the owner for the URL of the brand's Instagram profile. Open it as a public page and check that the handle, name, and bio website match this product, not a personal account or a brand from an earlier goal.  
+  _Done when:_ The profile URL and handle, with a note that the name and bio website match the product.
+- **C-INSTAGRAM-ACCESS.02** Ask the owner whether the account is a professional account (business or creator). Insights such as reach, saves, and profile visits only exist on professional accounts. Do not switch the account type yourself; if it is personal, ask the owner whether they want to switch it in the app.  
+  _Done when:_ The account type, and the owner's answer if a switch was discussed.
+- **C-INSTAGRAM-ACCESS.03** Note which Instagram accounts are signed in right now in the agent's browser or tools. If another account is active, switch to the brand account in the account switcher without signing out of the others; if the brand account is not there, the owner signs in on the official Instagram screen. Never ask for a password and never copy cookies or tokens.  
+  _Done when:_ The handles that are signed in, and the brand handle now active, or a note that nobody is signed in.
+- **C-INSTAGRAM-ACCESS.04** Decide who presses Share: the owner in the Instagram app, or the agent if its browser or Instagram tool is signed in to this exact handle. If the agent uses a tool rather than a browser, check that the tool shows this handle and can both create a post and read insights; if it can only read, the owner publishes.  
+  _Done when:_ Who will publish, the handle shown as signed in, and what the agent's tool can and cannot do on this account.
+- **C-INSTAGRAM-ACCESS.05** Decide who reads the numbers: the agent if it can open the account's insights, or the owner by sending screenshots. Ask the owner who can read direct messages, and write down the time zone the insights use.  
+  _Done when:_ Who reads insights and messages, and the time zone.
+- **C-INSTAGRAM-ACCESS.06** Write down the current bio and bio link exactly as they appear. Instagram captions do not make links clickable, so a later step may ask to point the bio link at this round's tracked link; that change needs the owner's yes.  
+  _Done when:_ The current bio text and bio link, copied from the profile.
+- **C-INSTAGRAM-ACCESS.07** Create a new account only if the owner asked for one in this conversation and no brand account exists. Use one real account with the owner's approved name, bio, and website. Sign up with the owner's email, or with inbox_address if the owner agrees, and read the code with inbox_latest. Never invent a birthday or other details.  
+  _Done when:_ The owner's request and the approved profile details, or a note that the existing account is used.
+- **C-INSTAGRAM-ACCESS.08** If Instagram asks for a phone code, a login check, a CAPTCHA, an identity check, or acceptance of terms, stop and tell the owner which screen needs them. Note where you stopped and continue from there once they are done.  
+  _Done when:_ What the owner must do, on which screen, and where to resume, or a note that nothing was needed.
+- **C-INSTAGRAM-ACCESS.09** Open the public profile once more and confirm that whoever publishes can start a new post on this handle. Write down the time you checked.  
+  _Done when:_ Profile URL, handle, account type, who publishes, and the time of the check.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `wrong_profile`: 重讀handle及品牌網址，回帳號切換器；不發布直到身分吻合。
-- `missing_page_link`: 讀專業帳號連結；若無權限僅卡API發布，素材繼續。
-- `upload_picker_blocked`: 在同一授權瀏覽器走原生檔案選擇器並核對本機圖；不擴大磁碟權限。
-- `default_crop`: 選原始比例並目視核對四邊，重新讀回預覽。
-- `publish_unknown`: 搜尋近期同圖／同文永久連結與時間，對帳後才決定是否重送。
-
-### 9. 研究IG買家情境與內容鉤子
-
-研究IG買家情境與內容鉤子
-
-- **C-IG-RESEARCH.01** 在本品牌利基找近期Reels／輪播，逐篇讀原文而非只看粉絲大帳  
-  _Done when:_ 原帖URL、日期、格式
-- **C-IG-RESEARCH.02** 區分創作者宣傳、觀眾求助及可見互動；不可見觸及填null  
-  _Done when:_ 需求引句及可見指標
-- **C-IG-RESEARCH.03** 拆首屏、caption開頭、內容結構與CTA，核對是否適合我們的產品  
-  _Done when:_ hook／結構／fact_ids
-- **C-IG-RESEARCH.04** 把可測變數限制成鉤子或內容格式其中一項，不照抄素材  
-  _Done when:_ 一個假設與兩版差異
-- **C-IG-RESEARCH.05** 保存樣本選法、觀察窗口及不能推論的成效  
-  _Done when:_ examples與limitations
-
-**Hand back:** `original_url`, `author`, `published_at_or_unknown`, `actual_quote_or_empty`, `visible_metrics_only`
+**Hand back:** `account_handle`, `profile_url`, `account_type`, `who_publishes`
 
 **If stuck:**
-- `wrong_profile`: 重讀handle及品牌網址，回帳號切換器；不發布直到身分吻合。
-- `missing_page_link`: 讀專業帳號連結；若無權限僅卡API發布，素材繼續。
-- `upload_picker_blocked`: 在同一授權瀏覽器走原生檔案選擇器並核對本機圖；不擴大磁碟權限。
-- `default_crop`: 選原始比例並目視核對四邊，重新讀回預覽。
-- `publish_unknown`: 搜尋近期同圖／同文永久連結與時間，對帳後才決定是否重送。
+- `wrong_account_signed_in`: If the active account is a personal account or another brand, stop before any posting and ask the owner to switch to the brand account or to post it themselves.
+- `personal_account_no_insights`: If the account is personal, tell the owner the goal's numbers cannot be read there and ask whether they want to switch it to a professional account in the app themselves.
+- `owner_action_needed`: If a phone code, login check, CAPTCHA, identity check, or terms screen appears, stop and tell the owner which screen and which button; never do these for them.
+- `agent_not_signed_in`: If neither the agent's browser nor its tool is signed in to the brand handle, set who_publishes to 'owner' and plan to hand them the final files and caption.
+- `account_restricted`: If Instagram says the account is restricted or an action is blocked, stop all posting and ask the owner to check the account's status in the app; never try a second account.
 
-### 10. 安排下一批內容與素材
+### 9. Study Instagram posts and comments for hooks that work
 
-安排下一批內容與素材
+Find, from real recent posts and comments in the product's niche, the buyer situations and opening hooks worth testing, so the next post starts from what this audience already responds to.
 
-- **S10.01** 讀取目標與上輪結論：確認這批內容要解決哪個問題或測什麼差異。  
-  _Done when:_ 每個項目能對應流程目標。
-- **S10.02** 盤點可重用素材：檢查舊文、圖片、影片、示範與權利。  
-  _Done when:_ 知道哪些可改編。
-- **S10.03** 指定買家與階段：每項內容只設定清楚的主要對象。  
-  _Done when:_ 訊息與購買階段相符。
-- **S10.04** 選切角與證據：列問題、承諾、真實示範及可用案例。  
-  _Done when:_ 主張能回到S01或S07證據。
-- **S10.05** 決定格式與渠道：指定文章、輪播、短片、廣告或指南等形式。  
-  _Done when:_ 格式與可用發布能力相符。
-- **S10.06** 指定現有行動入口：選既有試用、購買、訊息或外部表單。  
-  _Done when:_ 入口可達且與內容相符。
-- **S10.07** 設計可比較版本：只改可辨識的切角、開頭、證據或形式。  
-  _Done when:_ 版本標記與測試差異清楚。
-- **S10.08** 拆成製作工作單：交S11、S12、S13需要的素材與輸出規格。  
-  _Done when:_ 每單都有素材來源、尺寸／長度與完成標準。
-- **S10.09** 排發布及回饋時間：交S14與觀測排程，設定與本輪相符的窗口。  
-  _Done when:_ 每個版本能接回S33。
-- **S10.10** 接回結果並更新：由S34或S32開下一批工作。  
-  _Done when:_ 保留舊版與改動理由。
+- **C-IG-RESEARCH.01** Write a short search list from the chosen angle and buyer quotes: 3 to 5 keywords or hashtags, and 5 accounts in the niche of different sizes, not only the biggest ones. Include accounts the buyers follow, not only competitors.  
+  _Done when:_ The keywords, hashtags, and account handles you will search.
+- **C-IG-RESEARCH.02** Open at least 10 carousels or Reels from the last 90 days, one by one, with read_page or the agent's browser. Record each post's URL, author, date (or 'unknown'), format, and only the likes, comments, or views that are visible. Never guess reach.  
+  _Done when:_ A list of at least 10 posts with URL, author, date, format, and visible numbers.
+- **C-IG-RESEARCH.03** Read the comments under those posts. Copy at least 5 comments, word for word, where a person describes a problem, asks how to do something, or asks where to buy. Keep the creator's own promotion apart from what the audience says.  
+  _Done when:_ At least 5 exact comment quotes, each with the post URL it came from.
+- **C-IG-RESEARCH.04** For the 3 posts with the most visible engagement for their account size, break down the first slide or first 2 seconds, the first caption line, the order of the content, and the call to action.  
+  _Done when:_ A breakdown of 3 posts: hook, first caption line, structure, and call to action.
+- **C-IG-RESEARCH.05** Check each hook against the product fact sheet. Drop any hook that would need a claim the product cannot back up, such as a result, a number, or a before-and-after you do not have.  
+  _Done when:_ The hooks kept and the hooks dropped, each with a one-line reason.
+- **C-IG-RESEARCH.06** Write one test idea that changes only one thing: the hook, or the layout inside the format this goal publishes (for example a checklist carousel versus a step-by-step carousel). Describe version A and version B in one line each, in the product's own words; never copy another creator's images, text, or video.  
+  _Done when:_ One hypothesis and two versions that differ in one labeled thing.
+- **C-IG-RESEARCH.07** Write down how you picked the posts, the date range, and what this research cannot show. Visible likes and comments do not show reach, followers gained, or sales.  
+  _Done when:_ A short note on sample choice, date range, and limits.
 
-**Hand back:** `hypothesis`, `variants`, `fact_ids`, `acceptance_rule`
+**Hand back:** `examples`, `buyer_quotes`, `hypothesis`, `limitations`
+
+**If stuck:**
+- `login_wall`: If Instagram shows a sign-in wall and no posts, search the web for public post URLs in the niche, or ask the owner to send 10 post links or screenshots from their app.
+- `too_few_recent_posts`: If fewer than 10 posts from the last 90 days can be found, widen to 180 days, say so in limitations, and keep going.
+- `no_buyer_comments`: If the comments hold fewer than 5 real questions or problems, use the buyer quotes already collected for this goal and say so; never write quotes yourself.
+- `hook_needs_unproven_claim`: If every strong hook depends on a result the product cannot prove, ask the owner for the proof or pick a hook built on the buyer's situation instead.
+- `private_or_removed_post`: If a post is private or removed, leave it out and pick another; never describe a post you could not open.
+
+### 10. Plan this round's post and the files it needs
+
+Turn the chosen angle, the research, and last round's result into one post with one clear idea and a production brief, so the round tests that idea against the goal's main number.
+
+- **S10.01** Read the goal, its main number, and last round's result with where_are_we. Write in one sentence what this round should improve and the one thing it tests. If there is an earlier round, keep its post as it was and note what changes and why. If there is none, start from the chosen angle; never claim an earlier winner that does not exist.  
+  _Done when:_ One sentence naming the goal's number, the thing being tested, and last round's result with the reason for the change, or 'first round'.
+- **S10.02** List the posts, photos, videos, and product screenshots the owner already has. Mark each one 'owner made', 'licensed', or 'unknown'. Leave out anything marked unknown until the owner confirms the rights.  
+  _Done when:_ A list of usable files, each with its rights status.
+- **S10.03** Give the post one buyer group and one stage: first hears of the problem, compares options, or is ready to buy. If the idea speaks to two groups, keep one and save the other for a later round.  
+  _Done when:_ The post's one buyer group and stage.
+- **S10.04** Pick the angle and the proof: the problem, the promise, and a real demo, screenshot, or fact from the product fact sheet. Leave out any result you cannot prove.  
+  _Done when:_ The angle and the facts or demos the post relies on.
+- **S10.05** Use the format this goal's plan publishes: a carousel of 4:5 images at 1080 x 1350, or, for the Reels goal, a vertical 9:16 Reel at 1080 x 1920.  
+  _Done when:_ The format and size of the post.
+- **S10.06** Choose the one action the post asks for, matched to the goal's main number: save, follow, send a message, or tap the link in bio. If it sends people to the product, get this round's tracked link from tracking and open it to check it loads; if tracking says it is not available, use the product URL and note that clicks will be read from Instagram.  
+  _Done when:_ The call to action, and the link opened and checked, or a note that the post has no link.
+- **S10.07** Write version A, the one this round publishes. If the research suggests a second idea, write version B that differs in one thing only (the hook, the proof, or the layout), label the difference, and keep it as the candidate change for the next round. Do not publish both in one round: Instagram has one bio link and the round is judged on one post.  
+  _Done when:_ Version A, and version B if any, labeled with the single difference and marked 'next round'.
+- **S10.08** Write a production brief for version A: slide count or video length, the text for each slide or on-screen line, the files to use, and the size. Keep slide text under 20 words and put the hook on the first slide or in the first 2 seconds.  
+  _Done when:_ One brief with files, size, length, and the text for each part.
+- **S10.09** Pick the publish day and hour, at a time the owner can approve and, if the account's insights show when followers are most active, inside that time. Note that the numbers are read when the goal's observation window ends (48 hours for these goals), and that no other post for this goal goes out during the window.  
+  _Done when:_ The planned publish date and hour with time zone, and when the numbers will be read.
+
+**Hand back:** `batch_plan`, `versions`, `production_brief`, `schedule`
+
+**If stuck:**
+- `no_chosen_angle`: If no angle has been chosen, go back to the angle test step before planning the post.
+- `no_usable_files`: If there are no files with known rights, plan a post made from product screenshots or plain text slides, and ask the owner for one real photo or demo.
+- `no_working_link`: If the link does not open the product, stop and ask the owner which product URL to use before planning a link call to action.
+- `too_many_differences`: If version B differs from version A in more than one thing, cut it back to one difference so the next round can show what worked.
+- `fact_missing_for_claim`: If the post needs a fact you do not have, drop that claim or ask the owner; never fill the gap with a guess.
 
 ### 11. Write the post from proven facts
 
@@ -280,97 +295,121 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 12. 製作與改版圖片素材
+### 12. Make the marketing images from real product visuals
 
-製作與改版圖片素材
+Produce finished image files in the exact size the channel needs, built from real product visuals and approved copy, because a clear image that matches the product is what stops the scroll and moves the goal's main number.
 
-- **S12.01** 讀取用途與規格：確認渠道、圖片類型、尺寸與數量。  
-  _Done when:_ 每張圖的用途明確。
-- **S12.02** 盤點可用視覺：讀品牌、產品畫面、照片及使用權。  
-  _Done when:_ 素材來源可追查。
-- **S12.03** 核對文字與主張：使用S11已核對文案。  
-  _Done when:_ 價格與產品畫面一致。
-- **S12.04** 安排資訊層次：決定標題、示範、證據與行動提示的位置。  
-  _Done when:_ 一眼能理解重點。
-- **S12.05** 實際製作圖片：使用可用圖片工具產出檔案。  
-  _Done when:_ 取得可開啟的實際圖片。
-- **S12.06** 檢查文字與細節：查看字形、裁切、產品畫面及是否有生成錯字。  
-  _Done when:_ 關鍵文字與畫面正確。
-- **S12.07** 檢查尺寸與格式：核對檔案類型、像素、容量與可讀性。  
-  _Done when:_ 符合當前渠道需求。
-- **S12.08** 製作必要版本：依測試需求裁切、改版或改比例。  
-  _Done when:_ 版本各有用途與識別。
-- **S12.09** 保存檔案與使用紀錄：交S14或S31可讀的檔案參照。  
-  _Done when:_ 來源、版本、用途可查。
+- **S12.01** Write down what images this round needs: the channel and placement, the image type (single image, carousel, cover or ad), the pixel size, and how many. If the size is unknown, check the channel's current help page; for example 1080x1350 for a portrait feed image and 1080x1920 for a full-screen vertical one.  
+  _Done when:_ A list of images with channel, placement, size and purpose for each.
+- **S12.02** Collect the real visuals: product screenshots, product photos, logo and brand colours. Use only material the owner made or has the right to use; never copy other brands' images or stock photos without a licence.  
+  _Done when:_ Each visual with where it came from and who owns it.
+- **S12.03** Take the words only from the approved copy. For feed and ad images keep the text to at most two short lines, around 10 words, placed where it stays readable and clear of the channel's own buttons and captions; follow the channel's own text rules for covers and store screenshots. Do not let an image tool add numbers, prices, ratings or badges.  
+  _Done when:_ The exact text for each image, matching the approved copy.
+- **S12.04** Lay out each image with one headline, the product shown working, and one call to action. If there is more to say, split it into carousel slides instead of crowding one image.  
+  _Done when:_ A short layout note or sketch for each image.
+- **S12.05** Make the actual image files with the image or design tool available. Place the text as a real text layer, not generated lettering. A prompt or description is not a finished image. If the only available tool charges money, ask the owner before using it.  
+  _Done when:_ Image files that open.
+- **S12.06** Open each file at full size and check spelling, cropping, faces, and that any product screen shown is the real product. Fix any garbled or wrong text by rebuilding it, never by handing over a flawed image.  
+  _Done when:_ A checked list of each image with any fixes made.
+- **S12.07** Check each file's type (JPG or PNG), pixel size and file size against the channel's limits, and view it at phone width to confirm the text is readable.  
+  _Done when:_ Type, pixel size and file size for each image, all within the channel's limits.
+- **S12.08** If the round tests versions, make only the versions the test needs and change one thing between them, labelled A, B and so on. Do not make extra variations for channels not in this round.  
+  _Done when:_ Each version labelled with the single thing that differs.
+- **S12.09** Save the final files with clear names and a note of version, purpose and sources, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open, with the note for each file.
 
-**Hand back:** `actual_file`, `mime_type`, `dimensions`, `sha256`, `visual_readback`
-
-### 13. IG追蹤成長與內容到網站漏斗核對 (baseline numbers)
-
-IG追蹤成長與內容到網站漏斗核對
-
-- **C-IG-METRICS.01** 核對同IG ID、時區與比較期間；分開帳號總量及單篇內容  
-  _Done when:_ account_id與window
-- **C-IG-METRICS.02** 讀followers起訖或follows/unfollows，計淨增加；不能只用目前總粉絲  
-  _Done when:_ 起訖counts
-- **C-IG-METRICS.03** 讀reach、profile visits、可用link taps，缺欄位填null  
-  _Done when:_ 各分母與source
-- **C-IG-METRICS.04** 用既有網站分析匹配來源／期間；無追蹤資料不能推定是這篇導入  
-  _Done when:_ sessions與attribution
-- **C-IG-METRICS.05** 讀現有付款退款與全成本；漲粉、詢問、付款各自報告  
-  _Done when:_ money_events與limitations
+**Hand back:** `image_files`, `image_text`, `versions`, `sources`
 
 **If stuck:**
-- `wrong_profile`: 重讀handle及品牌網址，回帳號切換器；不發布直到身分吻合。
-- `missing_page_link`: 讀專業帳號連結；若無權限僅卡API發布，素材繼續。
-- `upload_picker_blocked`: 在同一授權瀏覽器走原生檔案選擇器並核對本機圖；不擴大磁碟權限。
-- `default_crop`: 選原始比例並目視核對四邊，重新讀回預覽。
-- `publish_unknown`: 搜尋近期同圖／同文永久連結與時間，對帳後才決定是否重送。
+- `no_real_product_visuals`: If there are no screenshots or photos of the real product, ask the owner for two or three, and meanwhile make a text-and-brand-colour design without fake product screens.
+- `size_unknown`: If the channel's required size is unclear, check its current help page; if still unclear, ask the owner where the image will run.
+- `text_garbled`: If the image tool produces wrong or garbled text, rebuild the text as a real text layer before handing over the file.
+- `rights_unclear`: If you cannot tell who owns a visual, leave it out and use one the owner confirms they own.
+- `image_tool_failed`: If the image tool fails, try another available tool with the same brief; do not start the whole brief over or create duplicate charges.
 
-### 14. IG輪播發布與公開讀回
+### 13. Read this goal's numbers on Instagram (baseline numbers)
 
-IG輪播發布與公開讀回
+Record the numbers this goal is judged on, for the account before and after the new post, so each round is compared on real numbers. record_numbers lists exactly which numbers it needs.
 
-- **C-IG-CAROUSEL.01** 讀同帳號近期貼文與本輪operation key，排除同圖同文已發  
-  _Done when:_ 近期URL與去重結果
-- **C-IG-CAROUSEL.02** 核對每張圖片的實際解碼、順序、文字安全區與使用權  
-  _Done when:_ assets順序及sha256
-- **C-IG-CAROUSEL.03** 在正確IG profile建輪播，保留原比例；預覽逐張核對裁切及首圖  
-  _Done when:_ 預覽證據
-- **C-IG-CAROUSEL.04** caption逐字核對事實、品牌網址與CTA；不加未授權價格／新承諾  
-  _Done when:_ caption雜湊與fact_ids
-- **C-IG-CAROUSEL.05** action-prepare後才執行單篇發布；未知結果先查近期內容  
-  _Done when:_ operation_key
-- **C-IG-CAROUSEL.06** 用公開永久連結重新讀每張圖、caption和handle；審核中另標狀態  
-  _Done when:_ publications與readback
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
-
-**If stuck:**
-- `wrong_profile`: 重讀handle及品牌網址，回帳號切換器；不發布直到身分吻合。
-- `missing_page_link`: 讀專業帳號連結；若無權限僅卡API發布，素材繼續。
-- `upload_picker_blocked`: 在同一授權瀏覽器走原生檔案選擇器並核對本機圖；不擴大磁碟權限。
-- `default_crop`: 選原始比例並目視核對四邊，重新讀回預覽。
-- `publish_unknown`: 搜尋近期同圖／同文永久連結與時間，對帳後才決定是否重送。
-
-### 15. IG追蹤成長與內容到網站漏斗核對 (result numbers)
-
-IG追蹤成長與內容到網站漏斗核對
-
-- **C-IG-METRICS.01** 核對同IG ID、時區與比較期間；分開帳號總量及單篇內容  
-  _Done when:_ account_id與window
-- **C-IG-METRICS.02** 讀followers起訖或follows/unfollows，計淨增加；不能只用目前總粉絲  
-  _Done when:_ 起訖counts
-- **C-IG-METRICS.03** 讀reach、profile visits、可用link taps，缺欄位填null  
-  _Done when:_ 各分母與source
-- **C-IG-METRICS.04** 用既有網站分析匹配來源／期間；無追蹤資料不能推定是這篇導入  
-  _Done when:_ sessions與attribution
-- **C-IG-METRICS.05** 讀現有付款退款與全成本；漲粉、詢問、付款各自報告  
-  _Done when:_ money_events與limitations
+- **C-IG-METRICS.01** Confirm the handle, whether this is the baseline or the current reading, and the time zone. The baseline is read just before this round's post goes live; the current reading is read after the goal's observation window ends, which the engine tells you (48 hours for these goals). Read only the components the step lists, and leave out any the engine says it counted itself.  
+  _Done when:_ Handle, baseline or current, the components needed, and the time zone.
+- **C-IG-METRICS.02** For numbers read per post, such as reach, saves, and profile visits: for the baseline, add up the account's last 3 to 5 posts of the same format from the past 30 days, each at least 48 hours old; for the current reading, use this round's post. Take both parts of a rate from the same posts, and keep per-post numbers apart from account totals.  
+  _Done when:_ The posts measured with their URLs, and each number as shown, per post and added up.
+- **C-IG-METRICS.03** For a Reel, read the views figure the Reel's insights show and use it for video_starts, saying so in source. Use a figure for views that reached the end only if the insights display one as a number, either a count or a percentage you can multiply by views; never read it off a graph by eye.  
+  _Done when:_ Views and the end-of-video figure exactly as displayed, with the screen they came from, or a note that no end-of-video figure is shown.
+- **C-IG-METRICS.04** For followers, read the follower count on the profile at the moment of reading; it is a running total and the engine subtracts the earlier reading. Note follows and unfollows too if the account's insights show them. Never report the total alone as this round's growth.  
+  _Done when:_ The follower count with the time read, plus follows and unfollows if shown.
+- **C-IG-METRICS.05** For link clicks and profile visits on the account: in the current reading, link_clicks are usually counted by the engine from the tracked link, so leave them out when the step says so. For the baseline, read external link taps and profile visits from the account's insights for the shortest date range offered that ends just before publishing, both from the same range.  
+  _Done when:_ Link clicks and profile visits with their source and date range.
+- **C-IG-METRICS.06** For qualified_inquiries, keep a running total: the number of different people who asked in comments or direct messages about price, availability, how to buy, or whether the product fits their case, counted from this goal's first baseline reading (0 at that reading). Leave out the owner, the agent, spam, and bots. The owner reads direct messages or sends screenshots.  
+  _Done when:_ The running total of different people who asked, with the date and a short summary of each question, without names.
+- **C-IG-METRICS.07** Call record_numbers with only this goal's metric components, by their exact names from the step's list. Put the screen or tool, the post URLs, the date range, and the time read in source. If there is no history for a component, record 0 and say in source that there is no history. Never estimate a number Instagram does not show.  
+  _Done when:_ The record_numbers call with each component name, its value, and its source.
+- **C-IG-METRICS.08** Report site visits or sales separately and only from a source the owner already has, such as site analytics or payment records. Say plainly when a visit or sale cannot be tied to the post.  
+  _Done when:_ Any visit or sales figure with its source, or a note that none was available.
 
 **If stuck:**
-- `wrong_profile`: 重讀handle及品牌網址，回帳號切換器；不發布直到身分吻合。
-- `missing_page_link`: 讀專業帳號連結；若無權限僅卡API發布，素材繼續。
-- `upload_picker_blocked`: 在同一授權瀏覽器走原生檔案選擇器並核對本機圖；不擴大磁碟權限。
-- `default_crop`: 選原始比例並目視核對四邊，重新讀回預覽。
-- `publish_unknown`: 搜尋近期同圖／同文永久連結與時間，對帳後才決定是否重送。
+- `cannot_open_insights`: If you cannot open the insights, ask the owner for a screenshot of the post's insights or the account's insights for each number this goal needs.
+- `component_not_shown`: If Instagram does not display a number this goal needs, ask the owner for another source they already have; if none exists, submit status 'blocked' naming the missing number, and never estimate it or read it off a graph.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If a screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
+- `too_early_to_read`: If the observation window has not ended, report the numbers as early and read them again once the engine says the window is over.
+- `personal_account_no_insights`: If the account is personal and shows no insights, record only what the public profile shows, say so in source, and send the owner back to the account step.
+
+### 14. Publish one Instagram carousel and confirm it
+
+Publish the approved carousel once, under the right account, and hand back its public URL, because the post has to be live and exactly as approved before its numbers can be measured.
+
+- **C-IG-CAROUSEL.01** Confirm the handle about to post is the agreed brand account. Look through its last 12 posts so you do not publish the same images or caption twice.  
+  _Done when:_ The handle, and a note on the recent posts you checked.
+- **C-IG-CAROUSEL.02** Open every slide file and check it shows correctly, is in the planned order, uses one size (4:5 at 1080 x 1350 works well), keeps text away from the edges, and is owner made or licensed. Check the slide count is within Instagram's current limit.  
+  _Done when:_ The ordered list of slide files, the slide count, and the rights status of each.
+- **C-IG-CAROUSEL.03** Check the caption against the product fact sheet: under 2,200 characters, no more than 5 hashtags, and no price, promise, or number the facts do not support. Links in captions are not clickable, so a link call to action points to the link in bio.  
+  _Done when:_ The final caption, its character count, and the facts each claim relies on.
+- **C-IG-CAROUSEL.04** If the call to action uses the bio link, get this round's tracked link from tracking and open it to check it loads the product. Changing the bio link changes the owner's profile, so it is part of the approval.  
+  _Done when:_ The tracked link, opened and checked, and the bio link it would replace, or a note that the bio link stays.
+- **C-IG-CAROUSEL.05** Show the owner the slides in order, the exact caption, and any bio link change. Get a clear yes to this exact version before anything goes live.  
+  _Done when:_ The owner's approval message for these slides, this caption, and this bio link.
+- **C-IG-CAROUSEL.06** The agreed person updates the bio link if approved, creates the post, adds the slides in order, and checks the preview of every slide for bad crops. Press Share once. If an upload is still running, wait; do not press Share again.  
+  _Done when:_ Confirmation that the preview matched the approved slides, who pressed Share, and when.
+- **C-IG-CAROUSEL.07** Open the post's public URL and check every slide, the slide order, the caption, and the handle. Open the profile and check the bio link. If the post shows as under review or not yet public, report that status and do not post again; if publishing seemed to fail, check the profile for the post before any retry.  
+  _Done when:_ The public post URL, the caption as it appears there, and the live bio link.
+
+**Hand back:** `post_url`, `published_text`, `bio_link`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not said yes to these exact slides, caption, and bio link, do not publish; show them and stop until they answer.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed handle, stop and ask the owner to switch accounts or to post it themselves.
+- `agent_cannot_publish`: If the agent cannot post, give the owner the slide files in order, the caption, and the bio link, and ask them to send back the post URL.
+- `bad_crop`: If the preview cuts off text or images, pick the original size in the crop option, or resize every slide to the same 4:5 size, then check the preview again.
+- `post_not_visible`: If the post does not show up after Share, check the profile again after a few minutes before any retry, and never post the same carousel twice.
+- `link_does_not_open`: If the tracked link does not open the product, stop before publishing and fix the link with the owner.
+
+### 15. Read this goal's numbers on Instagram (result numbers)
+
+Record the numbers this goal is judged on, for the account before and after the new post, so each round is compared on real numbers. record_numbers lists exactly which numbers it needs.
+
+- **C-IG-METRICS.01** Confirm the handle, whether this is the baseline or the current reading, and the time zone. The baseline is read just before this round's post goes live; the current reading is read after the goal's observation window ends, which the engine tells you (48 hours for these goals). Read only the components the step lists, and leave out any the engine says it counted itself.  
+  _Done when:_ Handle, baseline or current, the components needed, and the time zone.
+- **C-IG-METRICS.02** For numbers read per post, such as reach, saves, and profile visits: for the baseline, add up the account's last 3 to 5 posts of the same format from the past 30 days, each at least 48 hours old; for the current reading, use this round's post. Take both parts of a rate from the same posts, and keep per-post numbers apart from account totals.  
+  _Done when:_ The posts measured with their URLs, and each number as shown, per post and added up.
+- **C-IG-METRICS.03** For a Reel, read the views figure the Reel's insights show and use it for video_starts, saying so in source. Use a figure for views that reached the end only if the insights display one as a number, either a count or a percentage you can multiply by views; never read it off a graph by eye.  
+  _Done when:_ Views and the end-of-video figure exactly as displayed, with the screen they came from, or a note that no end-of-video figure is shown.
+- **C-IG-METRICS.04** For followers, read the follower count on the profile at the moment of reading; it is a running total and the engine subtracts the earlier reading. Note follows and unfollows too if the account's insights show them. Never report the total alone as this round's growth.  
+  _Done when:_ The follower count with the time read, plus follows and unfollows if shown.
+- **C-IG-METRICS.05** For link clicks and profile visits on the account: in the current reading, link_clicks are usually counted by the engine from the tracked link, so leave them out when the step says so. For the baseline, read external link taps and profile visits from the account's insights for the shortest date range offered that ends just before publishing, both from the same range.  
+  _Done when:_ Link clicks and profile visits with their source and date range.
+- **C-IG-METRICS.06** For qualified_inquiries, keep a running total: the number of different people who asked in comments or direct messages about price, availability, how to buy, or whether the product fits their case, counted from this goal's first baseline reading (0 at that reading). Leave out the owner, the agent, spam, and bots. The owner reads direct messages or sends screenshots.  
+  _Done when:_ The running total of different people who asked, with the date and a short summary of each question, without names.
+- **C-IG-METRICS.07** Call record_numbers with only this goal's metric components, by their exact names from the step's list. Put the screen or tool, the post URLs, the date range, and the time read in source. If there is no history for a component, record 0 and say in source that there is no history. Never estimate a number Instagram does not show.  
+  _Done when:_ The record_numbers call with each component name, its value, and its source.
+- **C-IG-METRICS.08** Report site visits or sales separately and only from a source the owner already has, such as site analytics or payment records. Say plainly when a visit or sale cannot be tied to the post.  
+  _Done when:_ Any visit or sales figure with its source, or a note that none was available.
+
+**If stuck:**
+- `cannot_open_insights`: If you cannot open the insights, ask the owner for a screenshot of the post's insights or the account's insights for each number this goal needs.
+- `component_not_shown`: If Instagram does not display a number this goal needs, ask the owner for another source they already have; if none exists, submit status 'blocked' naming the missing number, and never estimate it or read it off a graph.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If a screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
+- `too_early_to_read`: If the observation window has not ended, report the numbers as early and read them again once the engine says the window is over.
+- `personal_account_no_insights`: If the account is personal and shows no insights, record only what the public profile shows, say so in source, and send the owner back to the account step.

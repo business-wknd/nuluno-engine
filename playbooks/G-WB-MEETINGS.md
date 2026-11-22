@@ -1,7 +1,7 @@
-# 活動問答接成已確認個別示範
+# Live demo: turn questions into confirmed one-to-one demos
 
 - **Goal id:** `G-WB-MEETINGS`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** webinar
 - **Metric:** `confirmed_meetings` = `confirmed_meetings`, should increase
 - **Observation window:** 168 hours after publishing
@@ -179,106 +179,141 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備線上示範活動帳號、登入與授權
+### 8. Confirm the meeting tool, host account and live presenter
 
-準備線上示範活動帳號、登入與授權
+Settle which brand account hosts the live demo, what its plan allows, who presents and where attendance numbers will come from, so the event can run under the right name without upgrades or surprises mid-way.
 
-- **C-WEBINAR-ACCESS.01** 核對既有Zoom或會議服務的品牌host帳號、建立權與方案限制  
-  _Done when:_ host ID與可用能力
-- **C-WEBINAR-ACCESS.02** 官方登入／SSO由本人完成；不可新增付費方案以通過建會  
-  _Done when:_ 登入與方案限制
-- **C-WEBINAR-ACCESS.03** 核對活動時區、現有產品主講人、容量與錄影範圍  
-  _Done when:_ 活動條件與授權
-- **C-WEBINAR-ACCESS.04** 沿既有報名／會議功能建立，不改產品註冊或追蹤碼  
-  _Done when:_ 外部工具入口
-- **C-WEBINAR-ACCESS.05** 主講、錄影與參與同意需依既有條件；不能假裝AI已能主持真人課  
-  _Done when:_ 主持人與錄影條件
-- **C-WEBINAR-ACCESS.06** 會前核對報名與加入連結，實際出席／問答等待會後資料  
-  _Done when:_ 報名、加入、出席分開
+- **C-WEBINAR-ACCESS.01** Ask the owner which meeting or webinar tool the brand already uses and which account will host. The host must be the brand's account, not someone else's personal one. Use what exists; do not sign up for a new tool unless the owner asks in this conversation.  
+  _Done when:_ The tool's name and the host account, confirmed by the owner.
+- **C-WEBINAR-ACCESS.02** Decide who creates the event: the owner, or the agent's own browser if it is already signed in to the host account. If nobody is signed in, the owner signs in on the tool's official screen or company sign-in and enters any code themselves. Never ask for a password.  
+  _Done when:_ Who will create the event, and the account name shown after sign-in.
+- **C-WEBINAR-ACCESS.03** Read the plan's limits from the account's plan or billing page, or ask the owner: maximum participants, maximum meeting length, whether registration pages are included, whether recording is included, and whether this host account is allowed to create events. Do not buy an upgrade to get past a limit.  
+  _Done when:_ Each limit with where it was read, or 'not known'.
+- **C-WEBINAR-ACCESS.04** Confirm a real person will present the live demo: their name, role, and two or three dates and times they can do, with time zone. The agent cannot host or present a live session for people.  
+  _Done when:_ The presenter's name and their available slots with time zone.
+- **C-WEBINAR-ACCESS.05** Ask the owner whether the event will be recorded. Record only if the owner agrees and attendees are told at the start; if the tool has its own recording notice, leave it on. Write down where a replay would be shared, if anywhere.  
+  _Done when:_ The recording decision and how attendees will be told.
+- **C-WEBINAR-ACCESS.06** Confirm how people register: the tool's own registration page or a signup form the owner already has. Do not change the product's own signup or its tracking codes. Write down that registrations, people who join and purchases are read later from the tool's registration and attendee reports and the owner's payment records, never before the event happens.  
+  _Done when:_ The registration route and the reports that will be used for the numbers.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `plan_capacity_limit`: 顯示可用容量，不升級購買，等待本人或縮既定範圍。
-- `host_not_confirmed`: 準備資料但不假裝活動已可交付。
-- `attendance_pending`: 等meeting_completed／正式匯出，不捏造出席。
-
-### 9. 活動報名到實際出席及成交核對 (baseline numbers)
-
-活動報名到實際出席及成交核對
-
-- **C-WB-METRICS.01** 讀同event ID的registration與attendance匯出，核對時區與去重  
-  _Done when:_ event/window
-- **C-WB-METRICS.02** 分報名、實際加入、停留及提問，未舉辦不填出席數  
-  _Done when:_ raw metrics
-- **C-WB-METRICS.03** 依實際問題接S19答案與可聯絡跟進，不把報名當全面行銷同意  
-  _Done when:_ questions與consent
-- **C-WB-METRICS.04** 核對現有交易、退款、主講／軟體／交付成本與歸因限制  
-  _Done when:_ goal_observation與money_events
+**Hand back:** `host_account`, `who_creates_event`, `plan_limits`, `presenter`, `attendance_source`
 
 **If stuck:**
-- `plan_capacity_limit`: 顯示可用容量，不升級購買，等待本人或縮既定範圍。
-- `host_not_confirmed`: 準備資料但不假裝活動已可交付。
-- `attendance_pending`: 等meeting_completed／正式匯出，不捏造出席。
+- `plan_capacity_limit`: If the plan cannot hold the event, show the owner the limit and either plan a smaller event or wait; never upgrade or pay without the owner's written yes.
+- `host_not_confirmed`: If no real person has agreed to present, prepare the details but do not create or announce the event.
+- `owner_action_needed`: If a sign-in code, terms screen or identity check appears, stop and tell the owner which screen and which button; never enter codes or accept terms for them.
+- `no_meeting_tool`: If the brand has no meeting tool, ask the owner which one they want; set up one free account in the brand's name only after they say so, and leave terms screens and any payment to the owner.
+- `wrong_host_account`: If the signed-in account is personal or belongs to another brand, stop and ask the owner to switch to the agreed host account.
 
-### 10. 建立既有產品線上示範活動
+### 9. Read this goal's live demo numbers (baseline numbers)
 
-建立既有產品線上示範活動
+Record the numbers this goal is judged on, for the event before this round and for this round's event, so rounds are compared on real registrations, attendance, meetings and sales. record_numbers lists exactly which numbers it needs.
 
-- **C-WB-SCHEDULE.01** 核對目標受眾、現有產品能力、真人主講人與可交付時段  
-  _Done when:_ event brief
-- **C-WB-SCHEDULE.02** 讀目前Zoom／會議工具schema、host與時區，沿既有方案  
-  _Done when:_ host與schema
-- **C-WB-SCHEDULE.03** 用既有報名入口和會議服務準備事件，不改產品註冊  
-  _Done when:_ registration/join URLs
-- **C-WB-SCHEDULE.04** prepare後建立本事件，讀回日期時區、容量與加入權限  
-  _Done when:_ operation key與event ID
-- **C-WB-SCHEDULE.05** 未舉辦時交waiting_external等待meeting_completed，不造出席／錄影  
-  _Done when:_ event及wait_for
-
-**Hand back:** `event_id`, `event_url`, `host_confirmed_or_pending`, `attendance_source`
-
-**If stuck:**
-- `plan_capacity_limit`: 顯示可用容量，不升級購買，等待本人或縮既定範圍。
-- `host_not_confirmed`: 準備資料但不假裝活動已可交付。
-- `attendance_pending`: 等meeting_completed／正式匯出，不捏造出席。
-
-### 11. 向可聯絡對象邀請既有示範活動
-
-向可聯絡對象邀請既有示範活動
-
-- **C-WB-INVITE.01** 核對活動真實存在、時區、主講人與既有報名／加入入口  
-  _Done when:_ event ID與links
-- **C-WB-INVITE.02** 選已同意或正在原串要求示範的對象，取消已拒絕／購買舊跟進  
-  _Done when:_ contact IDs與trigger
-- **C-WB-INVITE.03** 寫對應需求的一次邀請，清楚時區與內容，不虛構限額  
-  _Done when:_ personal text
-- **C-WB-INVITE.04** prepare後以品牌正確渠道送出並讀回  
-  _Done when:_ operation key與messages
-- **C-WB-INVITE.05** 報名、到場、觀看與成交分開等真實事件  
-  _Done when:_ state與limitations
-
-**Hand back:** `message_id`, `actual_recipient`, `reply_parent_if_reply`, `delivery_or_pending_state`, `readback`
+- **C-WB-METRICS.01** Confirm which event you are measuring: its link or ID, date, time zone, and the date range. For the baseline use the owner's last comparable live event before this round; for the current reading use this round's event, read once the goal's observation window has passed (7 days after the event for these goals). If the event has not happened yet, do not record attendance.  
+  _Done when:_ The event link or ID, its date and time zone, the date range, and whether this is the baseline or the current reading.
+- **C-WB-METRICS.02** Read the tool's registration report and attendee report for that event, or ask the owner for an export or screenshot. Count each person once by email, even if they joined twice. Take out the host, presenter, owner, team and any test registration.  
+  _Done when:_ Registrations and attendees as counted, with the report they came from, the time read, and what was removed.
+- **C-WB-METRICS.03** Count attendees only as people who joined the live event. Where the attendee report shows time in session, note separately how many stayed at least 10 minutes, and how many watched a replay; replay views are not attendees.  
+  _Done when:_ Live attendees, those who stayed 10 minutes or more, and replay views, each with its source.
+- **C-WB-METRICS.04** List every question asked in the chat or Q&A and every request for a one-to-one demo. Count a confirmed meeting only when a date and time are accepted by both sides in writing or by an accepted calendar invite; requested, unanswered or cancelled meetings do not count. Signing up for the event is not agreement to marketing email.  
+  _Done when:_ Each question, each meeting request, and each confirmed meeting with its date, time and confirmation.
+- **C-WB-METRICS.05** Read sales from the round's sale counter and the owner's payment records for the date range. Count each order once, take out refunds and test or owner payments, and match buyers to attendees by email where possible. Say plainly where you cannot tell whether a sale came from the event.  
+  _Done when:_ Purchases with their sources, how many were matched to attendees, and any sale whose link to the event is unclear.
+- **C-WB-METRICS.06** Write down what the event cost: the tool's fee for the period, any paid promotion, and presenter time if the owner gives it. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-WB-METRICS.07** Call record_numbers with the exact component names this goal lists: registrations and attendees, confirmed_meetings, or external_purchases and attendees. Give each value its source. If there is no earlier event, record 0 and say 'no history' in the source. If the number you would divide by is 0, do not work out a rate; report it. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
 
 **If stuck:**
-- `plan_capacity_limit`: 顯示可用容量，不升級購買，等待本人或縮既定範圍。
-- `host_not_confirmed`: 準備資料但不假裝活動已可交付。
-- `attendance_pending`: 等meeting_completed／正式匯出，不捏造出席。
+- `attendance_pending`: If the event has not happened or its attendee report is not ready, report attendance as pending and read again later; never fill it in by guess.
+- `cannot_open_report`: If you cannot open the tool's reports, ask the owner for an export or screenshot of the registration and attendee reports for that event.
+- `no_history`: If there is no earlier comparable event, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `zero_registrations`: If there were no registrations, record 0, do not work out a rate, and report that the invite step needs attention.
+- `meeting_not_confirmed`: If a meeting request has no accepted date and time, list it as requested and leave it out of confirmed meetings.
+- `sales_not_traceable`: If payments cannot be matched to the event, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.
 
-### 12. 活動報名到實際出席及成交核對 (result numbers)
+### 10. Create the live demo event and its registration page
 
-活動報名到實際出席及成交核對
+Create one real, owner-approved live demo of what the product does today, with a working registration page, because people can only register, attend and buy if a real event with a real presenter exists.
 
-- **C-WB-METRICS.01** 讀同event ID的registration與attendance匯出，核對時區與去重  
-  _Done when:_ event/window
-- **C-WB-METRICS.02** 分報名、實際加入、停留及提問，未舉辦不填出席數  
-  _Done when:_ raw metrics
-- **C-WB-METRICS.03** 依實際問題接S19答案與可聯絡跟進，不把報名當全面行銷同意  
-  _Done when:_ questions與consent
-- **C-WB-METRICS.04** 核對現有交易、退款、主講／軟體／交付成本與歸因限制  
-  _Done when:_ goal_observation與money_events
+- **C-WB-SCHEDULE.01** Write a short event brief: who it is for (the chosen buyer group), the problem the demo solves (the chosen angle), what will be shown live, the presenter, a length of 30 to 45 minutes, and at least 10 minutes for questions. Show only features the product has today.  
+  _Done when:_ The event brief, with each feature checked against the product facts.
+- **C-WB-SCHEDULE.02** Pick a date and time at least 7 days ahead, in the main time zone of the buyer group, avoiding public holidays there. The owner and the presenter both confirm the slot.  
+  _Done when:_ The date, time and time zone, and the owner's and presenter's confirmation.
+- **C-WB-SCHEDULE.03** Look in the host account for an event already scheduled for this demo. If one exists, update that event instead of creating a second one.  
+  _Done when:_ A note that no matching event exists, or the link of the existing one that will be used.
+- **C-WB-SCHEDULE.04** Draft the event page: title, a short description of what attendees will see, date and time with time zone, length, presenter, and registration questions (name, email, and one optional 'what do you want to see?'). State facts only; no invented seat limits, bonuses or results. Show the owner the page text word for word and get a clear yes.  
+  _Done when:_ The exact event page text and the owner's approval message.
+- **C-WB-SCHEDULE.05** Create the event once in the host account: the owner does it, or the agent's own browser if signed in and the owner said yes. Turn registration on, keep capacity within the plan limit, and turn on the tool's reminder emails if it has them. If creating seems to fail, check the event list before trying again.  
+  _Done when:_ The event ID and the registration page URL.
+- **C-WB-SCHEDULE.06** Open the registration page as a visitor and check that it loads with the right title, date, time zone and presenter. If you make a test registration, use the owner's own address, check the confirmation carries the join link, and note it so it is taken out of the counts.  
+  _Done when:_ Confirmation that the page loads correctly and the join link arrives, and any test registration noted.
+- **C-WB-SCHEDULE.07** Hand over the event as 'waiting for the event'. Do not report any attendance, recording or replay until the event has happened and the tool's attendee report exists. If the time must change later, update this same event and tell registrants once.  
+  _Done when:_ The event status, its date, and where attendance will be read after it.
+
+**Hand back:** `event_id`, `registration_url`, `event_details`, `presenter_confirmed`, `attendance_source`
 
 **If stuck:**
-- `plan_capacity_limit`: 顯示可用容量，不升級購買，等待本人或縮既定範圍。
-- `host_not_confirmed`: 準備資料但不假裝活動已可交付。
-- `attendance_pending`: 等meeting_completed／正式匯出，不捏造出席。
+- `host_not_confirmed`: If no presenter has confirmed the slot, keep the event as a draft and do not open registration.
+- `plan_capacity_limit`: If the plan cannot hold the expected number of people, show the owner the limit and set a smaller capacity; never upgrade without the owner's written yes.
+- `owner_has_not_approved`: If the owner has not said yes to the event page text, do not create or publish the event; show them the text and stop until they answer.
+- `duplicate_event`: If an event for this demo already exists, update it instead of creating another, so registrants do not get two invitations.
+- `feature_not_ready`: If a feature in the brief is not live in the product, remove it from the agenda and the page; never demo or promise what does not exist.
+
+### 11. Invite opted-in people to the live demo and follow up
+
+Invite only people who agreed to hear from the brand or asked for a demo, with a personal, owner-approved message and the registration link from the first step, then remind registrants and follow up on questions, because the right invitations decide who registers, who shows up and who books or buys after.
+
+- **C-WB-INVITE.01** Open the event's registration page and confirm it exists and shows the right title, date, time zone and presenter. Ask tracking for the round's tracked link; use it only if it can point at the registration page, with ?v=A and ?v=B if there are two invite versions. Otherwise use the registration page URL itself and read registrations from the tool's report.  
+  _Done when:_ The registration page URL you opened and the link each invite version will carry.
+- **C-WB-INVITE.02** Choose who to invite: contacts who agreed to hear from the brand, people who asked for a demo in an existing conversation, and communities whose rules allow event posts. Leave out anyone who unsubscribed, said no, already registered, or already bought (unless the demo is for customers). Keep to the owner's cap; for personal messages, at most 30 a day.  
+  _Done when:_ The invite list or groups, the reason each is included, and the counts.
+- **C-WB-INVITE.03** Write one invite under 120 words that names the reader's problem, what they will see, the date and time in their time zone, the length, the presenter, and the registration link from the first step. Say who is sending and that they run the product. No invented seat limits, deadlines or results. Emails carry the unsubscribe link or line.  
+  _Done when:_ The invite text for each version, with its word count.
+- **C-WB-INVITE.04** Show the owner, word for word, each invite version, the channel, and who will receive it, and get a clear yes before anything is sent or posted.  
+  _Done when:_ The exact invites shown and the owner's approval message.
+- **C-WB-INVITE.05** Send through the brand's own channel: the owner's email tool, or a reply in the existing conversation. The agent sends only with its own tools and the owner's yes; otherwise the owner sends. Send each invite once; if status is unclear, check Sent before retrying, and never resend through another channel. A community post ends with its public URL.  
+  _Done when:_ Who sent, when, how many invites went out, and the public URL of any post.
+- **C-WB-INVITE.06** Remind registrants once 24 hours before and once at the start, unless the tool already sends reminders. Send non-registrants at most one follow-up, no sooner than 3 days after the first invite and never after the event. The owner approves the reminder and follow-up text.  
+  _Done when:_ Each reminder or follow-up with its text, date, audience and the owner's approval.
+- **C-WB-INVITE.07** After the event, within 24 hours, draft a short personal reply for each attendee who asked a question or asked for a one-to-one demo: answer from the product facts and offer two times the presenter has confirmed, or the owner's booking link. Only these people get it, and only after the owner approves the text. Any link to the product uses the round's tracked link.  
+  _Done when:_ The list of people followed up, each message as sent, and any times they accepted.
+- **C-WB-INVITE.08** Keep invites sent, registrations, attendees, replay views, meetings and purchases separate. Never report invites as registrations; pass the event to the measuring step.  
+  _Done when:_ A short record of what was sent and what is still waiting for the event or its reports.
+
+**Hand back:** `invite_text`, `recipients`, `owner_approval`, `sent_record`, `tracked_links`
+
+**If stuck:**
+- `event_not_found`: If the registration page does not load or shows the wrong details, stop and go back to the event step before inviting anyone.
+- `owner_has_not_approved`: If the owner has not said yes to this exact invite, do not send or post; show them the text and stop until they answer.
+- `consent_unknown`: If you cannot tell whether a person agreed to hear from the brand, leave them out of the invite.
+- `send_status_unknown`: If you cannot tell whether an invite went out, check Sent or the conversation first; never send it again or through a different channel.
+- `recipient_said_no`: If someone replies no or asks to stop, remove them from all reminders and follow-ups at once and record it.
+- `host_not_confirmed`: If the presenter cancels, do not send invites; tell the owner and move the event to a new confirmed time first.
+
+### 12. Read this goal's live demo numbers (result numbers)
+
+Record the numbers this goal is judged on, for the event before this round and for this round's event, so rounds are compared on real registrations, attendance, meetings and sales. record_numbers lists exactly which numbers it needs.
+
+- **C-WB-METRICS.01** Confirm which event you are measuring: its link or ID, date, time zone, and the date range. For the baseline use the owner's last comparable live event before this round; for the current reading use this round's event, read once the goal's observation window has passed (7 days after the event for these goals). If the event has not happened yet, do not record attendance.  
+  _Done when:_ The event link or ID, its date and time zone, the date range, and whether this is the baseline or the current reading.
+- **C-WB-METRICS.02** Read the tool's registration report and attendee report for that event, or ask the owner for an export or screenshot. Count each person once by email, even if they joined twice. Take out the host, presenter, owner, team and any test registration.  
+  _Done when:_ Registrations and attendees as counted, with the report they came from, the time read, and what was removed.
+- **C-WB-METRICS.03** Count attendees only as people who joined the live event. Where the attendee report shows time in session, note separately how many stayed at least 10 minutes, and how many watched a replay; replay views are not attendees.  
+  _Done when:_ Live attendees, those who stayed 10 minutes or more, and replay views, each with its source.
+- **C-WB-METRICS.04** List every question asked in the chat or Q&A and every request for a one-to-one demo. Count a confirmed meeting only when a date and time are accepted by both sides in writing or by an accepted calendar invite; requested, unanswered or cancelled meetings do not count. Signing up for the event is not agreement to marketing email.  
+  _Done when:_ Each question, each meeting request, and each confirmed meeting with its date, time and confirmation.
+- **C-WB-METRICS.05** Read sales from the round's sale counter and the owner's payment records for the date range. Count each order once, take out refunds and test or owner payments, and match buyers to attendees by email where possible. Say plainly where you cannot tell whether a sale came from the event.  
+  _Done when:_ Purchases with their sources, how many were matched to attendees, and any sale whose link to the event is unclear.
+- **C-WB-METRICS.06** Write down what the event cost: the tool's fee for the period, any paid promotion, and presenter time if the owner gives it. Keep costs separate from the goal's numbers.  
+  _Done when:_ Each cost with its amount, currency and source, or 'not given by the owner'.
+- **C-WB-METRICS.07** Call record_numbers with the exact component names this goal lists: registrations and attendees, confirmed_meetings, or external_purchases and attendees. Give each value its source. If there is no earlier event, record 0 and say 'no history' in the source. If the number you would divide by is 0, do not work out a rate; report it. Never estimate a number.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
+
+**If stuck:**
+- `attendance_pending`: If the event has not happened or its attendee report is not ready, report attendance as pending and read again later; never fill it in by guess.
+- `cannot_open_report`: If you cannot open the tool's reports, ask the owner for an export or screenshot of the registration and attendee reports for that event.
+- `no_history`: If there is no earlier comparable event, record 0 and say in the source that there is no history; the first round then sets the baseline.
+- `zero_registrations`: If there were no registrations, record 0, do not work out a rate, and report that the invite step needs attention.
+- `meeting_not_confirmed`: If a meeting request has no accepted date and time, list it as requested and leave it out of confirmed meetings.
+- `sales_not_traceable`: If payments cannot be matched to the event, record only what the sale counter shows and state that the rest is unknown; never assign sales by guess.

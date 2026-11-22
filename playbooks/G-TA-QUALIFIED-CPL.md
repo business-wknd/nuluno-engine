@@ -1,11 +1,11 @@
-# TikTok Ads降低合格買方名單成本
+# TikTok Ads: lower the cost per qualified lead
 
 - **Goal id:** `G-TA-QUALIFIED-CPL`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** tiktok_ads
 - **Metric:** `qualified_lead_cpl` = `spend_minor` / `qualified_leads`, should decrease
 - **Observation window:** 168 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `A-ANGLES`), data (the next round starts with `C-TA-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), creative (the next round starts with `S13`), data (the next round starts with `C-TA-METRICS`)
 
 ## Steps
 
@@ -179,29 +179,34 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備TikTok Ads帳號、登入與授權
+### 8. Confirm the TikTok Ads account, video rights and budget cap
 
-準備TikTok Ads帳號、登入與授權
+Settle which TikTok ad account the round uses, who makes changes, which identity and videos may run, what it can measure, and how much the owner allows to spend, so the test runs on the right account with rights in place and never overspends.
 
-- **C-TIKTOK_ADS-ACCESS.01** 核對Business Center與advertiser ID、角色、地區、幣別及時區  
-  _Done when:_ advertiser資料讀回
-- **C-TIKTOK_ADS-ACCESS.02** 沿既有登入／OAuth列出可操作帳號，真人驗證與企業文件交本人  
-  _Done when:_ 登入與授權狀態
-- **C-TIKTOK_ADS-ACCESS.03** 讀付款、帳號資格及現有pixel／Events API資料；不建立新追蹤碼  
-  _Done when:_ 付款／事件可用性
-- **C-TIKTOK_ADS-ACCESS.04** Spark Ads逐筆核對創作者授權碼／期間；非Spark也要素材商用權  
-  _Done when:_ 授權範圍與到期時間
-- **C-TIKTOK_ADS-ACCESS.05** 讀本輪campaign／ad group／ad狀態與上限，無範圍不啟用  
-  _Done when:_ 物件allowlist與budget
-- **C-TIKTOK_ADS-ACCESS.06** 讀影片處理／審核及連結實際狀態，不把草稿當配送  
-  _Done when:_ processing、review、delivery分開
+- **C-TIKTOK_ADS-ACCESS.01** Ask the owner for the advertiser ID of the TikTok Ads Manager account and the Business Center it belongs to, if any. Identify the brand by advertiser ID, never by account name.  
+  _Done when:_ The advertiser ID, any Business Center, and the owner's confirmation that it belongs to this brand.
+- **C-TIKTOK_ADS-ACCESS.02** Decide who makes changes: the owner in their own browser, or the agent's browser if it is already signed in with access to this advertiser ID. The owner signs in themselves; never ask for a password. Note the signed-in user's role; an analyst role can only read.  
+  _Done when:_ Who makes changes, the signed-in user, and their role on this ad account.
+- **C-TIKTOK_ADS-ACCESS.03** If the owner has no TikTok ad account, the owner creates exactly one on the official TikTok for Business sign-up page. If the owner chooses an address from inbox_address for the sign-up, read the verification code with inbox_latest. Business documents, identity checks and payment details are entered by the owner. Never create extra accounts.  
+  _Done when:_ The new advertiser ID and how the sign-up was verified, or a note that an account already existed.
+- **C-TIKTOK_ADS-ACCESS.04** Read the account's country, currency, time zone, payment status and account review status. These decide every budget and report in the round. Do not add or change a payment method.  
+  _Done when:_ Country, currency, time zone, payment status and review status, as shown in the account.
+- **C-TIKTOK_ADS-ACCESS.05** Check the account's existing pixel and events: which events fired in the last 7 days, for example a completed payment or a submitted form, and which one matches the goal's main number. Do not create a new pixel or change the website in this step.  
+  _Done when:_ The events that fired in the last 7 days, and the one this goal will be judged on, or 'none'.
+- **C-TIKTOK_ADS-ACCESS.06** Decide the identity the ad runs under. For Spark Ads (an existing TikTok post), get the authorization code from the post's creator and write down its expiry date; it must last past the round's end. For any video, confirm the owner has commercial rights to the footage, voices and music, or uses music from TikTok's Commercial Music Library.  
+  _Done when:_ The identity, any Spark code expiry date, and a rights note for each video.
+- **C-TIKTOK_ADS-ACCESS.07** Ask the owner to write, in this conversation, the most the round may spend per day and in total, in the account currency, and the last day. Check the minimum daily budget TikTok shows for an ad group, and tell the owner if it is above their daily cap.  
+  _Done when:_ The owner's written daily cap, total cap and end date, and the minimum daily budget shown.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
+**Hand back:** `advertiser_id`, `who_changes`, `currency_and_time_zone`, `event_to_judge`, `approved_caps`
 
 **If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
+- `wrong_advertiser`: If the ID belongs to another brand or another Business Center, stop and ask the owner for the exact advertiser ID.
+- `analyst_only`: If the signed-in user can only read, set who_changes to 'owner' or ask the owner to change the role themselves.
+- `account_under_review`: If the account is under review or needs documents, tell the owner which screen needs them and wait.
+- `event_unavailable`: If no event fits the goal, do not invent purchases; use the tracked link and sale counter and tell the owner.
+- `spark_permission_expired`: If the Spark code is missing or ends before the round does, use a video the owner has rights to or wait for a new code from the creator.
+- `minimum_budget_above_cap`: If TikTok's minimum daily budget is above the owner's cap, show both figures and ask the owner for a new written cap or to skip TikTok.
 
 ### 9. Write the post from proven facts
 
@@ -227,135 +232,176 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. 製作不露臉影片與產品示範
+### 10. Make a faceless demo video from real product footage
 
-製作不露臉影片與產品示範
+Produce a finished, playable video that shows the real product working, with subtitles and the right format for the channel, because a clear demo people watch to the end is what moves the goal's main number.
 
-- **S13.01** 確認影片目的與格式：讀用途、長度、比例與示範要求。  
-  _Done when:_ 這支影片要說服誰清楚。
-- **S13.02** 盤點真實畫面與素材權：確認既有錄影、截圖、配音及素材可用。  
-  _Done when:_ 關鍵功能有真實畫面。
-- **S13.03** 準備腳本與鏡頭順序：由S11腳本安排開頭、操作、結果與行動入口。  
-  _Done when:_ 每段對得上現有素材。
-- **S13.04** 取得允許的示範畫面：用既有素材或已准許示範環境錄製；真人節點另記。  
-  _Done when:_ 畫面真實且不暴露客戶私密資料。
-- **S13.05** 製作配音與字幕：用可用且有權使用的方法完成。  
-  _Done when:_ 內容與腳本一致。
-- **S13.06** 剪輯完整影片：完成畫面、字幕、節奏與片尾。  
-  _Done when:_ 取得影片檔而非只有腳本。
-- **S13.07** 檢查影音與事實：實際播放，核對聲音、字幕、功能畫面與敏感內容。  
-  _Done when:_ 片頭、中段、結尾均正常。
-- **S13.08** 輸出與轉換格式：依支援渠道輸出長短與比例版本。  
-  _Done when:_ 格式、容量、長度符合要求。
-- **S13.09** 準備封面及發布資料：將封面需求交S12，標題與說明交S11。  
-  _Done when:_ S14或S31有完整發布包。
-- **S13.10** 保存並交接：記錄版本、來源、字幕、檔案與用途。  
-  _Done when:_ 下一步可讀取、播放與上傳。
+- **S13.01** Write down who the video must convince, the channel and placement, the length, and the shape; for example under 60 seconds and 1080x1920 vertical for short-form, or 16:9 for a longer video.  
+  _Done when:_ One line on the viewer and the goal of the video, plus length and size.
+- **S13.02** Collect real footage: screen recordings, screenshots, existing videos, music and voice the owner has the right to use. Every feature the video shows needs real footage of the product.  
+  _Done when:_ A list of footage with where each piece came from, and any feature still missing footage.
+- **S13.03** Turn the approved script into a shot list: a hook in the first 2 seconds, the product being used, the result, and one call to action. Replace any claim you cannot show on screen with one you can.  
+  _Done when:_ A shot list where each line names the footage it uses.
+- **S13.04** Record missing demo footage only in a demo account or test setup the owner approved, or cut it from existing material. Hide customer names, emails and private data. If a shot needs a real person's face or voice or a change to the live product, list it for the owner and make the rest.  
+  _Done when:_ The new footage, checked for private data, and a list of any shots left for the owner.
+- **S13.05** Add subtitles that match the script word for word, and a voice-over only with a voice the owner has the right to use. Check every number, product name and spelling in the subtitles.  
+  _Done when:_ The subtitle file or burned-in subtitles, checked against the script.
+- **S13.06** Edit the full video with footage, subtitles, pacing and an end card that shows the call to action. A script alone is not a finished video. If the only available editing or voice tool charges money, ask the owner before using it.  
+  _Done when:_ A video file that plays.
+- **S13.07** Play the whole video and check the start, middle and end: sound, subtitles, that each product screen is real, and that no private data or misleading scene appears.  
+  _Done when:_ A note that the full video was played, with any fixes made.
+- **S13.08** Export the versions each channel needs, checking length, size, shape and file size against the channel's limits. If a file fails, fix and export it again; never hand over the same broken file twice.  
+  _Done when:_ Each exported file with its length, pixel size and file size.
+- **S13.09** Prepare what publishing needs: a cover image, a title and a caption from the approved copy. If several versions are tested, label them A, B and so on, with one difference between them.  
+  _Done when:_ The cover, title and caption for each version, labelled.
+- **S13.10** Save the final files with clear names and a note of version, purpose, sources and subtitles, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open and play, with the note for each file.
 
-**Hand back:** `actual_file`, `decoded_duration`, `dimensions`, `sha256`, `playback_readback`
-
-### 11. TikTok Ads轉換歸因與全成本核對 (baseline numbers)
-
-TikTok Ads轉換歸因與全成本核對
-
-- **C-TA-METRICS.01** 以TikTok Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-TA-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-TA-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-TA-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-TA-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+**Hand back:** `video_files`, `versions`, `sources`, `publish_kit`
 
 **If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
+- `no_real_footage`: If there is no real footage of a feature, ask the owner for a screen recording of it and drop that claim from the video until it arrives.
+- `private_data_on_screen`: If any frame shows customer names, emails or other private data, blur or recut it before going further.
+- `needs_live_product_change`: If recording would change the live product or real customer data, stop that recording and ask the owner for a safe demo account or existing footage.
+- `voice_rights_unclear`: If you cannot confirm the right to use a voice or music track, use subtitles only or a track the owner confirms they may use.
+- `export_fails_limits`: If an export is over the channel's length or file size limit, shorten or compress it and check again before handing it over.
 
-### 12. TikTok Ads影片PAUSED測試建立
+### 11. Read this goal's numbers from TikTok Ads (baseline numbers)
 
-TikTok Ads影片PAUSED測試建立
+Record the exact numbers this goal is judged on, for the period before the round and for the round itself, from TikTok Ads and the owner's own records, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
 
-- **C-TA-DRAFT.01** 核對advertiser、Spark／非Spark身份及素材權利／有效期  
-  _Done when:_ identity與rights
-- **C-TA-DRAFT.02** 讀目前ad group目標、placement與影片規格，不套其他平台選項  
-  _Done when:_ schema
-- **C-TA-DRAFT.03** 把caption、CTA、既有目的地、每日／總額及PAUSED寫入草稿  
-  _Done when:_ draft manifest
-- **C-TA-DRAFT.04** prepare後建本輪campaign/ad group/ad並保存上傳／物件ID  
-  _Done when:_ operation keys
-- **C-TA-DRAFT.05** 讀回status、審核、身份、link及金額，processing不當配送  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
-
-**If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
-
-### 13. TikTok Ads單組啟用
-
-TikTok Ads單組啟用
-
-- **C-TA-ACTIVATE.01** 重讀advertiser ID、Spark授權與campaign/ad group/ad，只選本輪allowlist物件  
-  _Done when:_ identity manifest
-- **C-TA-ACTIVATE.02** 核對有效activate_ads範圍、原幣每日／總額及到期，零預算不能啟用  
-  _Done when:_ grant與budget
-- **C-TA-ACTIVATE.03** 確認草稿已通過素材／目的地核對；平台審核中另標，不繞審核  
-  _Done when:_ draft/readback
-- **C-TA-ACTIVATE.04** prepare後只啟用本輪ID，不啟動其他草稿或自動加預算  
-  _Done when:_ operation_key
-- **C-TA-ACTIVATE.05** 讀回status、effective delivery與budget，安排授權到期停止  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+- **C-TA-METRICS.01** Confirm the advertiser ID, the currency and the time zone. For the baseline, use the same number of days as the round lasts, ending the day before this round's ads are switched on, and count the account's existing campaigns. For the current reading, use the days since this round's ads were switched on and count only this round's campaign. Use the same event, click figure and qualification rule for both. If you cannot open the ad account's reporting, ask the owner for an export or screenshot.  
+  _Done when:_ Advertiser ID, the campaigns counted, date range with time zone, currency, and how the numbers will be obtained.
+- **C-TA-METRICS.02** Check which components record_numbers asks for and use those exact names. Goals that use this step ask for: spend_minor and attributed_conversions (cost per conversion), spend_minor and qualified_leads (cost per qualified lead), or link_clicks and impressions (link click rate).  
+  _Done when:_ The list of component names this goal needs, copied from record_numbers.
+- **C-TA-METRICS.03** Read spend for the range and convert it to the currency's smallest unit without rounding. Example: US$12.34 is 1234. For a currency shown without decimals, such as JPY, use the figure as shown. Never convert to another currency.  
+  _Done when:_ Spend as shown, and the same figure in the smallest unit.
+- **C-TA-METRICS.04** Read impressions and link clicks. Record only clicks that went to the destination link, not all clicks on the ad such as profile visits or likes, and use the same click figure in baseline and current. If the report shows only one click figure, say which kind it is. Compare it with the tracked link's own click count as a check and report both.  
+  _Done when:_ Impressions, destination clicks, the tracked link's click count, and which figure was recorded.
+- **C-TA-METRICS.05** For conversions, count only the event agreed for this goal and note the attribution window the report uses. Conversions can arrive days late; if the range ended less than 3 days ago, say in source that the number is early. Check purchases against the owner's payment records or the sale counter, count each order once, and leave out the owner's, test and refunded orders.  
+  _Done when:_ The event name, attribution window, count, the payment record check, and whether it is early.
+- **C-TA-METRICS.06** For qualified leads, use the qualification rule agreed for this goal, for example 'business owner in the target country who left a working email'; if none was written, write one with the owner before counting and keep it for every round. Count each person once from the lead form responses, the owner's lead list, or a CRM if the owner already uses a CRM. Leave out the owner, tests, duplicates and spam.  
+  _Done when:_ The qualification rule, the count, and what was left out.
+- **C-TA-METRICS.07** Call record_numbers with each component's exact name, its value, and a source naming the report or export, the advertiser ID, the date range and the time zone. If there is no history, record 0 and say 'no history' in source. Never estimate. Do not change any ad or budget in this step.  
+  _Done when:_ The record_numbers call with names, values and sources.
 
 **If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for an export or screenshot covering the exact date range.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `event_unavailable`: If the agreed event recorded nothing or does not exist, use the payment records, lead list or sale counter and say so; never invent purchases.
+- `conversions_still_arriving`: If the range ended less than 3 days ago, record the numbers as early and read them again after 3 days.
+- `numbers_from_wrong_account`: If the screen or export shows a different advertiser ID, do not use those numbers and ask again.
+- `clicks_do_not_match`: If destination clicks and the tracked link's clicks differ by more than half, still record TikTok's destination clicks and report both figures in source.
 
-### 14. TikTok Ads轉換歸因與全成本核對 (result numbers)
+### 12. Build the TikTok video ad as a switched-off draft
 
-TikTok Ads轉換歸因與全成本核對
+Create this round's TikTok campaign, ad group and video ad, switched off, exactly as the owner approved, so it can be switched on later with no surprises in budget, wording, rights or link.
 
-- **C-TA-METRICS.01** 以TikTok Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-TA-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-TA-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-TA-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-TA-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+- **C-TA-DRAFT.01** Before building, check again: the advertiser ID, the identity (Spark code valid past the round's end, or the account's own identity), the rights note for each video, and the owner's written daily cap, total cap and end date. If any cap is missing, stop.  
+  _Done when:_ Advertiser ID, identity, rights note, and caps quoted from the owner's message.
+- **C-TA-DRAFT.02** Check each video: vertical, the first two seconds show the buyer's situation, captions readable without sound, and length and file size within the limits the upload screen shows. If you test more than one video, change only the first two seconds between them.  
+  _Done when:_ Each video file with its length, orientation, opening line, and what differs between versions.
+- **C-TA-DRAFT.03** Plan the structure: one new campaign with the objective that matches the goal's main number, using the names the objective list shows: traffic for link clicks, lead generation for leads, website conversions or sales for purchases. A purchase objective needs the event chosen in the account step; if there is none, use traffic. One ad group with locations and language from the buyer segments, a daily budget no higher than the owner's cap, and a schedule ending on the round's last day. Do not copy settings from another platform.  
+  _Done when:_ A written plan of objective, ad group targeting, budget and schedule.
+- **C-TA-DRAFT.04** Write the ad text from the approved copy, under 100 characters, and pick one call-to-action button; a Spark Ad uses the post's own caption instead. Set the destination to the round's tracked link with ?v=A, ?v=B per video. Open the link and see the product page load. No invented numbers, testimonials, scarcity or guarantees.  
+  _Done when:_ Ad text with character count, the button, and each destination URL confirmed to load.
+- **C-TA-DRAFT.05** Show the owner word for word: each video, ad text, button, destination URL, objective, locations, daily budget and schedule. Get a clear yes before creating anything.  
+  _Done when:_ The full draft as shown to the owner and their approval message.
+- **C-TA-DRAFT.06** Create only this round's campaign, ad group and ads so that nothing can spend yet: set the ad group's schedule to start on a future day, and switch the campaign off before submitting if the screen allows it, otherwise right after submitting. Use the owner's browser, or the agent's own browser if the owner said yes. Touch nothing that already exists, and check the campaign list before any retry so nothing is created twice.  
+  _Done when:_ The names and IDs of the new campaign, ad group and ads, that the campaign is off, and the schedule start as set.
+- **C-TA-DRAFT.07** Open the draft again and check: campaign off, daily budget, currency, schedule, identity, destination URLs, video processing and review status. A processed or approved video is not live. If review is pending, keep the same ad ID and wait. If rejected, read the reason and fix only that part with the owner's yes.  
+  _Done when:_ Each setting as it appears in the account, and each ad's review status.
 
-**If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
-
-### 15. TikTok Ads觀察後只暫停本輪測試物件
-
-TikTok Ads觀察後只暫停本輪測試物件
-
-- **C-TA-STOP.01** 從本輪成功activate操作讀campaign／ad group／ad IDs，不用帳號全部物件清單當範圍  
-  _Done when:_ owned active object IDs
-- **C-TA-STOP.02** 核對本輪觀察窗及已存報表，保留原素材、預算和版本  
-  _Done when:_ observation evidence
-- **C-TA-STOP.03** prepare後只pause本輪已核對IDs；不取消訂單、刪campaign或動其他品牌  
-  _Done when:_ scoped pause operation
-- **C-TA-STOP.04** 讀effective status已不配送；逾時先對帳，不能標已停止  
-  _Done when:_ ad_objects與delivery_state
-- **C-TA-STOP.05** 下一輪另用單一變數測試與原範圍，暫停不擴大預算或授權  
-  _Done when:_ changes與next-test boundary
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+**Hand back:** `campaign_id`, `ad_ids`, `daily_budget`, `destination_urls`, `review_status`
 
 **If stuck:**
-- `spark_permission_expired`: 停止該素材啟用，改已授權素材或等待創作者新授權。
-- `event_unavailable`: 等待資料或選可核對目標，不虛構購買。
-- `video_review_pending`: 保留ad ID等待審核，不重建同ad。
+- `no_written_caps`: If the owner has not written a daily cap, total cap and end date, stop and ask for them before building.
+- `owner_has_not_approved`: If the owner has not said yes to this exact draft, do not create it; show it and wait.
+- `spark_permission_expired`: If the Spark code has expired or ends before the round, stop that ad and use a video the owner has rights to, or wait for a new code.
+- `video_review_pending`: If an ad is still in review, keep its ad ID and check again later; never create a second copy of the same ad.
+- `ad_rejected`: If an ad is rejected, read the stated reason and fix only that part with the owner's yes; if the product itself must change, stop that ad.
+- `no_video_rights`: If the owner cannot confirm rights to a video's footage, voices or music, leave that video out.
+
+### 13. Switch on only this round's TikTok ads, within the approved cap
+
+Turn on only the approved switched-off campaign, at a budget the owner wrote down, so real viewers see the video and the goal's main number gets new data without risking more money than allowed.
+
+- **C-TA-ACTIVATE.01** Open the draft and confirm the advertiser ID and the campaign, ad group and ad IDs from the draft step. These are the only items this step may switch on. Check that any Spark code is still valid past the round's end.  
+  _Done when:_ The list of IDs to switch on, matching the draft step, and the Spark code expiry if used.
+- **C-TA-ACTIVATE.02** Check the money against the owner's written caps: the daily budget is at or below the daily cap, the daily budget times the number of days is at or below the total cap, and the schedule ends on the round's last day. A zero or missing cap means do not switch on.  
+  _Done when:_ Daily budget, number of days, planned total, end date, and the owner's caps side by side.
+- **C-TA-ACTIVATE.03** Check each ad's review status. If it is still in review, wait and check again; never edit or copy an ad to get around review. If it is rejected, go back to the draft step.  
+  _Done when:_ Each ad's review status at the time of the check.
+- **C-TA-ACTIVATE.04** Ask the owner for a yes in this conversation to switch on now, stating the campaign name, daily budget, total cap and end date.  
+  _Done when:_ The owner's message saying yes to these exact figures.
+- **C-TA-ACTIVATE.05** Switch on only this round's campaign, ad group and ads, and move the schedule start to today if it was set in the future. Do not switch on any other item, raise any budget, or turn on automatic budget increases.  
+  _Done when:_ The time the campaign was switched on and who switched it on.
+- **C-TA-ACTIVATE.06** Within 3 hours, check the status and whether impressions have started. Then check spend once a day: it must stay under the daily cap, and when total spend comes within one daily budget of the total cap, run the stop step. If an ad shows as not delivering, write down the reason TikTok gives.  
+  _Done when:_ Status, impressions, daily spend and total spend at each check, with the times read.
+- **C-TA-ACTIVATE.07** Write down the stop date and total cap, and plan the stop step for whichever comes first, or the Spark code's expiry if that is sooner. Hand back the ad IDs, destination URLs, and an ad preview link or screenshot.  
+  _Done when:_ The stop date, the planned stop trigger, and the ad IDs with preview link or screenshot.
+
+**Hand back:** `switched_on_ids`, `live_since`, `delivery_status`, `stop_plan`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not said yes to switching on at these figures, do not switch on; ask and wait.
+- `budget_over_cap`: If the daily budget or planned total is above the owner's cap, lower the budget to fit or ask the owner for a new written cap.
+- `video_review_pending`: If an ad is still in review, keep the same ad ID and check again later; never create a copy to skip review.
+- `spark_permission_expired`: If the Spark code has expired, leave that ad off and use a video the owner has rights to, or wait for a new code.
+- `payment_problem`: If TikTok shows a payment problem, stop and tell the owner which screen needs them; never touch payment details.
+- `not_delivering`: If there are no impressions after 24 hours, read the reason TikTok shows and report it; do not raise the budget.
+
+### 14. Read this goal's numbers from TikTok Ads (result numbers)
+
+Record the exact numbers this goal is judged on, for the period before the round and for the round itself, from TikTok Ads and the owner's own records, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
+
+- **C-TA-METRICS.01** Confirm the advertiser ID, the currency and the time zone. For the baseline, use the same number of days as the round lasts, ending the day before this round's ads are switched on, and count the account's existing campaigns. For the current reading, use the days since this round's ads were switched on and count only this round's campaign. Use the same event, click figure and qualification rule for both. If you cannot open the ad account's reporting, ask the owner for an export or screenshot.  
+  _Done when:_ Advertiser ID, the campaigns counted, date range with time zone, currency, and how the numbers will be obtained.
+- **C-TA-METRICS.02** Check which components record_numbers asks for and use those exact names. Goals that use this step ask for: spend_minor and attributed_conversions (cost per conversion), spend_minor and qualified_leads (cost per qualified lead), or link_clicks and impressions (link click rate).  
+  _Done when:_ The list of component names this goal needs, copied from record_numbers.
+- **C-TA-METRICS.03** Read spend for the range and convert it to the currency's smallest unit without rounding. Example: US$12.34 is 1234. For a currency shown without decimals, such as JPY, use the figure as shown. Never convert to another currency.  
+  _Done when:_ Spend as shown, and the same figure in the smallest unit.
+- **C-TA-METRICS.04** Read impressions and link clicks. Record only clicks that went to the destination link, not all clicks on the ad such as profile visits or likes, and use the same click figure in baseline and current. If the report shows only one click figure, say which kind it is. Compare it with the tracked link's own click count as a check and report both.  
+  _Done when:_ Impressions, destination clicks, the tracked link's click count, and which figure was recorded.
+- **C-TA-METRICS.05** For conversions, count only the event agreed for this goal and note the attribution window the report uses. Conversions can arrive days late; if the range ended less than 3 days ago, say in source that the number is early. Check purchases against the owner's payment records or the sale counter, count each order once, and leave out the owner's, test and refunded orders.  
+  _Done when:_ The event name, attribution window, count, the payment record check, and whether it is early.
+- **C-TA-METRICS.06** For qualified leads, use the qualification rule agreed for this goal, for example 'business owner in the target country who left a working email'; if none was written, write one with the owner before counting and keep it for every round. Count each person once from the lead form responses, the owner's lead list, or a CRM if the owner already uses a CRM. Leave out the owner, tests, duplicates and spam.  
+  _Done when:_ The qualification rule, the count, and what was left out.
+- **C-TA-METRICS.07** Call record_numbers with each component's exact name, its value, and a source naming the report or export, the advertiser ID, the date range and the time zone. If there is no history, record 0 and say 'no history' in source. Never estimate. Do not change any ad or budget in this step.  
+  _Done when:_ The record_numbers call with names, values and sources.
+
+**If stuck:**
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for an export or screenshot covering the exact date range.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `event_unavailable`: If the agreed event recorded nothing or does not exist, use the payment records, lead list or sale counter and say so; never invent purchases.
+- `conversions_still_arriving`: If the range ended less than 3 days ago, record the numbers as early and read them again after 3 days.
+- `numbers_from_wrong_account`: If the screen or export shows a different advertiser ID, do not use those numbers and ask again.
+- `clicks_do_not_match`: If destination clicks and the tracked link's clicks differ by more than half, still record TikTok's destination clicks and report both figures in source.
+
+### 15. Pause only this round's TikTok ads and close the round
+
+Switch off exactly the campaign this round switched on, confirm spending has stopped, and record the final spend, so the round's result is clean and no money leaks after the test.
+
+- **C-TA-STOP.01** Take the list of IDs from the switch-on step. This list is the only thing this step may switch off. Never use 'all active campaigns' as the list.  
+  _Done when:_ The campaign, ad group and ad IDs this round switched on.
+- **C-TA-STOP.02** Confirm why the round ends: the end date arrived, the total cap was reached, the Spark code expired, or the owner asked. Make sure the current numbers were read for the full window before pausing; if not, read spend, clicks and conversions now.  
+  _Done when:_ The reason the round ends, and the time the current numbers were read.
+- **C-TA-STOP.03** Save the ads as they ran: video files, ad text, button, targeting, budget and destination URLs, so the next round can change one thing from a known start.  
+  _Done when:_ A saved copy of the round's ads and settings.
+- **C-TA-STOP.04** Tell the owner which items will be switched off, by name and ID. If the owner wants to keep them running, stop here and ask for a new written daily cap, total cap and end date.  
+  _Done when:_ The message to the owner listing the items to switch off, and their answer.
+- **C-TA-STOP.05** Switch off only those IDs. Do not delete any campaign, do not touch other campaigns or brands, and do not change payment settings.  
+  _Done when:_ The time each item was switched off and who did it.
+- **C-TA-STOP.06** Open the account again and confirm each item shows as off and not delivering. Compare spend at the time of pausing with spend 24 hours later; new impressions should stop. If the status did not change, check again before trying a second time.  
+  _Done when:_ Status of each item and spend at pause time and 24 hours later.
+- **C-TA-STOP.07** Record the final spend in the currency's smallest unit and write the one change the next round will test, for example a new first two seconds. The next round starts from a new draft; pausing never extends the budget or the owner's approval.  
+  _Done when:_ Final spend in the smallest unit and the next round's single change.
+
+**Hand back:** `paused_ids`, `paused_at`, `final_spend_minor`, `next_change`
+
+**If stuck:**
+- `ids_unknown`: If you do not have the IDs from the switch-on step, find the round's campaign by its exact name and creation date and confirm it with the owner before switching anything off.
+- `pause_not_taking`: If the status does not show off, wait 15 minutes and check again before retrying; tell the owner if it still runs.
+- `owner_wants_to_continue`: If the owner wants the ads to keep running, ask for a new written daily cap, total cap and end date before doing anything.
+- `spend_after_pause`: If spend keeps rising 24 hours after the pause, check the status of every item and tell the owner the exact figures.
+- `wrong_account`: If the signed-in account shows a different advertiser ID, stop and switch to the agreed account before pausing anything.

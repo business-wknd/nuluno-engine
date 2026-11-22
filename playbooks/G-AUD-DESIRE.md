@@ -1,7 +1,7 @@
-# 驗證受眾真正想要的結果與購買動機
+# Audience: confirm the outcome buyers really want
 
 - **Goal id:** `G-AUD-DESIRE`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** audience
 - **Metric:** `desire_response_rate` = `qualified_desire_responses` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing
@@ -213,60 +213,64 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 9. 彙整成效並核對付款與成本 (baseline numbers)
+### 9. Read the goal's numbers and check them against payments and costs (baseline numbers)
 
-彙整成效並核對付款與成本
+Record the goal's real numbers for one period, with test activity, duplicates and refunds removed and costs listed, so each round is judged on what truly happened.
 
-- **S33.01** 盤點這輪可用資料：列平台報表、外部表單、訊息、付款與成本來源。  
-  _Done when:_ 每個來源有權限及範圍。
-- **S33.02** 確定期間、時區與幣別：按工作計畫統一比較口徑。  
-  _Done when:_ 能區分不同貨幣與日期。
-- **S33.03** 讀取最新實際資料：按可用工具取得必要欄位與更新時間。  
-  _Done when:_ 欄位來自實際規格。
-- **S33.04** 核對內容與廣告版本：把流量、訊息及廣告ID接到對應工作。  
-  _Done when:_ 知道哪個版本產生何種可見結果。
-- **S33.05** 清理重複與測試資料：按原始ID、事件、訂單與明確測試標記去重。  
-  _Done when:_ 測試不混成外部新增銷售。
-- **S33.06** 核對名單與回覆品質：區分留下資料、可聯絡、有需求與已購買。  
-  _Done when:_ 各階段分母清楚。
-- **S33.07** 核對付款與退款：回到可用交易紀錄確認金額、時間與狀態。  
-  _Done when:_ 未付合約、未收訂單與實收分開。
-- **S33.08** 整理全部可得成本：納廣告、平台、金流、佣金、工具、交付與人事等。  
-  _Done when:_ 每筆有來源或標未知。
-- **S33.09** 處理未來交付與份額：需要時列保留款、待交付成本與可取得份額。  
-  _Done when:_ 預收與可自由使用金額分開。
-- **S33.10** 計算可合理判斷的結果：實際計算率、費用、已核對貢獻及缺口。  
-  _Done when:_ 分母與公式可查。
-- **S33.11** 註明歸因與增量限制：分平台自報來源、可追蹤關聯及有對照的增加結果。  
-  _Done when:_ 沒有把相關當因果。
-- **S33.12** 輸出與安排更新：交S32／S34資料版本、時間與缺件。  
-  _Done when:_ 下一輪知道資料是否夠新。
+- **S33.01** Get the goal's exact metric component names from record_numbers (for example qualified_inquiries and eligible_exposures). Set the date range, time zone and currency. For the baseline, use a period of the same length just before this round; for the current reading, use the round's own observation period.  
+  _Done when:_ The component names, the date range with time zone, and the currency.
+- **S33.02** List every source the owner already has: post insights, the ad account's reporting, the round's tracked link and sale counter from tracking, form responses, the inbox, and payment records such as the payment provider's dashboard. Note who can open each one. Do not install new tracking code.  
+  _Done when:_ Each source, what it covers, and whether you or the owner can read it.
+- **S33.03** Read each component from those sources, with the time you read it. For an exposures component, use the reach or views number the channel shows for this round's posts, and say which one you used. If you cannot open a source, ask the owner for a screenshot or export.  
+  _Done when:_ The raw number for each component, its source, and the time it was read.
+- **S33.04** Match each result to the post, ad or version it came from (for example ?v=A or ?v=B). If you cannot tell where a result came from, mark it unknown; do not give it to the version that seems most likely.  
+  _Done when:_ Results split by version, with unknown results listed apart.
+- **S33.05** Remove duplicates and tests. Count each person and each order once. Leave out the owner's, the team's and the agent's own messages and purchases, test-mode payments, and bots.  
+  _Done when:_ What was removed and why, with the count before and after.
+- **S33.06** Qualify the results. An inquiry or response counts only when the person states a real need or a wanted outcome that the product meets, not just praise or a like. A purchase counts only when it is paid, in the date range, and not refunded; unpaid invoices and abandoned checkouts do not count.  
+  _Done when:_ The list of counted inquiries, responses or purchases, each with its link or order reference.
+- **S33.07** List the round's costs: ad spend, platform and payment fees, tools, and delivery costs, each with its source. If a payment covers work not yet delivered, note the delivery cost still owed and keep that money apart from money that is free to use. An unknown cost stays unknown, never zero. Keep different currencies separate unless you have a stated rate.  
+  _Done when:_ The cost list with sources, any money held for future delivery, and any unknown items named.
+- **S33.08** Pass each component to record_numbers under its exact name, with the source in source. If there is no history, record 0 and say so in source. Never estimate a number; if a component cannot be read, say which and why.  
+  _Done when:_ The record_numbers call with every component and its source.
+- **S33.09** Note the limits of what the numbers show: what the platform reports, what the tracked link and sale counter show, and what the payment records confirm. Without a comparison group, do not claim the round caused the change.  
+  _Done when:_ A short note on where each number comes from and what it cannot prove.
 
-### 10. 彙整成效並核對付款與成本 (result numbers)
+**If stuck:**
+- `no_source_for_component`: If no source shows a component, ask the owner whether they have one; if not, say so plainly and do not estimate.
+- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `payments_not_accessible`: If you cannot open payment records, ask the owner for an export or screenshot of payments and refunds for the date range.
+- `test_data_mixed_in`: If you cannot tell test or owner activity from real buyers, leave those items out and list them as unverified.
+- `currency_mismatch`: If sources use different currencies and there is no stated rate, keep them separate and do not add them together.
+- `zero_denominator`: If the denominator component is 0, record the real numbers and say the rate cannot be worked out yet; never report it as 0% or 100%.
 
-彙整成效並核對付款與成本
+### 10. Read the goal's numbers and check them against payments and costs (result numbers)
 
-- **S33.01** 盤點這輪可用資料：列平台報表、外部表單、訊息、付款與成本來源。  
-  _Done when:_ 每個來源有權限及範圍。
-- **S33.02** 確定期間、時區與幣別：按工作計畫統一比較口徑。  
-  _Done when:_ 能區分不同貨幣與日期。
-- **S33.03** 讀取最新實際資料：按可用工具取得必要欄位與更新時間。  
-  _Done when:_ 欄位來自實際規格。
-- **S33.04** 核對內容與廣告版本：把流量、訊息及廣告ID接到對應工作。  
-  _Done when:_ 知道哪個版本產生何種可見結果。
-- **S33.05** 清理重複與測試資料：按原始ID、事件、訂單與明確測試標記去重。  
-  _Done when:_ 測試不混成外部新增銷售。
-- **S33.06** 核對名單與回覆品質：區分留下資料、可聯絡、有需求與已購買。  
-  _Done when:_ 各階段分母清楚。
-- **S33.07** 核對付款與退款：回到可用交易紀錄確認金額、時間與狀態。  
-  _Done when:_ 未付合約、未收訂單與實收分開。
-- **S33.08** 整理全部可得成本：納廣告、平台、金流、佣金、工具、交付與人事等。  
-  _Done when:_ 每筆有來源或標未知。
-- **S33.09** 處理未來交付與份額：需要時列保留款、待交付成本與可取得份額。  
-  _Done when:_ 預收與可自由使用金額分開。
-- **S33.10** 計算可合理判斷的結果：實際計算率、費用、已核對貢獻及缺口。  
-  _Done when:_ 分母與公式可查。
-- **S33.11** 註明歸因與增量限制：分平台自報來源、可追蹤關聯及有對照的增加結果。  
-  _Done when:_ 沒有把相關當因果。
-- **S33.12** 輸出與安排更新：交S32／S34資料版本、時間與缺件。  
-  _Done when:_ 下一輪知道資料是否夠新。
+Record the goal's real numbers for one period, with test activity, duplicates and refunds removed and costs listed, so each round is judged on what truly happened.
+
+- **S33.01** Get the goal's exact metric component names from record_numbers (for example qualified_inquiries and eligible_exposures). Set the date range, time zone and currency. For the baseline, use a period of the same length just before this round; for the current reading, use the round's own observation period.  
+  _Done when:_ The component names, the date range with time zone, and the currency.
+- **S33.02** List every source the owner already has: post insights, the ad account's reporting, the round's tracked link and sale counter from tracking, form responses, the inbox, and payment records such as the payment provider's dashboard. Note who can open each one. Do not install new tracking code.  
+  _Done when:_ Each source, what it covers, and whether you or the owner can read it.
+- **S33.03** Read each component from those sources, with the time you read it. For an exposures component, use the reach or views number the channel shows for this round's posts, and say which one you used. If you cannot open a source, ask the owner for a screenshot or export.  
+  _Done when:_ The raw number for each component, its source, and the time it was read.
+- **S33.04** Match each result to the post, ad or version it came from (for example ?v=A or ?v=B). If you cannot tell where a result came from, mark it unknown; do not give it to the version that seems most likely.  
+  _Done when:_ Results split by version, with unknown results listed apart.
+- **S33.05** Remove duplicates and tests. Count each person and each order once. Leave out the owner's, the team's and the agent's own messages and purchases, test-mode payments, and bots.  
+  _Done when:_ What was removed and why, with the count before and after.
+- **S33.06** Qualify the results. An inquiry or response counts only when the person states a real need or a wanted outcome that the product meets, not just praise or a like. A purchase counts only when it is paid, in the date range, and not refunded; unpaid invoices and abandoned checkouts do not count.  
+  _Done when:_ The list of counted inquiries, responses or purchases, each with its link or order reference.
+- **S33.07** List the round's costs: ad spend, platform and payment fees, tools, and delivery costs, each with its source. If a payment covers work not yet delivered, note the delivery cost still owed and keep that money apart from money that is free to use. An unknown cost stays unknown, never zero. Keep different currencies separate unless you have a stated rate.  
+  _Done when:_ The cost list with sources, any money held for future delivery, and any unknown items named.
+- **S33.08** Pass each component to record_numbers under its exact name, with the source in source. If there is no history, record 0 and say so in source. Never estimate a number; if a component cannot be read, say which and why.  
+  _Done when:_ The record_numbers call with every component and its source.
+- **S33.09** Note the limits of what the numbers show: what the platform reports, what the tracked link and sale counter show, and what the payment records confirm. Without a comparison group, do not claim the round caused the change.  
+  _Done when:_ A short note on where each number comes from and what it cannot prove.
+
+**If stuck:**
+- `no_source_for_component`: If no source shows a component, ask the owner whether they have one; if not, say so plainly and do not estimate.
+- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `payments_not_accessible`: If you cannot open payment records, ask the owner for an export or screenshot of payments and refunds for the date range.
+- `test_data_mixed_in`: If you cannot tell test or owner activity from real buyers, leave those items out and list them as unverified.
+- `currency_mismatch`: If sources use different currencies and there is no stated rate, keep them separate and do not add them together.
+- `zero_denominator`: If the denominator component is 0, record the real numbers and say the rate cannot be worked out yet; never report it as 0% or 100%.

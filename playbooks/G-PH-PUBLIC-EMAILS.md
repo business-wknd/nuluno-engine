@@ -1,7 +1,7 @@
-# Product Hunt Maker找到有來源的商務Email
+# Product Hunt: raise the share of makers with a sourced public email
 
 - **Goal id:** `G-PH-PUBLIC-EMAILS`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** producthunt
 - **Metric:** `public_email_coverage` = `verified_public_emails` / `reviewed_makers`, should increase
 - **Observation window:** 168 hours after publishing
@@ -179,118 +179,137 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備Product Hunt帳號、登入與授權
+### 8. Confirm the Product Hunt account and who acts on it
 
-準備Product Hunt帳號、登入與授權
+Settle which real Product Hunt maker account the owner uses, whether the product already has a page, and who presses publish, so research, the launch and replies all run under the right account without stopping halfway.
 
-- **C-PRODUCTHUNT-ACCESS.01** 先讀產品頁、makers與topics公開資料，核對當前登入是否為已授權maker  
-  _Done when:_ 產品slug、maker profile與擁有權
-- **C-PRODUCTHUNT-ACCESS.02** API另核對既有token、scope與商用許可；官方文件要求商用先獲許可，不能當免費名單API  
-  _Done when:_ 商用許可／讀取方式
-- **C-PRODUCTHUNT-ACCESS.03** 需要登入時沿官方提供方式；OAuth、本人驗證、條款確認由帳號本人完成  
-  _Done when:_ 登入checkpoint
-- **C-PRODUCTHUNT-ACCESS.04** Email不是標準保證欄位；只從maker本人公開網站／商務聯絡頁核對，不由username拼地址  
-  _Done when:_ 公開商務來源與email或null
-- **C-PRODUCTHUNT-ACCESS.05** 上架前先找現有listing與重複產品；只有本品牌有權時準備既有產品資料  
-  _Done when:_ 現有listing及擁有權
-- **C-PRODUCTHUNT-ACCESS.06** 核對當前launch與討論規則，不買票、不互投、不把其他makers自推當買方需求  
-  _Done when:_ 當前規則與排除紀錄
+- **C-PRODUCTHUNT-ACCESS.01** Ask the owner for the URL of their own Product Hunt profile and the product's website. Open the profile with read_page or your browser and confirm it exists, shows a real name, and is the owner's. Product Hunt accounts are for real people: use the owner's one personal account, and never create extra or brand-only accounts to act on Product Hunt.  
+  _Done when:_ The profile URL, the name and handle shown on it, and the owner's confirmation that it is theirs.
+- **C-PRODUCTHUNT-ACCESS.02** Search Product Hunt for the product's name and its website domain. If a page for this product already exists, open it and check whether the owner is listed as a maker. Plan to use that page; do not plan a second page for the same product.  
+  _Done when:_ The URL of any existing product page with its listed makers, or a note that a search on the name and the domain found none.
+- **C-PRODUCTHUNT-ACCESS.03** Decide who will press publish on Product Hunt: the owner on their own device, or your browser if it is already signed in to the owner's account and the owner agrees. If nobody is signed in, the owner signs in themselves on the official Product Hunt sign-in screen. Never ask for a password. If this goal only researches makers and posts nothing, write 'nobody, research only' and skip sign-in.  
+  _Done when:_ Who will publish, how the owner signed in, and the handle shown after sign-in, or a note that this goal posts nothing.
+- **C-PRODUCTHUNT-ACCESS.04** Create a new Product Hunt account only if the owner has none, this goal includes a launch or replies, and the owner asks for one in this conversation. The account must be in the owner's real name. If the owner agrees to sign up with the address from inbox_address, read the verification code with inbox_latest; otherwise the owner reads the code from their own email. Any terms screen or identity check is done by the owner.  
+  _Done when:_ The new profile URL and the owner's request, or a note that the existing account is used.
+- **C-PRODUCTHUNT-ACCESS.05** Read Product Hunt's current help pages on launching and community rules, and write down in three to six short lines what is not allowed. In every case: never buy votes, never trade votes, never use extra accounts, and never ask people to upvote; ask for feedback instead.  
+  _Done when:_ A short list of the current rules with the help page URLs they came from.
+- **C-PRODUCTHUNT-ACCESS.06** Settle how you will read Product Hunt data. Read public pages one at a time with read_page or your browser; do not bulk-download pages or use scraping tools. Do not use the Product Hunt API as a free lead list; its terms ask for permission before commercial use, so use it only if the owner already has that permission in writing. Profiles do not reliably show an email address, so any business email must later come from the maker's own public website, never from a guess built on a username.  
+  _Done when:_ A one-line note on how data will be read, whether the owner has written API permission, and that emails will only come from makers' own websites.
+- **C-PRODUCTHUNT-ACCESS.07** If this goal includes a launch or replies, confirm with the agreed account signed in that whoever publishes can open the screen for submitting a product and can post a comment. Do not submit or post anything in this step. If the goal only researches makers, write 'not needed'.  
+  _Done when:_ Confirmation that the submit screen and the comment box open for the agreed account, with the time checked, or 'not needed'.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `api_commercial_permission`: 等待既有許可或本人可用的正式資料路徑。
-- `email_not_available`: 如實輸出email=null與profile來源，不猜Email。
-- `duplicate_listing`: 維護已擁有listing或保存待本人，不重複上架。
-- `launch_time_mismatch`: 核對平台排程時區與公開日期；草稿不當已launch。
-- `maker_not_buyer`: 沒有實際需求訊號不標高意向客戶。
-
-### 9. Product Hunt產品與Maker名單研究
-
-Product Hunt產品與Maker名單研究
-
-- **C-PH-MAKERS.01** 按產品類別、launch日期與買方情境挑產品；先寫何種maker可能需要我們  
-  _Done when:_ criteria與hypothesis
-- **C-PH-MAKERS.02** 用允許的公開資料／獲商用許可API讀product、makers、website與topics  
-  _Done when:_ post ID與maker profiles
-- **C-PH-MAKERS.03** 逐maker核對產品網站和角色，避免把hunter當owner  
-  _Done when:_ maker_role與source
-- **C-PH-MAKERS.04** 找實際需求或可說明的適配理由；新launch本身不是付費意願  
-  _Done when:_ reason與evidence
-- **C-PH-MAKERS.05** 按maker與公司去重，輸出leads與非買家排除  
-  _Done when:_ leads與excluded
-
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
+**Hand back:** `account_handle`, `profile_url`, `existing_product_page`, `who_publishes`
 
 **If stuck:**
-- `api_commercial_permission`: 等待既有許可或本人可用的正式資料路徑。
-- `email_not_available`: 如實輸出email=null與profile來源，不猜Email。
-- `duplicate_listing`: 維護已擁有listing或保存待本人，不重複上架。
-- `launch_time_mismatch`: 核對平台排程時區與公開日期；草稿不當已launch。
-- `maker_not_buyer`: 沒有實際需求訊號不標高意向客戶。
+- `no_product_hunt_account`: If the owner has no Product Hunt account and this goal only researches makers, carry on without one; if it includes a launch or replies, ask whether they want one in their real name and create it only on a clear yes.
+- `wrong_account_signed_in`: If the signed-in account is not the owner's agreed profile, stop and ask the owner to switch accounts or to act on their own device.
+- `page_owned_by_someone_else`: If the product already has a page that lists other people as makers, do not create a new one; ask the owner to request maker access for that page through Product Hunt's help pages.
+- `owner_action_needed`: If a verification screen, terms screen or identity check appears, stop and tell the owner which screen and which button; never accept terms for them.
+- `no_api_permission`: If the owner has no written API permission, read public pages one at a time instead and say so in the hand-back.
+- `agent_browser_not_signed_in`: If your browser is not signed in to the owner's account, set who_publishes to 'owner' and plan to hand them exact text to paste.
 
-### 10. Product Hunt Maker公開商務Email核對
+### 9. Find Product Hunt makers who fit the product
 
-Product Hunt Maker公開商務Email核對
+Build a short, sourced list of real makers whose recent products and public words show a need the product meets, because only checked, well-fitting makers count toward the goal's main number and give later steps someone worth reaching.
 
-- **C-PH-EMAIL.01** 從product頁沿maker profile到其本人列出的產品／個人官網，保存跳轉鏈  
-  _Done when:_ product URL、maker URL、official domain
-- **C-PH-EMAIL.02** 讀官網contact/about/press頁確認是否有公開商務Email與用途  
-  _Done when:_ contact source URL
-- **C-PH-EMAIL.03** 不存在就輸出email=null，不將PH登入Email或API未提供欄位當已知  
-  _Done when:_ business_contacts
-- **C-PH-EMAIL.04** 區分公司support地址、媒體窗口與maker本人，逐筆核對關係  
-  _Done when:_ contact_type與relationship
-- **C-PH-EMAIL.05** 記來源、日期、用途及後續同意未知，不直接加入促銷序列  
-  _Done when:_ leads與consent
-- **C-PH-EMAIL.06** API沒商用許可就保存待接，不用匿名抓取或猜地址補滿數量  
-  _Done when:_ limitations與excluded
+- **C-PH-MAKERS.01** From the buyer groups and the strongest motive chosen earlier, write who a fitting maker is in two or three lines: the kind of product they launched, how recently (for example, in the last 90 days), and the situation that would make them need this product. Add a one-line guess to test, such as 'makers of B2B tools launched in the last 90 days need X because Y'. Also write who to leave out: competitors, the owner's own products, and people who say they do not want contact.  
+  _Done when:_ The fit definition, the one-line guess, and the leave-out rules.
+- **C-PH-MAKERS.02** Pick three to five searches: the product category, two or three known alternatives, and the job the buyer is trying to get done. Open Product Hunt search and topic pages for each with read_page or your browser, one page at a time.  
+  _Done when:_ Each search or topic page URL you opened, and the date.
+- **C-PH-MAKERS.03** From those pages, open each product that matches the fit definition and launched within the chosen time. Record the product page URL, the launch date, the product website, and the people listed as makers. The hunter who posted a product is not its owner unless they are also listed as a maker.  
+  _Done when:_ One row per product with its page URL, launch date, website and maker names.
+- **C-PH-MAKERS.04** For each maker, open their Product Hunt profile and the product website. Confirm they built or run the product and that the site is still live. Keep one row per company: if several makers run the same company, put them in one row and mark the one whose role fits best as the contact. Review at least 20 rows and stop at 50 per round, so each one gets a real check.  
+  _Done when:_ A list of distinct rows reviewed, one per company, each with the makers' profile URLs, roles, company and a note that the site loads.
+- **C-PH-MAKERS.05** For each maker, look for a public sign of need that the product meets: a line in their launch comments, a public post asking for help, a job post, or a roadmap item. Copy the exact words with the URL and date. A recent launch on its own is not a need and not a sign they will pay.  
+  _Done when:_ For each maker, either a quoted need with URL and date, or 'no need found'.
+- **C-PH-MAKERS.06** Keep what you saw separate from what you infer. Write the observed need in one field and your reason for fit in another. Mark a maker 'qualified' only when the fit rests on a quoted need or a clear, sourced fact about their situation.  
+  _Done when:_ Each maker has an observed-need field and a separate fit-reason field.
+- **C-PH-MAKERS.07** Sort every reviewed row into qualified, unknown or excluded, with one line of reason each. Do not contact anyone and do not guess any email address in this step.  
+  _Done when:_ Three groups whose counts add up to the number of rows reviewed, each row with a reason.
 
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
-
-**If stuck:**
-- `api_commercial_permission`: 等待既有許可或本人可用的正式資料路徑。
-- `email_not_available`: 如實輸出email=null與profile來源，不猜Email。
-- `duplicate_listing`: 維護已擁有listing或保存待本人，不重複上架。
-- `launch_time_mismatch`: 核對平台排程時區與公開日期；草稿不當已launch。
-- `maker_not_buyer`: 沒有實際需求訊號不標高意向客戶。
-
-### 11. Product Hunt launch流量與付費結果 (baseline numbers)
-
-Product Hunt launch流量與付費結果
-
-- **C-PH-METRICS.01** 確認listing確實公開，保存launch時間與平台口徑  
-  _Done when:_ listing/window
-- **C-PH-METRICS.02** 讀可見comments／votes與既有網站referral sessions，分開分母  
-  _Done when:_ raw metrics
-- **C-PH-METRICS.03** maker／hunter互動不當目標買家，沒有需求不標商機  
-  _Done when:_ qualified inquiries
-- **C-PH-METRICS.04** 現有付款資料可對應來源才算可歸因，未設追蹤不改產品硬補  
-  _Done when:_ purchases/costs/limitations
+**Hand back:** `fit_definition`, `searches_used`, `maker_list`, `excluded_makers`
 
 **If stuck:**
-- `api_commercial_permission`: 等待既有許可或本人可用的正式資料路徑。
-- `email_not_available`: 如實輸出email=null與profile來源，不猜Email。
-- `duplicate_listing`: 維護已擁有listing或保存待本人，不重複上架。
-- `launch_time_mismatch`: 核對平台排程時區與公開日期；草稿不當已launch。
-- `maker_not_buyer`: 沒有實際需求訊號不標高意向客戶。
+- `no_fit_definition`: If no buyer group or motive was chosen earlier, go back to those steps before searching.
+- `too_few_matches`: If the searches turn up fewer than 20 rows, widen the launch time or add two more searches, and say which change you made.
+- `pages_blocked`: If Product Hunt pages will not open for you, ask the owner to open them and share what they show; do not use a scraping service.
+- `no_api_permission`: If reading by API would need commercial permission the owner does not have, keep reading public pages one at a time.
+- `maker_is_not_a_buyer`: If a maker shows no sign of need, mark them unknown or excluded; never mark them qualified only because they launched recently.
 
-### 12. Product Hunt launch流量與付費結果 (result numbers)
+### 10. Find makers' public business emails from their own sites
 
-Product Hunt launch流量與付費結果
+For each qualified maker, find a business email the maker has published on their own website and record where it was found, because only sourced, public addresses count and only they can be contacted fairly later.
 
-- **C-PH-METRICS.01** 確認listing確實公開，保存launch時間與平台口徑  
-  _Done when:_ listing/window
-- **C-PH-METRICS.02** 讀可見comments／votes與既有網站referral sessions，分開分母  
-  _Done when:_ raw metrics
-- **C-PH-METRICS.03** maker／hunter互動不當目標買家，沒有需求不標商機  
-  _Done when:_ qualified inquiries
-- **C-PH-METRICS.04** 現有付款資料可對應來源才算可歸因，未設追蹤不改產品硬補  
-  _Done when:_ purchases/costs/limitations
+- **C-PH-EMAIL.01** Take the qualified rows from the latest maker list. For each, start at the Product Hunt product page, open the contact maker's profile, and follow the links they list to the product website or their personal site. Write down every URL in that path.  
+  _Done when:_ For each row, the product page URL, profile URL and website URL.
+- **C-PH-EMAIL.02** Confirm the website belongs to this maker or their product: the domain matches the link on the product page, or the maker is named on the site's about or team page.  
+  _Done when:_ For each website, the page and line that ties it to the maker.
+- **C-PH-EMAIL.03** Read the site's contact, about, press and legal notice pages and the page footer. Record any email address printed there, the URL of the page it is on, and what the page says it is for, such as partnerships, press or support.  
+  _Done when:_ Each email found, with its page URL and stated purpose, and the date you read it.
+- **C-PH-EMAIL.04** If no address is printed, record 'none found' and the pages you checked. Never build an address from a name or username, never use email-guessing, lookup or scraping services, and never treat the email used to sign in to Product Hunt, or a field Product Hunt does not show, as known. A contact form may be recorded as a form URL, not as an email.  
+  _Done when:_ Makers with no email marked 'none found', with the pages checked.
+- **C-PH-EMAIL.05** Mark each address by type: the maker personally, the company's general inbox, customer support, or press and partnerships. Count an address as a verified public business email only if it is on the maker's own site and is not a customer-support-only address.  
+  _Done when:_ Each address with its type and a yes or no for counting as verified.
+- **C-PH-EMAIL.06** Check the page for signs the maker does not want pitches, such as 'no solicitations'. Note them and exclude that address. A public address is not consent to marketing: do not add anyone to a mailing list. Any later message is one personal email, approved by the owner word for word, that says who is writing, how they relate to the product and why, includes a way to opt out, and follows anti-spam law.  
+  _Done when:_ For each address, a note of any no-contact sign and 'not added to any list'.
+- **C-PH-EMAIL.07** Hand back one row for each qualified row you checked: verified email with source, none found, or excluded with reason. Do not send anything in this step.  
+  _Done when:_ A list whose rows match the qualified rows checked, each with a result and a source.
+
+**Hand back:** `contacts_found`, `none_found`, `excluded_contacts`
 
 **If stuck:**
-- `api_commercial_permission`: 等待既有許可或本人可用的正式資料路徑。
-- `email_not_available`: 如實輸出email=null與profile來源，不猜Email。
-- `duplicate_listing`: 維護已擁有listing或保存待本人，不重複上架。
-- `launch_time_mismatch`: 核對平台排程時區與公開日期；草稿不當已launch。
-- `maker_not_buyer`: 沒有實際需求訊號不標高意向客戶。
+- `no_qualified_makers`: If there is no list of qualified makers for this round, go back to the maker search step first.
+- `no_website_listed`: If a maker lists no website and the product page links nowhere, mark them 'none found' and move on; do not search for private addresses.
+- `email_not_published`: If the site shows only a contact form, record the form URL and mark the email as 'none found'; never guess an address.
+- `site_not_theirs`: If you cannot tie the website to the maker, do not use any address from it and mark the row unknown.
+- `no_contact_requested`: If the site asks not to be contacted for sales, exclude that maker and note the page.
+
+### 11. Read this goal's numbers for Product Hunt (baseline numbers)
+
+Record the numbers this goal is judged on, for a fixed window before and after the round, from sources you can name, so rounds are compared on real counts and not on guesses. record_numbers lists exactly which numbers it needs.
+
+- **C-PH-METRICS.01** Read the goal's metric components from where_are_we. Set the window: seven days, in the owner's time zone. For a baseline, use the seven days before the round starts; for current, the seven days after it starts. If a launch is involved, note that Product Hunt's launch day runs on Pacific Time and write both times.  
+  _Done when:_ The component names, the start and end of the window with time zone, and whether this is the baseline or the current reading.
+- **C-PH-METRICS.02** If the goal counts makers, read the maker list for the window: for the baseline, the last round's list; for current, this round's list. Count each row once (one per company). reviewed_makers is the rows whose profile and product site were actually opened and checked. qualified_makers is the rows marked qualified with a quoted need or sourced fit reason. verified_public_emails is the rows with an address the email step counted as verified, printed on the maker's own site, with the page URL. Never count unknown or excluded rows as qualified.  
+  _Done when:_ Each maker count with the list it came from and the date that list was made, or 'no history' if there was no earlier list.
+- **C-PH-METRICS.03** If the goal counts site visits, take the click count of this round's tracked link from tracking for the window. If the listing does not use the tracked link, or for a baseline before any tracked link existed, use visits referred by producthunt.com in the owner's site analytics and name it. Use the same source for baseline and current, and use one source only; never add two sources together.  
+  _Done when:_ The visit count, the tool it came from, and the window it covers.
+- **C-PH-METRICS.04** If the goal counts purchases, take the sale counter on the page shown after payment, or the owner's payment records for the window. Count only purchases from outside buyers that can be tied to this round. Leave out the owner's own test payments, refunded orders, and sales you cannot connect to this round, and say how many you left out.  
+  _Done when:_ The purchase count, its source, and the number left out with the reason.
+- **C-PH-METRICS.05** If a launch is live, also note the visible upvote and comment counts and the number of different people who asked a real question about the product. Do not count the owner, the hunter, other makers promoting their own products, or simple congratulations. These are context only, not the goal's number.  
+  _Done when:_ The upvote and comment counts and the number of real questions, each with the launch page URL.
+- **C-PH-METRICS.06** Call record_numbers with the goal's exact component names and a source for each. If there is no history for a component, record 0 and say in source that there is no history. Never estimate or fill a gap; if a component cannot be read, say which one and why.  
+  _Done when:_ The record_numbers call with every component name, value and source.
+
+**If stuck:**
+- `no_history`: If there is no history for a component, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `no_purchase_source`: If there is no sale counter and the owner has no payment records to share, ask the owner for the sales in the window from their payment tool; if none exists, say so and do not estimate.
+- `tracked_link_not_used`: If the live listing or replies do not use this round's tracked link, use the owner's site analytics for visits from producthunt.com and say so; if neither exists, record what you can and name the gap.
+- `launch_not_live`: If the listing is still a draft, scheduled or pending, do not treat it as launched; record the current reading only once it is public.
+- `too_early_to_read`: If the window has not closed, report the numbers as early and read them again when the seven days are over.
+- `zero_denominator`: If the count a rate is divided by is 0, record the components as they are and do not report any rise or fall.
+
+### 12. Read this goal's numbers for Product Hunt (result numbers)
+
+Record the numbers this goal is judged on, for a fixed window before and after the round, from sources you can name, so rounds are compared on real counts and not on guesses. record_numbers lists exactly which numbers it needs.
+
+- **C-PH-METRICS.01** Read the goal's metric components from where_are_we. Set the window: seven days, in the owner's time zone. For a baseline, use the seven days before the round starts; for current, the seven days after it starts. If a launch is involved, note that Product Hunt's launch day runs on Pacific Time and write both times.  
+  _Done when:_ The component names, the start and end of the window with time zone, and whether this is the baseline or the current reading.
+- **C-PH-METRICS.02** If the goal counts makers, read the maker list for the window: for the baseline, the last round's list; for current, this round's list. Count each row once (one per company). reviewed_makers is the rows whose profile and product site were actually opened and checked. qualified_makers is the rows marked qualified with a quoted need or sourced fit reason. verified_public_emails is the rows with an address the email step counted as verified, printed on the maker's own site, with the page URL. Never count unknown or excluded rows as qualified.  
+  _Done when:_ Each maker count with the list it came from and the date that list was made, or 'no history' if there was no earlier list.
+- **C-PH-METRICS.03** If the goal counts site visits, take the click count of this round's tracked link from tracking for the window. If the listing does not use the tracked link, or for a baseline before any tracked link existed, use visits referred by producthunt.com in the owner's site analytics and name it. Use the same source for baseline and current, and use one source only; never add two sources together.  
+  _Done when:_ The visit count, the tool it came from, and the window it covers.
+- **C-PH-METRICS.04** If the goal counts purchases, take the sale counter on the page shown after payment, or the owner's payment records for the window. Count only purchases from outside buyers that can be tied to this round. Leave out the owner's own test payments, refunded orders, and sales you cannot connect to this round, and say how many you left out.  
+  _Done when:_ The purchase count, its source, and the number left out with the reason.
+- **C-PH-METRICS.05** If a launch is live, also note the visible upvote and comment counts and the number of different people who asked a real question about the product. Do not count the owner, the hunter, other makers promoting their own products, or simple congratulations. These are context only, not the goal's number.  
+  _Done when:_ The upvote and comment counts and the number of real questions, each with the launch page URL.
+- **C-PH-METRICS.06** Call record_numbers with the goal's exact component names and a source for each. If there is no history for a component, record 0 and say in source that there is no history. Never estimate or fill a gap; if a component cannot be read, say which one and why.  
+  _Done when:_ The record_numbers call with every component name, value and source.
+
+**If stuck:**
+- `no_history`: If there is no history for a component, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `no_purchase_source`: If there is no sale counter and the owner has no payment records to share, ask the owner for the sales in the window from their payment tool; if none exists, say so and do not estimate.
+- `tracked_link_not_used`: If the live listing or replies do not use this round's tracked link, use the owner's site analytics for visits from producthunt.com and say so; if neither exists, record what you can and name the gap.
+- `launch_not_live`: If the listing is still a draft, scheduled or pending, do not treat it as launched; record the current reading only once it is public.
+- `too_early_to_read`: If the window has not closed, report the numbers as early and read them again when the seven days are over.
+- `zero_denominator`: If the count a rate is divided by is 0, record the components as they are and do not report any rise or fall.

@@ -1,7 +1,7 @@
-# Meta Ads降低已核對外部購買成本
+# Meta Ads: lower the cost per verified outside purchase
 
 - **Goal id:** `G-META-PURCHASE-CPA`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** meta_ads
 - **Metric:** `purchase_cpa` = `spend_minor` / `external_purchases`, should decrease
 - **Observation window:** 72 hours after publishing
@@ -179,89 +179,92 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備Meta Ads帳號、登入與授權
+### 8. Confirm the Meta ad account, brand Page and spending limits
 
-準備Meta Ads帳號、登入與授權
+Settle which ad account, which brand Page and Instagram account, who operates Ads Manager, and how much the owner allows to be spent, so ads can run under the right brand without the round stopping halfway.
 
-- **C-META_ADS-ACCESS.01** 盤點已連接工具／官方Ads Manager；讀目前可以列帳號、素材、campaign及insights的schema  
-  _Done when:_ 工具清單及實際read欄位
-- **C-META_ADS-ACCESS.02** 以本人既有登入列出可用Business Portfolio與ad account；核對精確帳號ID和幣別／時區  
-  _Done when:_ Business ID、ad account ID、幣別時區
-- **C-META_ADS-ACCESS.03** 核對本品牌Page／IG與廣告帳號授權關係；選不到目標身分就卡廣告，不選別品牌代替  
-  _Done when:_ Page/IG與管理角色證據
-- **C-META_ADS-ACCESS.04** 讀Account Quality及付款狀態，分清單一ad拒登、帳號限制、付款問題和權限不足  
-  _Done when:_ 原始限制種類與notice ID
-- **C-META_ADS-ACCESS.05** 連接器回done仍檢查實際資料列，方案限制文字不當數字；不可用寫入則保留官方允許UI路徑  
-  _Done when:_ 數值型別、來源與缺失能力
-- **C-META_ADS-ACCESS.06** OAuth正常更新只用既有範圍；2FA／身分／新增付款與條款交本人  
-  _Done when:_ 憑證更新或本人checkpoint
-- **C-META_ADS-ACCESS.07** 新帳號建立僅在明確授權及正常官方入口下操作；建立失敗不重複造帳號  
-  _Done when:_ 已建立ID或失敗續接
-- **C-META_ADS-ACCESS.08** 對任何寫入核對本輪物件allowlist、每日／總額與到期停止；零預算只準備OFF草稿  
-  _Done when:_ 帳號身分、物件及費用上限讀回
+- **C-META_ADS-ACCESS.01** Ask the owner for the brand website, the Facebook Page and the Instagram account the ads should run under. Note how you will work: in your own browser already signed in to Meta Ads Manager, or through the owner's screen and screenshots.  
+  _Done when:_ The website, Page URL, Instagram handle, and who will operate Ads Manager.
+- **C-META_ADS-ACCESS.02** The owner signs in to Ads Manager themselves; never ask for a password. List the business portfolios and ad accounts the owner can see, let the owner pick one, and write down its ad account ID, currency and time zone. If there are several, do not choose for them.  
+  _Done when:_ The chosen ad account ID, its currency and time zone, and the owner's choice in their own words.
+- **C-META_ADS-ACCESS.03** Check that the brand's own Page and Instagram account are connected to this ad account and can be chosen as the ad's identity. If you open a new ad to see the identity choice, discard that draft afterwards so nothing is left in the account. If they cannot be chosen, stop the ads part of the round; never run the ads under another brand's Page.  
+  _Done when:_ The Page and Instagram account shown as choosable for this ad account, a note that any test draft was discarded, or a note that they are missing.
+- **C-META_ADS-ACCESS.04** Check the account's health in Account Quality and in the ad account's payment settings. Sort any problem into one type: one rejected ad, a restricted account, a payment problem, or missing permission. Copy the exact wording of each notice.  
+  _Done when:_ Account status, the problem type if any, and the exact notice text with the date it was read.
+- **C-META_ADS-ACCESS.05** Confirm the signed-in person can create and edit ads and can open the ad account's reporting. Open the reporting for the last 7 days and check that real numbers appear, not a message about a plan limit or missing permission. If only reading works, plan for the owner to make every change by hand from the drafts you prepare.  
+  _Done when:_ What the signed-in person can do (read reports, create drafts, switch ads on and off), and whether real numbers appeared in reporting.
+- **C-META_ADS-ACCESS.06** If Meta asks for a two-factor code, an identity check, a new payment method or acceptance of terms, stop. Tell the owner which screen and which button, and wait. Resume on the same screen once they are done.  
+  _Done when:_ What the owner had to do, on which screen, and where you resumed.
+- **C-META_ADS-ACCESS.07** Create a new ad account or business portfolio only if the owner asked for one in this conversation, and only through Meta's own screens. Keep to one real account. If creation seems to fail, check whether it was created before trying again; never make a second one.  
+  _Done when:_ The new account ID with the owner's request, or a note that the existing account is used.
+- **C-META_ADS-ACCESS.08** Ask the owner to write down the limits for this round: the daily budget, the total for the round, the end date, and the currency. Without a written amount above zero, this round may only prepare ads that stay off.  
+  _Done when:_ The owner's written message with daily budget, round total, end date and currency, or a note that no spend is approved.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
-
-### 9. Meta Ads基準、歸因與全成本盤點
-
-Meta Ads基準、歸因與全成本盤點
-
-- **C-META-BASELINE.01** 按指定campaign/adset/ad IDs讀status、effective_status、budget、spend及日期  
-  _Done when:_ IDs/window/account currency
-- **C-META-BASELINE.02** 分impressions、link clicks、landing page views與選定conversion action  
-  _Done when:_ raw metrics與action type
-- **C-META-BASELINE.03** 核對attribution window、account timezone和轉換延遲，兩期間口徑一致  
-  _Done when:_ attribution model
-- **C-META-BASELINE.04** 付款退款回現有來源去重；平台報告purchase不等於銀行實收  
-  _Done when:_ money_events/economic IDs
-- **C-META-BASELINE.05** 未知成本／追蹤欄位保留null，無可比資料等待，不先改廣告  
-  _Done when:_ goal_observation與limitations
-
-**Hand back:** `goal_observation`, `original_metric_fields`, `source_read_time`, `missing_components`, `economic_ids_if_required`
+**Hand back:** `ad_account`, `brand_identity`, `account_health`, `who_operates`, `approved_limits`
 
 **If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
+- `brand_page_not_available`: If the brand's Page or Instagram account cannot be selected in this ad account, stop the ads part and ask the owner to give the ad account access to the Page; never use another Page instead.
+- `account_restricted_or_unpaid`: If the account is restricted or has a payment problem, tell the owner the exact notice and Meta's next step shown on screen; never add or pay with a card for them.
+- `owner_action_needed`: If a code, identity check, payment method or terms screen appears, stop and tell the owner which screen and which button; never enter codes or accept terms for them.
+- `signed_out_again`: If the session expires, ask the owner to sign in once more; if it expires again, switch to the owner operating Ads Manager from your drafts.
+- `no_budget_approved`: If the owner has not written a daily budget and round total, continue preparing drafts that stay off and ask for the two numbers before any ad is switched on.
+- `several_ad_accounts`: If the owner can see more than one ad account, list them by ID and name and let the owner choose; never pick one yourself.
 
-### 10. Meta素材疲乏與單一變數測試設計
+### 9. Map past Meta ad results and how each number will be counted
 
-Meta素材疲乏與單一變數測試設計
+Lay out what past ads spent and returned, and fix the counting rules for this goal once, so the before and after numbers of this round are compared the same way and the weak point is visible.
 
-- **C-META-CREATIVE.01** 讀本輪已核對ads、素材ID、曝光、頻率、CPA及最少觀察時間  
-  _Done when:_ baseline與creative IDs
-- **C-META-CREATIVE.02** 分無配送／審核／受眾問題／素材疲乏，不能因一天差就判疲乏  
-  _Done when:_ diagnosis及evidence
-- **C-META-CREATIVE.03** 從受眾動機與原話選一個鉤子或格式，控制其他差異  
-  _Done when:_ hypothesis與changed variable
-- **C-META-CREATIVE.04** 為每版列文字、圖片／影片需求、fact_ids和觀測窗口  
-  _Done when:_ content_batch
-- **C-META-CREATIVE.05** 預算／身分／目的地沿本輪已確認範圍，需超出就保留待決定  
-  _Done when:_ limits與test plan
+- **C-META-BASELINE.01** In the ad account's reporting, list the campaigns, ad sets and ads that ran in the last 30 days, with their status, budget, amount spent and the dates they ran. If you cannot open reporting, ask the owner for a screenshot or an export of the same view.  
+  _Done when:_ A table of past campaigns, ad sets and ads with IDs, status, budget, spend and dates, and where it was read.
+- **C-META-BASELINE.02** For the same 30 days, read impressions, frequency, link clicks, landing page views and the result each campaign was set to get (purchases, leads or another conversion). Write each number exactly as shown and 'not shown' where it is missing.  
+  _Done when:_ The numbers per campaign as displayed, with the name of the result each campaign counts.
+- **C-META-BASELINE.03** Write down the attribution setting (for example 7-day click, 1-day view), the account time zone, and how long after a click sales usually arrive. These must stay the same for the baseline and the current read.  
+  _Done when:_ The attribution setting, time zone and typical delay, stated as the rule for this goal.
+- **C-META-BASELINE.04** Find where real sales, leads and refunds are recorded: the payment provider, the order list, the lead form inbox, or a CRM if the owner already uses a CRM. Ask the owner whether the Meta pixel is installed on the product page, because Meta only counts landing page views and website conversions where it is. A purchase reported by Meta is not money received; note how you will match the two and count each order only once.  
+  _Done when:_ The name of each source for sales, leads and refunds, whether the pixel is on the product page, and how a Meta result will be matched to one real order or lead.
+- **C-META-BASELINE.05** Propose what counts for this goal and ask the owner to confirm or correct it: what makes a lead qualified, which orders count as outside customers (not the owner, team, tests or bots), and which costs are included in full costs. Write each rule in one sentence.  
+  _Done when:_ The counting rules in plain sentences, confirmed by the owner.
+- **C-META-BASELINE.06** List every part of the goal's main number you cannot yet get, such as unknown fees or no sales source, and leave it empty; never estimate. If there is no past ad history, say so; the first round sets the baseline.  
+  _Done when:_ A list of missing pieces and why each is missing, or a note that every piece has a source.
+- **C-META-BASELINE.07** From the table, name where results drop most: few impressions, low link click rate, clicks that do not load the page, or page visits that do not buy. Do not change any ad during this step.  
+  _Done when:_ One sentence naming the weakest stage, with the two numbers that show it.
 
-**Hand back:** `hypothesis`, `variants`, `fact_ids`, `acceptance_rule`
+**Hand back:** `past_results`, `counting_rules`, `money_sources`, `missing_pieces`, `weakest_stage`
 
 **If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for a screenshot or export of the last 30 days by campaign, with the columns you need.
+- `no_sales_source`: If there is no record of real sales or leads outside Meta, tell the owner the goal cannot be judged on money yet and ask where orders arrive; do not use Meta's numbers as money received.
+- `plan_limit_text_not_numbers`: If a tool returns a message about a plan limit instead of numbers, do not treat it as a number; read the same figures from the ad account's reporting or ask the owner for a screenshot.
+- `attribution_changed`: If past campaigns used different attribution settings, pick one with the owner and note that older numbers are not directly comparable.
+- `no_history`: If the account has never run ads, write that there is no history and move on; the first round's read becomes the baseline.
+
+### 10. Diagnose current Meta ads and design a one-change test
+
+Find out why current ads are falling short and design two ad versions that differ in one thing only, so the round shows clearly which change moves the goal's main number.
+
+- **C-META-CREATIVE.01** Read the ads that ran most recently: their IDs, impressions, frequency, link click rate, cost per result, and how long they have run. Do not judge any ad with under 1,000 impressions or under 72 hours of delivery.  
+  _Done when:_ A short table of recent ads with these numbers and which ones have enough data to judge.
+- **C-META-CREATIVE.02** Sort the problem into one type: not delivering, stuck in review or rejected, wrong audience, or tired creative. Call it tired only when frequency is above 3 and the link click rate fell by at least 20% over 7 days or more; one bad day is not enough.  
+  _Done when:_ The problem type and the numbers that support it.
+- **C-META-CREATIVE.03** If the problem is delivery, review or account health, stop here and send the round back to the account step; if it is the wrong audience, send it back to the buyer group step. A new creative fixes neither. Otherwise continue.  
+  _Done when:_ A note that the problem is in the ad itself, or which step the round was sent back to.
+- **C-META-CREATIVE.04** From the chosen angle, buyer quotes and buying motive, pick one thing to change: the hook, the image, the format (image, carousel, video) or the offer wording. Write a one-sentence guess of why it will do better.  
+  _Done when:_ The single thing that changes and the one-sentence guess, with the quote or motive it comes from.
+- **C-META-CREATIVE.05** Write a brief for version A (the current best ad, unchanged) and version B (the one change). For each, list the opening line, the headline, the image or video needed, the button, and the tracked link with ?v=A or ?v=B. Keep the first line of the ad text under 125 characters.  
+  _Done when:_ Two briefs side by side, showing they differ only in the chosen element.
+- **C-META-CREATIVE.06** Next to each claim in the briefs, name the product fact that supports it. Remove any number, testimonial, deadline or guarantee the facts do not support.  
+  _Done when:_ Each claim paired with its product fact, and a list of claims removed.
+- **C-META-CREATIVE.07** Set the rule for picking a winner before anything runs: the goal's main number, the goal's observation window (at least 72 hours), at least 1,000 impressions per version, and, when the goal counts purchases or leads, at least 5 of them per version. Call B the winner only if it beats A by 20% or more on the goal's main number; otherwise report 'no clear winner' and keep A. Keep the ad account, Page, audience and total budget the same as already approved; anything beyond that waits for the owner.  
+  _Done when:_ The written winner rule and a note that budget, audience and Page stay within what the owner approved.
+
+**Hand back:** `diagnosis`, `hypothesis`, `variants`, `acceptance_rule`
+
+**If stuck:**
+- `not_enough_data`: If no ad has 1,000 impressions and 72 hours of delivery, or no ad has run at all, write version A from the chosen angle as it stands and design version B with one change, without claiming any old ad is tired.
+- `problem_is_not_creative`: If ads are not delivering, are rejected or the account is restricted, send the round back to the account step instead of writing new ads.
+- `no_chosen_angle`: If no angle or buyer quotes exist yet, go back to the angle test step before writing briefs.
+- `fact_missing_for_claim`: If a claim needs a fact you do not have, remove it or ask the owner; never fill the gap with a guess.
+- `change_needs_more_budget`: If the test only works with a bigger budget or a new audience, write the request for the owner and keep the round within the current limits until they answer in writing.
 
 ### 11. Write the post from proven facts
 
@@ -287,153 +290,174 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 12. 製作與改版圖片素材
+### 12. Make the marketing images from real product visuals
 
-製作與改版圖片素材
+Produce finished image files in the exact size the channel needs, built from real product visuals and approved copy, because a clear image that matches the product is what stops the scroll and moves the goal's main number.
 
-- **S12.01** 讀取用途與規格：確認渠道、圖片類型、尺寸與數量。  
-  _Done when:_ 每張圖的用途明確。
-- **S12.02** 盤點可用視覺：讀品牌、產品畫面、照片及使用權。  
-  _Done when:_ 素材來源可追查。
-- **S12.03** 核對文字與主張：使用S11已核對文案。  
-  _Done when:_ 價格與產品畫面一致。
-- **S12.04** 安排資訊層次：決定標題、示範、證據與行動提示的位置。  
-  _Done when:_ 一眼能理解重點。
-- **S12.05** 實際製作圖片：使用可用圖片工具產出檔案。  
-  _Done when:_ 取得可開啟的實際圖片。
-- **S12.06** 檢查文字與細節：查看字形、裁切、產品畫面及是否有生成錯字。  
-  _Done when:_ 關鍵文字與畫面正確。
-- **S12.07** 檢查尺寸與格式：核對檔案類型、像素、容量與可讀性。  
-  _Done when:_ 符合當前渠道需求。
-- **S12.08** 製作必要版本：依測試需求裁切、改版或改比例。  
-  _Done when:_ 版本各有用途與識別。
-- **S12.09** 保存檔案與使用紀錄：交S14或S31可讀的檔案參照。  
-  _Done when:_ 來源、版本、用途可查。
+- **S12.01** Write down what images this round needs: the channel and placement, the image type (single image, carousel, cover or ad), the pixel size, and how many. If the size is unknown, check the channel's current help page; for example 1080x1350 for a portrait feed image and 1080x1920 for a full-screen vertical one.  
+  _Done when:_ A list of images with channel, placement, size and purpose for each.
+- **S12.02** Collect the real visuals: product screenshots, product photos, logo and brand colours. Use only material the owner made or has the right to use; never copy other brands' images or stock photos without a licence.  
+  _Done when:_ Each visual with where it came from and who owns it.
+- **S12.03** Take the words only from the approved copy. For feed and ad images keep the text to at most two short lines, around 10 words, placed where it stays readable and clear of the channel's own buttons and captions; follow the channel's own text rules for covers and store screenshots. Do not let an image tool add numbers, prices, ratings or badges.  
+  _Done when:_ The exact text for each image, matching the approved copy.
+- **S12.04** Lay out each image with one headline, the product shown working, and one call to action. If there is more to say, split it into carousel slides instead of crowding one image.  
+  _Done when:_ A short layout note or sketch for each image.
+- **S12.05** Make the actual image files with the image or design tool available. Place the text as a real text layer, not generated lettering. A prompt or description is not a finished image. If the only available tool charges money, ask the owner before using it.  
+  _Done when:_ Image files that open.
+- **S12.06** Open each file at full size and check spelling, cropping, faces, and that any product screen shown is the real product. Fix any garbled or wrong text by rebuilding it, never by handing over a flawed image.  
+  _Done when:_ A checked list of each image with any fixes made.
+- **S12.07** Check each file's type (JPG or PNG), pixel size and file size against the channel's limits, and view it at phone width to confirm the text is readable.  
+  _Done when:_ Type, pixel size and file size for each image, all within the channel's limits.
+- **S12.08** If the round tests versions, make only the versions the test needs and change one thing between them, labelled A, B and so on. Do not make extra variations for channels not in this round.  
+  _Done when:_ Each version labelled with the single thing that differs.
+- **S12.09** Save the final files with clear names and a note of version, purpose and sources, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open, with the note for each file.
 
-**Hand back:** `actual_file`, `mime_type`, `dimensions`, `sha256`, `visual_readback`
-
-### 13. Meta投放新觀察與付款成本核對 (baseline numbers)
-
-Meta投放新觀察與付款成本核對
-
-- **C-META-METRICS.01** 以Meta Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-META-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-META-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-META-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-META-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+**Hand back:** `image_files`, `image_text`, `versions`, `sources`
 
 **If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
+- `no_real_product_visuals`: If there are no screenshots or photos of the real product, ask the owner for two or three, and meanwhile make a text-and-brand-colour design without fake product screens.
+- `size_unknown`: If the channel's required size is unclear, check its current help page; if still unclear, ask the owner where the image will run.
+- `text_garbled`: If the image tool produces wrong or garbled text, rebuild the text as a real text layer before handing over the file.
+- `rights_unclear`: If you cannot tell who owns a visual, leave it out and use one the owner confirms they own.
+- `image_tool_failed`: If the image tool fails, try another available tool with the same brief; do not start the whole brief over or create duplicate charges.
 
-### 14. Meta PAUSED測試廣告建立
+### 13. Read this goal's Meta Ads numbers and check them against real sales (baseline numbers)
 
-Meta PAUSED測試廣告建立
+Record the numbers this goal is judged on, read from the ad account and matched against real sales, leads and costs, so the before and after of the round are compared on real money and not on what the platform reports.
 
-- **C-META-DRAFT.01** 核對精確ad account、Page／IG、目標及本輪物件  
-  _Done when:_ identity manifest
-- **C-META-DRAFT.02** 讀campaign/adset目前schema、幣別、預算／停止時間，所有新物件PAUSED  
-  _Done when:_ draft manifest
-- **C-META-DRAFT.03** 素材解碼後按工具支援上傳，確認asset hash及正確預覽  
-  _Done when:_ asset receipt
-- **C-META-DRAFT.04** prepare後只建本輪campaign/adset/creative/ad，逐筆保存ID  
-  _Done when:_ operation keys與object IDs
-- **C-META-DRAFT.05** 讀回身份、目的地、每日／整輪金額、status及effective_status，零預算保持OFF  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
-
-**If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
-
-### 15. Meta明確範圍內單組啟用
-
-Meta明確範圍內單組啟用
-
-- **C-META-ACTIVATE.01** 重讀本輪campaign/adset/ad IDs、Page／IG與最後草稿，排除其他未發布草稿  
-  _Done when:_ scope readback
-- **C-META-ACTIVATE.02** 核對有效啟用授權、每日／總額、到期與正整數最小貨幣單位；零預算停止  
-  _Done when:_ grant與budget
-- **C-META-ACTIVATE.03** 列現值→新值→預期→回退方式，prepare activate_ads  
-  _Done when:_ operation intent
-- **C-META-ACTIVATE.04** 僅啟用allowlist物件，不按Publish all，不自動增加budget  
-  _Done when:_ operation key與IDs
-- **C-META-ACTIVATE.05** 讀回status／effective_status／budget；審核中不當配送，對帳後排停止  
-  _Done when:_ ad_objects與delivery_state
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+- **C-META-METRICS.01** Confirm the ad account ID, the ads being measured, the date range, the time zone and the attribution setting. For the baseline read, use the account's ads over the most recent past period as long as the goal's observation window; for the current read, use this round's campaign, ad set and ad IDs from the time they started delivering. Use the same attribution setting for both.  
+  _Done when:_ Ad account ID, ad IDs, date range with time zone, and attribution setting.
+- **C-META-METRICS.02** For the current read, wait until the goal's observation window (72 hours of delivery) has passed since the ads started delivering. If you must read earlier, mark the numbers as early and read again after the window.  
+  _Done when:_ The time delivery started and the time of this read, with 'final' or 'early'.
+- **C-META-METRICS.03** In the ad account's reporting, or from the owner's screenshot or export, read amount spent, impressions, link clicks, landing page views and the result the ads were set to get, for each version (A and B) and in total. Write each exactly as shown; write 'not shown' and do not estimate when a number is missing.  
+  _Done when:_ The numbers per version and in total as displayed, with the screen or file they came from and the time they were read.
+- **C-META-METRICS.04** Check leads, purchases and refunds against the owner's own records: the payment provider, the order list, the lead form inbox, the round's sale counter from tracking, or a CRM if the owner already uses a CRM. Apply the counting rules agreed in the baseline step and count only real outside customers; leave out the owner, team, tests, bots, duplicates and refunded orders.  
+  _Done when:_ The count from the owner's records, the source name, and how many were left out and why.
+- **C-META-METRICS.05** If the goal needs money, add up the money from matched outside sales after refunds, and every cost for the round: ad spend, payment fees, platform fees, commissions, software and tools, product or delivery cost, paid help, and any other cost, plus money held back for work still to deliver. Meta's return on ad spend is not the owner's income.  
+  _Done when:_ Money from matched sales after refunds, and each cost with its amount and source, or 'unknown' where there is no source.
+- **C-META-METRICS.06** Turn money into the currency's smallest unit for any component ending in _minor, using the currency's standard decimal places: multiply by 100 for currencies with two decimals, such as USD, EUR and TWD; use the amount as shown for currencies without decimals, such as JPY and KRW. Say which rule you used.  
+  _Done when:_ Each money amount as shown and in the smallest unit, with the rule used.
+- **C-META-METRICS.07** Call record_numbers with the goal's exact component names, as record_numbers lists them for this goal (for example spend_minor, impressions, link_clicks, landing_page_views, attributed_conversions, qualified_leads, external_purchases, net_after_all_costs_minor), and a source for each. If there is no history, record 0 and say so in source. If a source is incomplete, say what is missing in source. Never estimate, and never change any ad during this step.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
 
 **If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for a screenshot or export with the columns this goal needs, for the exact date range.
+- `no_sales_records`: If there is no record of real sales or leads outside Meta, say so in source and leave those components unrecorded; never copy Meta's reported purchases as real ones.
+- `cost_unknown`: If a cost needed for money after costs has no source, list it as unknown and ask the owner for the figure; do not estimate it.
+- `too_early_to_read`: If the observation window has not passed, record the numbers as early and read them again after the window ends; do not fill conversions that have not arrived yet with 0.
+- `settings_differ_from_baseline`: If the attribution setting, time zone or range length differs from the baseline, read again with the baseline's settings before recording.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
 
-### 16. Meta投放新觀察與付款成本核對 (result numbers)
+### 14. Build this round's Meta ads switched off
 
-Meta投放新觀察與付款成本核對
+Build the approved ad versions in the ad account, switched off and within the owner's budget, so nothing spends until the owner says yes and each version can be measured on its own.
 
-- **C-META-METRICS.01** 以Meta Ads精確帳號／物件ID讀本輪開始後的新報表，記原幣、時區與attribution window  
-  _Done when:_ native account／window／currency
-- **C-META-METRICS.02** 讀spend、選定click／conversion action與樣本，未成熟轉換不補0  
-  _Done when:_ raw numerator/denominator
-- **C-META-METRICS.03** 用本品牌現有CRM／金流核對qualified leads、external purchases、refunds及canonical order IDs  
-  _Done when:_ sources與economic IDs
-- **C-META-METRICS.04** 核對八類成本、未來交付保留款與歸因完整性；平台ROAS不是本人淨收入  
-  _Done when:_ money_events與limitations
-- **C-META-METRICS.05** 同口徑比較基準與當前，交goal_observation，不在讀數工作偷改廣告  
-  _Done when:_ goal_observation
+- **C-META-DRAFT.01** Re-check the ad account ID, the brand Page and Instagram account, the campaign objective that fits the goal (sales, leads, or traffic for a goal about clicks or page loads), and the owner's written daily budget, round total and end date. Plan one campaign, one ad set per version with the same audience and placements, and one ad in each, all named with the round name.  
+  _Done when:_ The list of objects to create with their names, and the limits quoted from the owner's message.
+- **C-META-DRAFT.02** Show the owner each ad word for word: the ad text, headline, image or video, button, the Page and Instagram account it shows as, and the link. Get a clear yes for each version before building.  
+  _Done when:_ The exact text and image of each version and the owner's approval message.
+- **C-META-DRAFT.03** Use the round's tracked link as each ad's website link, with ?v=A or ?v=B to match the version. Open each link on a phone and check the product page loads in about 3 seconds and matches what the ad promises. If the goal counts landing page views or website conversions and the owner has not confirmed the Meta pixel is on that page, tell the owner before building.  
+  _Done when:_ Each tracked link, which version it belongs to, a note that it loaded the right page, and whether the pixel is confirmed on that page.
+- **C-META-DRAFT.04** In Ads Manager (your own browser if it is signed in and the owner agreed, otherwise the owner), create the campaign and one ad set per version. Split the approved daily budget equally and set it on each ad set, not on the campaign, so Meta cannot move money from one version to the other; the ad sets together must not exceed the approved daily budget. Set the end date the owner gave and, if the owner agrees, a campaign spending limit equal to the round total.  
+  _Done when:_ The campaign and ad set names with each ad set's budget, the end date and any spending limit as shown on screen.
+- **C-META-DRAFT.05** Upload the approved images or videos and create one ad per version in its own ad set. Check the ad preview for each placement shows the right image, text, Page name and link, with nothing cut off that changes the meaning.  
+  _Done when:_ A preview check for each ad, with any placement turned off and why.
+- **C-META-DRAFT.06** Turn the campaign, every ad set and every ad off before publishing them, so they are created but spend nothing. Do not use any option that would also publish or switch on other drafts or ads in the account.  
+  _Done when:_ Each new object shown as off, and a note that no other draft or ad was touched.
+- **C-META-DRAFT.07** Read back from the ad account each new object's ID, status, budget, end date, Page and link, and confirm spend is 0. If saving seemed to fail, search the account for the round name before trying again; never create a second copy.  
+  _Done when:_ The IDs, status off, budget, end date and link of every new object, and spend of 0.
 
-**If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
-
-### 17. Meta Ads觀察後只暫停本輪測試物件
-
-Meta Ads觀察後只暫停本輪測試物件
-
-- **C-META-STOP.01** 從本輪成功activate操作讀campaign／ad group／ad IDs，不用帳號全部物件清單當範圍  
-  _Done when:_ owned active object IDs
-- **C-META-STOP.02** 核對本輪觀察窗及已存報表，保留原素材、預算和版本  
-  _Done when:_ observation evidence
-- **C-META-STOP.03** prepare後只pause本輪已核對IDs；不取消訂單、刪campaign或動其他品牌  
-  _Done when:_ scoped pause operation
-- **C-META-STOP.04** 讀effective status已不配送；逾時先對帳，不能標已停止  
-  _Done when:_ ad_objects與delivery_state
-- **C-META-STOP.05** 下一輪另用單一變數測試與原範圍，暫停不擴大預算或授權  
-  _Done when:_ changes與next-test boundary
-
-**Hand back:** `original_object_ids`, `effective_status`, `native_budget_readback`, `review_or_delivery_state`
+**Hand back:** `ad_ids`, `approved_ads`, `budget_settings`, `status_check`
 
 **If stuck:**
-- `connector_plan_string`: 拒當數字，保存限制原因，改可用的正式報表讀取。
-- `write_disabled`: 不升級連接、不改成別品牌；在原範圍內用官方介面或等待能力。
-- `wrong_page`: 停止發布，定位本品牌Page；素材研究繼續。
-- `unpublished_drafts`: 僅開本輪campaign/adset/ad，不用Publish all改其他草稿。
-- `billing_or_restriction`: 保存實際notice、金額未知與官方下一步；不代付新費用。
-- `expired_token`: 最多正常刷新一次並重讀身分，仍失敗則本人授權。
-- `unknown_write`: 以operation key及物件ID對帳，不重建或重複啟用。
+- `owner_has_not_approved`: If the owner has not said yes to the exact text and image of a version, do not build it; show it to them and wait.
+- `no_budget_approved`: If there is no written daily budget and round total, build nothing that can spend; prepare the ads off and ask the owner for the two numbers.
+- `wrong_page`: If the brand's Page or Instagram account cannot be selected for the ad, stop building and go back to the account step; never use another Page.
+- `link_does_not_open`: If a tracked link does not open the product page, stop before building that ad and fix the link with the owner.
+- `not_sure_it_was_created`: If you are not sure an object was saved, search the account for the round name and use what exists; never create a duplicate.
+- `account_restricted_or_unpaid`: If Ads Manager shows a restriction or payment problem, copy the exact notice, tell the owner, and stop; never pay or add a card for them.
+
+### 15. Switch on only this round's Meta ads within the approved budget
+
+Switch on exactly this round's ads after the owner's written yes, within the approved daily budget and total, so the test starts spending only what was agreed and its numbers can be read.
+
+- **C-META-ACTIVATE.01** Open this round's campaign, ad set and ad IDs and check they are still off and unchanged since the owner approved them. List any other drafts or unpublished changes in the account and leave them alone.  
+  _Done when:_ This round's IDs shown as off and unchanged, and a list of other drafts left untouched.
+- **C-META-ACTIVATE.02** Find the owner's written approval to spend: daily budget, round total, end date and currency. Check each ad set budget is a whole amount above zero and that together they are not higher than the approved daily budget. If any of these is missing or zero, stop.  
+  _Done when:_ The owner's approval quoted, and the budget and end date as set in the ad account.
+- **C-META-ACTIVATE.03** Write a short change plan and show it to the owner: which objects go from off to on, the daily budget, the end date, the most it can spend in total, and how to undo it (switch them off). Wait for the owner's yes to this plan.  
+  _Done when:_ The change plan and the owner's yes.
+- **C-META-ACTIVATE.04** Switch on only this round's campaign, ad sets and ads, using your own browser if the owner said yes to that, otherwise the owner does it. Do not use any option that publishes all pending changes, and do not raise any budget.  
+  _Done when:_ Who switched them on, at what time, which objects, and the link to each live ad if the ad preview offers one.
+- **C-META-ACTIVATE.05** After about 15 minutes, read each object's delivery status in the ad account. 'In review' means not delivering yet. If an ad is rejected, copy the reason and tell the owner; do not edit and resubmit without their yes.  
+  _Done when:_ Each object's delivery status with the time it was read, and any rejection reason.
+- **C-META-ACTIVATE.06** Once the ads show as delivering, note the start time; the observation window counts from there. At 24 and 48 hours, check that spend so far is within the daily budget and that both versions are getting impressions.  
+  _Done when:_ The delivery start time, and spend so far and impressions per version at the 24-hour and 48-hour checks.
+- **C-META-ACTIVATE.07** Note the date and time when the observation window ends, so the numbers are read and the ads paused on time and never left running past the approved end date.  
+  _Done when:_ The planned time for the current read and for pausing.
+
+**Hand back:** `ad_ids`, `delivery_status`, `live_budget`, `delivery_start_time`
+
+**If stuck:**
+- `no_written_approval`: If the owner has not approved a daily budget, total and the change plan in writing, keep everything off and ask them.
+- `ads_changed_since_approval`: If the text, image, link or budget changed after the owner approved, show the new version and get a new yes before switching on.
+- `ad_rejected`: If an ad is rejected, copy the reason, tell the owner, and wait for their yes before editing or asking for a new review.
+- `stuck_in_review`: If an ad is still in review after 24 hours, tell the owner and do not count review time in the observation window.
+- `spend_above_limit`: If spend runs above the approved daily budget or heads past the round total, switch this round's ads off at once and tell the owner.
+- `account_restricted_or_unpaid`: If a restriction or payment problem appears, copy the exact notice and tell the owner; never pay or add a card for them.
+
+### 16. Read this goal's Meta Ads numbers and check them against real sales (result numbers)
+
+Record the numbers this goal is judged on, read from the ad account and matched against real sales, leads and costs, so the before and after of the round are compared on real money and not on what the platform reports.
+
+- **C-META-METRICS.01** Confirm the ad account ID, the ads being measured, the date range, the time zone and the attribution setting. For the baseline read, use the account's ads over the most recent past period as long as the goal's observation window; for the current read, use this round's campaign, ad set and ad IDs from the time they started delivering. Use the same attribution setting for both.  
+  _Done when:_ Ad account ID, ad IDs, date range with time zone, and attribution setting.
+- **C-META-METRICS.02** For the current read, wait until the goal's observation window (72 hours of delivery) has passed since the ads started delivering. If you must read earlier, mark the numbers as early and read again after the window.  
+  _Done when:_ The time delivery started and the time of this read, with 'final' or 'early'.
+- **C-META-METRICS.03** In the ad account's reporting, or from the owner's screenshot or export, read amount spent, impressions, link clicks, landing page views and the result the ads were set to get, for each version (A and B) and in total. Write each exactly as shown; write 'not shown' and do not estimate when a number is missing.  
+  _Done when:_ The numbers per version and in total as displayed, with the screen or file they came from and the time they were read.
+- **C-META-METRICS.04** Check leads, purchases and refunds against the owner's own records: the payment provider, the order list, the lead form inbox, the round's sale counter from tracking, or a CRM if the owner already uses a CRM. Apply the counting rules agreed in the baseline step and count only real outside customers; leave out the owner, team, tests, bots, duplicates and refunded orders.  
+  _Done when:_ The count from the owner's records, the source name, and how many were left out and why.
+- **C-META-METRICS.05** If the goal needs money, add up the money from matched outside sales after refunds, and every cost for the round: ad spend, payment fees, platform fees, commissions, software and tools, product or delivery cost, paid help, and any other cost, plus money held back for work still to deliver. Meta's return on ad spend is not the owner's income.  
+  _Done when:_ Money from matched sales after refunds, and each cost with its amount and source, or 'unknown' where there is no source.
+- **C-META-METRICS.06** Turn money into the currency's smallest unit for any component ending in _minor, using the currency's standard decimal places: multiply by 100 for currencies with two decimals, such as USD, EUR and TWD; use the amount as shown for currencies without decimals, such as JPY and KRW. Say which rule you used.  
+  _Done when:_ Each money amount as shown and in the smallest unit, with the rule used.
+- **C-META-METRICS.07** Call record_numbers with the goal's exact component names, as record_numbers lists them for this goal (for example spend_minor, impressions, link_clicks, landing_page_views, attributed_conversions, qualified_leads, external_purchases, net_after_all_costs_minor), and a source for each. If there is no history, record 0 and say so in source. If a source is incomplete, say what is missing in source. Never estimate, and never change any ad during this step.  
+  _Done when:_ The record_numbers call with every component, its value and its source.
+
+**If stuck:**
+- `cannot_open_reporting`: If you cannot open the ad account's reporting, ask the owner for a screenshot or export with the columns this goal needs, for the exact date range.
+- `no_sales_records`: If there is no record of real sales or leads outside Meta, say so in source and leave those components unrecorded; never copy Meta's reported purchases as real ones.
+- `cost_unknown`: If a cost needed for money after costs has no source, list it as unknown and ask the owner for the figure; do not estimate it.
+- `too_early_to_read`: If the observation window has not passed, record the numbers as early and read them again after the window ends; do not fill conversions that have not arrived yet with 0.
+- `settings_differ_from_baseline`: If the attribution setting, time zone or range length differs from the baseline, read again with the baseline's settings before recording.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+
+### 17. Pause only this round's Meta ads when the window ends
+
+Pause exactly this round's ads once the numbers are read, and confirm they stopped spending, so the round costs no more than approved and the next test starts clean.
+
+- **C-META-STOP.01** Take the list of campaign, ad set and ad IDs that were switched on this round. Use only that list; never pause by picking from all ads in the account.  
+  _Done when:_ This round's IDs, taken from the switch-on step.
+- **C-META-STOP.02** Check that the observation window has ended and that the current numbers were recorded. If they were not, record them first so the read covers the full window.  
+  _Done when:_ The window end time and a note that the current numbers are recorded.
+- **C-META-STOP.03** Tell the owner exactly which ads will be paused. Keep an ad running only if the owner asks for it and writes a new daily budget, total and end date for it; record that it is still spending at their request.  
+  _Done when:_ The list shown to the owner and their answer, with any new written limits for an ad kept running.
+- **C-META-STOP.04** Switch off only those IDs, using your own browser if the owner agreed, otherwise the owner does it. Do not delete anything, do not edit text, images or budgets, and do not touch other campaigns or brands.  
+  _Done when:_ Who switched them off, at what time, and which IDs.
+- **C-META-STOP.05** After about 15 minutes, read each object's delivery status and confirm it is off and not delivering. If it is unclear, check again before trying anything else; never report it as stopped without seeing it.  
+  _Done when:_ Each ID with its status as shown and the time read.
+- **C-META-STOP.06** Read the final amount spent for the round and compare it with the approved total. If it went over, report by how much.  
+  _Done when:_ Final spend in the account currency and in its smallest unit, next to the approved total.
+- **C-META-STOP.07** Write what the next round should test: one new change, the same account, Page and limits. Pausing never raises the budget or extends the owner's approval.  
+  _Done when:_ One sentence on the next test and a note that the limits stay as approved.
+
+**Hand back:** `paused_ids`, `status_after_pause`, `final_spend`, `next_test`
+
+**If stuck:**
+- `numbers_not_recorded`: If the current numbers were not recorded yet, record them first, then pause.
+- `ids_unknown`: If you do not have this round's IDs, search the account for the round name and confirm the list with the owner before pausing anything.
+- `still_delivering`: If an ad still shows as delivering after pausing, check again after 15 minutes and then ask the owner to switch it off by hand.
+- `agent_cannot_change_ads`: If your browser cannot switch ads off, give the owner the exact list of IDs to switch off and ask for a screenshot after.
+- `spend_over_total`: If final spend is above the approved total, pause at once and report the amount over to the owner.

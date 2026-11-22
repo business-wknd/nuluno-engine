@@ -2,13 +2,13 @@
 
 **Give your AI agent a sales goal it works on until the numbers say it is done.**
 
-You already have Claude or ChatGPT. Ask it to "help me sell my product" and you get one long answer, then nothing. Nuluno Engine is an MCP server that turns that into a loop: it hands the agent one step at a time from a sales playbook, keeps everything the agent delivers, waits for real numbers, and if the target is missed it opens another round that changes exactly one thing.
+You already have an AI assistant. Ask it to "help me sell my product" and you get one long answer, then nothing. Nuluno Engine is an MCP server that turns that into a loop: it hands the agent one step at a time from a sales playbook, keeps everything the agent delivers, waits for real numbers, and if the target is missed it opens another round that changes exactly one thing.
 
 The agent is the brain. The engine is the memory, the checklist and the referee. It needs no model key.
 
 ## Start in one minute
 
-**Hosted, nothing to install.** Go to [engine.nuluno.com](https://engine.nuluno.com/?lang=en), paste your product URL, copy the connection address into Claude or ChatGPT as a custom connector, and say: *"Use Nuluno Engine to sell my product."* Free.
+**Hosted, nothing to install.** Go to [engine.nuluno.com](https://engine.nuluno.com/?lang=en), paste your product URL, add the connection address to Claude as a custom connector, and say: *"Use Nuluno Engine to sell my product."* Free.
 
 **Local, from this repo.** Python 3.9+, no dependencies:
 
@@ -52,13 +52,22 @@ window ends.
 
 The baseline numbers are from a real run on our own product.
 
+## A real run, from one sentence
+
+On 22 Nov 2026 we added the hosted connection address to Claude.ai as a custom connector and typed only *"用 Nuluno Engine 幫我賣這個產品"* ("Use Nuluno Engine to sell this product") for Notavue, a tool that turns YouTube piano covers into sheet music. Without further prompting, Claude:
+
+1. read the product site and chose the goal "Threads: raise the link click rate", because piano learners in Taiwan are active there;
+2. searched public forums for real complaints and picked one buyer group: adults who love a specific YouTube cover and cannot find sheet music for that version;
+3. wrote three opening lines to compare, kept every claim to what the site supports, and put the round's tracked link in the post;
+4. finished 7 of the 12 steps, then stopped and asked the owner which Threads account would post and who presses publish. It asked for no password and published nothing.
+
 ## The rules the engine enforces
 
 - **One step at a time, in order.** Out-of-order or repeated submissions are refused and the current step is returned.
 - **Deliverables, not "done".** Each step names what must be handed back; missing pieces are rejected.
 - **Published means a public URL.** A publishing step is not accepted without the https URL of what went live. The engine fetches it and records whether it could be read.
 - **Numbers decide.** Only recorded numbers with a stated source can end a goal. No self-scoring. On the hosted service, clicks and sales counted by the engine replace whatever the agent reports for them.
-- **One change per round.** After a miss the agent must name one bottleneck and one change, and the same change cannot be submitted twice.
+- **One change per round.** After a miss the engine shows the agent how each number moved and what each possible bottleneck looks like in numbers. The agent names one bottleneck and one change, and the same change cannot be submitted twice.
 - **A person only when a person is needed.** Logins and approvals are recorded as "waiting on the owner" with the one thing to do; the step stays open.
 
 ## Tools
@@ -78,7 +87,7 @@ The baseline numbers are from a real run on our own product.
 
 [`playbooks/`](playbooks/) holds 99 goals across Threads, Instagram, X, TikTok, YouTube, Reddit, LinkedIn, Product Hunt, Meta and Google ads, email and webinars. The engine runs [`engine/library.json`](engine/library.json); `python3 engine/pages.py` writes the pages in `playbooks/` from it.
 
-Three Threads playbooks are in English end to end, and the link-click one is running on a live product. The others mix steps in English with steps in Traditional Chinese. Each page shows its language.
+Every playbook is written step by step in plain English: 155 skills and 1,116 steps, each step with what counts as done, what to hand back, and what to do when stuck. The Threads link-click playbook is running on a live product.
 
 The most useful contribution is running one playbook on a real product and sending back what was unclear or wrong.
 

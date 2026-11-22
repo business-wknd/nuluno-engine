@@ -1,11 +1,11 @@
-# TikTok提高影片到profile造訪率
+# TikTok: turn more video views into profile visits
 
 - **Goal id:** `G-TT-PROFILE-RATE`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** tiktok
 - **Metric:** `profile_visit_rate` = `profile_visits` / `video_views`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `A-ANGLES`), link_eligibility (the next round starts with `C-TIKTOK-ACCESS`), data (the next round starts with `C-TT-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), content (the next round starts with `C-TT-RESEARCH`), link_eligibility (the next round starts with `C-TIKTOK-ACCESS`), data (the next round starts with `C-TT-METRICS`)
 
 ## Steps
 
@@ -179,55 +179,62 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備TikTok帳號、登入與授權
+### 8. Confirm the TikTok account, who posts, and the link option
 
-準備TikTok帳號、登入與授權
+Settle which TikTok account will post, who presses post, whether the profile can show a clickable website link, and which numbers can be read, so videos go out under the right brand and the goal's number can be measured.
 
-- **C-TIKTOK-ACCESS.01** 讀目標TikTok handle與品牌網址，盤點現有登入及可用的發布／analytics工具  
-  _Done when:_ handle與工具
-- **C-TIKTOK-ACCESS.02** 核對帳號類型、國家／地區、網站欄位與analytics的實際可見資格，不假設每個新帳號都有bio link  
-  _Done when:_ 功能與資格讀回
-- **C-TIKTOK-ACCESS.03** 沿官方登入／OAuth；手機驗證、QR確認與CAPTCHA交本人，不搬用其他品牌session  
-  _Done when:_ 登入checkpoint
-- **C-TIKTOK-ACCESS.04** 不為網站欄位自行改Business帳號或編造公司文件；可先做內容，缺導站入口標不適用  
-  _Done when:_ 是否可用既有網站入口
-- **C-TIKTOK-ACCESS.05** 核對商用音樂／原素材權利與可用發布格式，讀目前限制而非套固定秒數  
-  _Done when:_ 素材權利與schema
-- **C-TIKTOK-ACCESS.06** 開Analytics確認內容、觀眾、profile views、link clicks實際能讀哪些指標及時區  
-  _Done when:_ 資料可用範圍
+- **C-TIKTOK-ACCESS.01** Ask the owner for the URL of the TikTok profile that will post and the brand's website. Open the profile as a public page and confirm it exists and belongs to the brand. If it exists, use it and do not create a second account.  
+  _Done when:_ The profile URL, the handle, and the owner's confirmation that it is theirs.
+- **C-TIKTOK-ACCESS.02** Decide who presses post: the owner in the TikTok app, or the agent's own browser if it is already signed in to that account and the owner agrees. Some TikTok features work only in the app, so the owner may need to do those parts. Never ask for a password, and do not reuse another brand's signed-in session.  
+  _Done when:_ Who will post, and which parts the owner must do in the app.
+- **C-TIKTOK-ACCESS.03** If the owner asked for a new account, the owner signs up on the official TikTok screen with their real details. If an email code is needed, the agent may give an address from inbox_address and read the code with inbox_latest. Phone checks, QR confirmations, and puzzles are for the owner. Create one real account only.  
+  _Done when:_ How sign-in or sign-up was done, which steps the owner handled, and the resulting handle.
+- **C-TIKTOK-ACCESS.04** Check the account type, the country or region it is set to, and whether the profile can show a clickable website link right now. Do not assume every account has this, because it differs by account type and region. Do not switch the account type or fill in business details to get a link unless the owner asks and the details are true.  
+  _Done when:_ The account type, the region, and a yes or no on whether a clickable website link can be added.
+- **C-TIKTOK-ACCESS.05** If a website link is available, plan to put the round's tracked link in the profile, with the owner's approval of the change. If it is not available, tell the owner that clicks and sales from TikTok cannot be tracked through the profile this round, and focus on video numbers.  
+  _Done when:_ The planned profile link, or a note that no clickable link is available and what that means for measurement.
+- **C-TIKTOK-ACCESS.06** Check the sound and footage rights for the planned videos. Business accounts can use only sounds cleared for commercial use, so prefer original audio. Read the current length and size limits on the upload screen instead of assuming them.  
+  _Done when:_ The sound and footage source for each planned video, marked original or cleared, and the limits shown on the upload screen.
+- **C-TIKTOK-ACCESS.07** Check which numbers the account's analytics shows, such as video views, average watch time, full-watch share, profile views, and followers, and the time zone it uses. If analytics is off or empty, note that it may only fill in after the first post and a day or two of delay.  
+  _Done when:_ A list of numbers that can be read, the time zone, and how they will be obtained.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `bio_link_ineligible`: 保存當前資格與官方入口；不把不可點文字當可追蹤連結。
-- `music_not_licensed`: 換買家有權使用的原音或商用音源後重驗。
-- `video_processing`: 保存video ID讀處理／審核狀態，不重傳同片。
-- `web_mobile_difference`: 記錄只有app可用的功能；給本人精確續接，不捏造網頁按鈕。
-- `analytics_not_ready`: 等首篇公開內容與資料延遲，未知指標維持null。
-
-### 9. TikTok開頭與導站情境研究
-
-TikTok開頭與導站情境研究
-
-- **C-TT-RESEARCH.01** 按買家問題找近期相關影片，不把熱門音樂本身當購買動機  
-  _Done when:_ video URLs與情境
-- **C-TT-RESEARCH.02** 讀前段、節奏、字幕、結尾CTA和觀眾實際問題  
-  _Done when:_ hook與問題引句
-- **C-TT-RESEARCH.03** 區分video views、profile visits、link clicks、網站sessions；看不到填null  
-  _Done when:_ 可見數據及分母
-- **C-TT-RESEARCH.04** 選一項開頭或CTA變數做下輪影片，保留素材權利與來源  
-  _Done when:_ test_angles與rights
-- **C-TT-RESEARCH.05** 核對link資格，若無可用入口就先測內容／profile visits，不能聲稱網站轉換可測  
-  _Done when:_ limitations
-
-**Hand back:** `original_url`, `author`, `published_at_or_unknown`, `actual_quote_or_empty`, `visible_metrics_only`
+**Hand back:** `account_handle`, `profile_url`, `who_publishes`, `profile_link`, `numbers_visible`
 
 **If stuck:**
-- `bio_link_ineligible`: 保存當前資格與官方入口；不把不可點文字當可追蹤連結。
-- `music_not_licensed`: 換買家有權使用的原音或商用音源後重驗。
-- `video_processing`: 保存video ID讀處理／審核狀態，不重傳同片。
-- `web_mobile_difference`: 記錄只有app可用的功能；給本人精確續接，不捏造網頁按鈕。
-- `analytics_not_ready`: 等首篇公開內容與資料延遲，未知指標維持null。
+- `bio_link_ineligible`: If the profile cannot show a clickable website link, do not treat plain text in the bio as a trackable link; tell the owner and measure video numbers only.
+- `owner_action_needed`: If TikTok asks for a phone check, QR confirmation, puzzle, or terms, stop and tell the owner exactly which screen needs them, then resume where you stopped.
+- `music_not_licensed`: If a planned sound is not cleared for commercial use, switch to original audio or a cleared sound before the video is made.
+- `web_mobile_difference`: If a feature exists only in the app, write down the exact step for the owner to do on their phone; never describe a web button you have not seen.
+- `analytics_not_ready`: If analytics shows nothing yet, note it and plan to read numbers after the first video has been live for at least 48 hours.
+- `handle_not_the_brand`: If the signed-in account is a personal account or another brand, stop before any posting and ask the owner which account to use.
+
+### 9. Study TikTok openings and calls to action that fit the buyer
+
+Find how real TikTok videos about the buyer's problem open and end, and turn that into one opening or call-to-action test, because the first seconds and the ending decide whether viewers keep watching, follow, or click.
+
+- **C-TT-RESEARCH.01** Turn the chosen angle and buyer quotes into three to five TikTok search phrases, such as '<situation> tutorial', '<problem> review', or '<category> alternative'. Search with web search, read_page, or the agent's browser.  
+  _Done when:_ The search phrases and the date they were searched.
+- **C-TT-RESEARCH.02** Collect at least ten videos from the last 90 days that speak to the buyer's problem. Choose them for the problem they address, not for a trending sound. Write down the URL, the author, and the posting date, or 'unknown'.  
+  _Done when:_ A list of at least ten video URLs with author and date or 'unknown'.
+- **C-TT-RESEARCH.03** For each video, write a short note on the first three seconds: the first image, the on-screen text, and the first spoken line. Also note the length, the pace, whether captions are on screen, and how it ends. Paraphrase; quote no more than a few words.  
+  _Done when:_ A note per video covering the opening, length, pace, captions, and ending.
+- **C-TT-RESEARCH.04** Read the comments and copy up to three real viewer questions or objections per video word for word. Skip comments from the creator and obvious spam.  
+  _Done when:_ Viewer questions and objections, each with the video URL it came from.
+- **C-TT-RESEARCH.05** Record only the numbers shown publicly, such as views, likes, and comments. Profile visits, link clicks, and site visits are not public, so leave them empty and never guess them. Do not treat views as sales.  
+  _Done when:_ The public numbers per video, with private numbers left empty.
+- **C-TT-RESEARCH.06** Pick one thing for the next video to test, either the opening or the call to action, and write versions A and B that differ only in that thing. Choose the opening when the goal's main number depends on watching or following, and the call to action when it depends on profile visits, clicks, or sales.  
+  _Done when:_ The single thing tested, versions A and B, and the videos or viewer quotes each draws on.
+- **C-TT-RESEARCH.07** Take from the account step whether the profile can show a clickable website link. If it cannot, the call to action must not say 'link in bio', the test should aim at video numbers or profile visits only, and the plan must not claim website sales can be measured.  
+  _Done when:_ A note on whether a link is available and how the call to action was adjusted.
+
+**Hand back:** `videos_studied`, `openings_found`, `viewer_questions`, `test_plan`
+
+**If stuck:**
+- `too_few_relevant_videos`: If fewer than ten relevant videos turn up, widen the search phrases to the buyer's wider situation or extend the date range to 180 days, and say so.
+- `cannot_open_tiktok_pages`: If TikTok pages will not open for the agent, ask the owner to share five to ten video links they find relevant, and study those.
+- `bio_link_ineligible`: If the profile cannot show a clickable link, drop 'link in bio' from every call to action and test openings or profile visits instead.
+- `music_not_licensed`: If a pattern depends on a sound the brand cannot use commercially, note it and plan the test with original audio.
+- `no_buyer_problem_match`: If the videos found do not match the buyer's problem, go back to the buyer quotes and rewrite the search phrases before collecting more.
 
 ### 10. Write the post from proven facts
 
@@ -253,93 +260,119 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 11. 製作不露臉影片與產品示範
+### 11. Make a faceless demo video from real product footage
 
-製作不露臉影片與產品示範
+Produce a finished, playable video that shows the real product working, with subtitles and the right format for the channel, because a clear demo people watch to the end is what moves the goal's main number.
 
-- **S13.01** 確認影片目的與格式：讀用途、長度、比例與示範要求。  
-  _Done when:_ 這支影片要說服誰清楚。
-- **S13.02** 盤點真實畫面與素材權：確認既有錄影、截圖、配音及素材可用。  
-  _Done when:_ 關鍵功能有真實畫面。
-- **S13.03** 準備腳本與鏡頭順序：由S11腳本安排開頭、操作、結果與行動入口。  
-  _Done when:_ 每段對得上現有素材。
-- **S13.04** 取得允許的示範畫面：用既有素材或已准許示範環境錄製；真人節點另記。  
-  _Done when:_ 畫面真實且不暴露客戶私密資料。
-- **S13.05** 製作配音與字幕：用可用且有權使用的方法完成。  
-  _Done when:_ 內容與腳本一致。
-- **S13.06** 剪輯完整影片：完成畫面、字幕、節奏與片尾。  
-  _Done when:_ 取得影片檔而非只有腳本。
-- **S13.07** 檢查影音與事實：實際播放，核對聲音、字幕、功能畫面與敏感內容。  
-  _Done when:_ 片頭、中段、結尾均正常。
-- **S13.08** 輸出與轉換格式：依支援渠道輸出長短與比例版本。  
-  _Done when:_ 格式、容量、長度符合要求。
-- **S13.09** 準備封面及發布資料：將封面需求交S12，標題與說明交S11。  
-  _Done when:_ S14或S31有完整發布包。
-- **S13.10** 保存並交接：記錄版本、來源、字幕、檔案與用途。  
-  _Done when:_ 下一步可讀取、播放與上傳。
+- **S13.01** Write down who the video must convince, the channel and placement, the length, and the shape; for example under 60 seconds and 1080x1920 vertical for short-form, or 16:9 for a longer video.  
+  _Done when:_ One line on the viewer and the goal of the video, plus length and size.
+- **S13.02** Collect real footage: screen recordings, screenshots, existing videos, music and voice the owner has the right to use. Every feature the video shows needs real footage of the product.  
+  _Done when:_ A list of footage with where each piece came from, and any feature still missing footage.
+- **S13.03** Turn the approved script into a shot list: a hook in the first 2 seconds, the product being used, the result, and one call to action. Replace any claim you cannot show on screen with one you can.  
+  _Done when:_ A shot list where each line names the footage it uses.
+- **S13.04** Record missing demo footage only in a demo account or test setup the owner approved, or cut it from existing material. Hide customer names, emails and private data. If a shot needs a real person's face or voice or a change to the live product, list it for the owner and make the rest.  
+  _Done when:_ The new footage, checked for private data, and a list of any shots left for the owner.
+- **S13.05** Add subtitles that match the script word for word, and a voice-over only with a voice the owner has the right to use. Check every number, product name and spelling in the subtitles.  
+  _Done when:_ The subtitle file or burned-in subtitles, checked against the script.
+- **S13.06** Edit the full video with footage, subtitles, pacing and an end card that shows the call to action. A script alone is not a finished video. If the only available editing or voice tool charges money, ask the owner before using it.  
+  _Done when:_ A video file that plays.
+- **S13.07** Play the whole video and check the start, middle and end: sound, subtitles, that each product screen is real, and that no private data or misleading scene appears.  
+  _Done when:_ A note that the full video was played, with any fixes made.
+- **S13.08** Export the versions each channel needs, checking length, size, shape and file size against the channel's limits. If a file fails, fix and export it again; never hand over the same broken file twice.  
+  _Done when:_ Each exported file with its length, pixel size and file size.
+- **S13.09** Prepare what publishing needs: a cover image, a title and a caption from the approved copy. If several versions are tested, label them A, B and so on, with one difference between them.  
+  _Done when:_ The cover, title and caption for each version, labelled.
+- **S13.10** Save the final files with clear names and a note of version, purpose, sources and subtitles, in a place the publishing step can open and upload from.  
+  _Done when:_ File paths or links that open and play, with the note for each file.
 
-**Hand back:** `actual_file`, `decoded_duration`, `dimensions`, `sha256`, `playback_readback`
-
-### 12. TikTok影片到網站轉換漏斗 (baseline numbers)
-
-TikTok影片到網站轉換漏斗
-
-- **C-TT-METRICS.01** 讀同handle、video ID與本輪window，記網站link是否可用  
-  _Done when:_ account/window/link
-- **C-TT-METRICS.02** 分video views、profile visits、website clicks，不能把views當sessions  
-  _Done when:_ raw funnel fields
-- **C-TT-METRICS.03** 從現有網站分析讀同來源sessions及既有checkout結果，不加追蹤碼  
-  _Done when:_ analytics與payments
-- **C-TT-METRICS.04** 計profile到link、link到session、session到purchase各段，缺分母就等待  
-  _Done when:_ rates與limitations
+**Hand back:** `video_files`, `versions`, `sources`, `publish_kit`
 
 **If stuck:**
-- `bio_link_ineligible`: 保存當前資格與官方入口；不把不可點文字當可追蹤連結。
-- `music_not_licensed`: 換買家有權使用的原音或商用音源後重驗。
-- `video_processing`: 保存video ID讀處理／審核狀態，不重傳同片。
-- `web_mobile_difference`: 記錄只有app可用的功能；給本人精確續接，不捏造網頁按鈕。
-- `analytics_not_ready`: 等首篇公開內容與資料延遲，未知指標維持null。
+- `no_real_footage`: If there is no real footage of a feature, ask the owner for a screen recording of it and drop that claim from the video until it arrives.
+- `private_data_on_screen`: If any frame shows customer names, emails or other private data, blur or recut it before going further.
+- `needs_live_product_change`: If recording would change the live product or real customer data, stop that recording and ask the owner for a safe demo account or existing footage.
+- `voice_rights_unclear`: If you cannot confirm the right to use a voice or music track, use subtitles only or a track the owner confirms they may use.
+- `export_fails_limits`: If an export is over the channel's length or file size limit, shorten or compress it and check again before handing it over.
 
-### 13. TikTok直式影片發布與封面讀回
+### 12. Read this goal's numbers on TikTok (baseline numbers)
 
-TikTok直式影片發布與封面讀回
+Record the numbers this goal is judged on, for the account's videos before and after the new video, so rounds are compared on real numbers from video to profile to website to sale. record_numbers lists exactly which numbers it needs.
 
-- **C-TT-VIDEO.01** 解碼影片，核對開頭、字幕、封面與音樂商用權  
-  _Done when:_ video sha256／rights
-- **C-TT-VIDEO.02** 讀本帳號發布工具和目前格式限制，確認可用導站入口  
-  _Done when:_ schema與link eligibility
-- **C-TT-VIDEO.03** 核對caption與CTA只連既有網站，不添加不存在的link功能  
-  _Done when:_ approved text
-- **C-TT-VIDEO.04** prepare後單次上傳，保存upload/video ID與審核狀態  
-  _Done when:_ operation_key與video ID
-- **C-TT-VIDEO.05** 公開後重讀影片、封面、字幕可見性、handle及URL；審核中不算已上線  
-  _Done when:_ publications
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
-
-**If stuck:**
-- `bio_link_ineligible`: 保存當前資格與官方入口；不把不可點文字當可追蹤連結。
-- `music_not_licensed`: 換買家有權使用的原音或商用音源後重驗。
-- `video_processing`: 保存video ID讀處理／審核狀態，不重傳同片。
-- `web_mobile_difference`: 記錄只有app可用的功能；給本人精確續接，不捏造網頁按鈕。
-- `analytics_not_ready`: 等首篇公開內容與資料延遲，未知指標維持null。
-
-### 14. TikTok影片到網站轉換漏斗 (result numbers)
-
-TikTok影片到網站轉換漏斗
-
-- **C-TT-METRICS.01** 讀同handle、video ID與本輪window，記網站link是否可用  
-  _Done when:_ account/window/link
-- **C-TT-METRICS.02** 分video views、profile visits、website clicks，不能把views當sessions  
-  _Done when:_ raw funnel fields
-- **C-TT-METRICS.03** 從現有網站分析讀同來源sessions及既有checkout結果，不加追蹤碼  
-  _Done when:_ analytics與payments
-- **C-TT-METRICS.04** 計profile到link、link到session、session到purchase各段，缺分母就等待  
-  _Done when:_ rates與limitations
+- **C-TT-METRICS.01** Confirm the TikTok handle, which videos you are measuring, the date range, and the time zone. For a baseline, use the account's recent videos over a range of the same length as this round; for current, use this round's video URL over this round's range. Note whether the profile has a clickable website link.  
+  _Done when:_ The handle, the video URLs, the date range with time zone, and whether a profile link exists.
+- **C-TT-METRICS.02** Pass only this goal's metric components, by these exact names: followers for net followers; completed_views and video_starts for completion rate; profile_visits and video_views for profile visit rate; website_clicks and profile_visits for profile link rate; external_purchases and attributed_sessions for site purchase rate. Decide where each is read before reading anything, and never borrow a number from another goal.  
+  _Done when:_ A list of each component name and the source it will be read from.
+- **C-TT-METRICS.03** Open the video's analytics and the account's analytics, or ask the owner for screenshots if you cannot, and read the numbers exactly as displayed. video_views and video_starts are the views TikTok shows for the video. If full watches are shown only as a percentage, multiply it by the views on the same screen, round down, and say so in source. For followers, record the net change in the range, the end count minus the start count, and say so in source.  
+  _Done when:_ The numbers as displayed, the screen they came from, and the time they were read.
+- **C-TT-METRICS.04** Keep each stage separate: video views are not profile visits, profile visits are not website clicks, and website clicks are not site visits. Read website_clicks from the round's tracked link, split by ?v= label if there are versions. If the baseline period had no tracked link, read website clicks for both baseline and current from TikTok's analytics and give the tracked-link count in source as a cross-check.  
+  _Done when:_ Each stage's number with its own source, and no stage filled in from another.
+- **C-TT-METRICS.05** Read attributed_sessions from the owner's site analytics with TikTok as the source; if there is none, use clicks on the round's tracked link and say in source that these are clicks, not sessions. Read external_purchases from the sale counter or payment records, count each paid order once, and leave out refunds and the owner's own test payments. Do not add new tracking code.  
+  _Done when:_ Site visit and purchase counts with their sources, and any orders excluded and why.
+- **C-TT-METRICS.06** If the account has no history for a number, record 0 and say in source that there is no history. If TikTok does not show a number, write 'not shown' and never estimate it. If the video is less than 48 hours old, label the numbers early and read again later.  
+  _Done when:_ Each zero or missing number with its reason.
+- **C-TT-METRICS.07** Call record_numbers with each component by its exact name and a source naming the screen, screenshot, link, or record and the time read. If a rate's bottom number is 0, still record both numbers and do not claim any improvement.  
+  _Done when:_ The record_numbers call with every component, its value, and its source.
 
 **If stuck:**
-- `bio_link_ineligible`: 保存當前資格與官方入口；不把不可點文字當可追蹤連結。
-- `music_not_licensed`: 換買家有權使用的原音或商用音源後重驗。
-- `video_processing`: 保存video ID讀處理／審核狀態，不重傳同片。
-- `web_mobile_difference`: 記錄只有app可用的功能；給本人精確續接，不捏造網頁按鈕。
-- `analytics_not_ready`: 等首篇公開內容與資料延遲，未知指標維持null。
+- `cannot_open_analytics`: If you cannot open TikTok's analytics, ask the owner for screenshots of the video's and the account's analytics for the exact date range.
+- `analytics_not_ready`: If analytics is empty or the video is less than 48 hours old, label any numbers early and read them again after the delay.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If a screenshot shows a different handle or other videos, do not use those numbers and ask again.
+- `bio_link_ineligible`: If the profile has no clickable link, record website clicks and site visits from TikTok as 'not available' in source and do not estimate them.
+- `purchase_source_missing`: If there is no sale counter, site analytics, or payment record, say so in source and do not count any purchases.
+
+### 13. Publish one TikTok video and confirm it
+
+Publish the approved vertical video once, under the right account and with the right cover, caption, and profile link, and hand back its public URL, because the video must be live exactly as approved before its numbers can be read.
+
+- **C-TT-VIDEO.01** Open the final video file and check it: vertical 9:16, the opening hook shows in the first two seconds, on-screen captions are readable, a cover frame is chosen, and the sound is original or cleared for commercial use. Check its length against the limit shown on TikTok's upload screen.  
+  _Done when:_ The file name, length, cover frame, and sound source, with each check passed.
+- **C-TT-VIDEO.02** Confirm the handle about to post is the agreed one, and look through its last ten videos so you do not repeat the same opening or caption.  
+  _Done when:_ The handle and a note on the recent videos you checked.
+- **C-TT-VIDEO.03** Write the caption: one line on the viewer's situation, one true benefit, and a call to action, aiming for under 300 characters with no more than five relevant hashtags. Links in captions are not clickable, so point to the profile link only if the profile has one. Use only claims the product facts support.  
+  _Done when:_ The caption text, its character count, and the facts it relies on.
+- **C-TT-VIDEO.04** If the profile can show a website link, prepare the round's tracked link for it, with ?v=A or ?v=B if this round runs one version at a time. Open the link and check it lands on the product page. One profile link carries one label, so when two versions run at the same time, compare them on each video's own numbers instead. Do not change the profile yet.  
+  _Done when:_ The profile link as it will appear, opened and confirmed to load, or a note that no link is available.
+- **C-TT-VIDEO.05** Show the owner the video, the cover, the caption word for word, and any profile link change, and get a clear yes before anything goes public.  
+  _Done when:_ The exact material shown to the owner and their approval quoted word for word.
+- **C-TT-VIDEO.06** Make the approved profile link change, then upload the video once. The agent does this only if its own browser is signed in to the agreed account and the owner said yes; otherwise the owner does it from the app using the approved files and caption. If the upload is still processing, wait and do not upload again.  
+  _Done when:_ Who changed the link and posted, the date and time, and any processing or review status shown.
+- **C-TT-VIDEO.07** Once the video is public, open its URL and read back the caption, the handle, the cover, and that captions show on screen. A video still under review is not live. If posting seemed to fail, check the profile before trying again so nothing is posted twice.  
+  _Done when:_ The public video URL, the caption as it appears there, and the handle.
+
+**Hand back:** `video_url`, `published_caption`, `profile_link`, `posted_at`
+
+**If stuck:**
+- `owner_has_not_approved`: If the owner has not said yes to this exact video, cover, and caption, do not post; show them the material and stop until they answer.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed handle, stop and ask the owner to switch accounts or to post it themselves.
+- `music_not_licensed`: If the sound is not original or cleared for commercial use, replace it before posting and show the owner the new version.
+- `video_processing`: If the video is still processing or in review, wait and check its status again later; never upload the same video twice.
+- `web_mobile_difference`: If posting or setting the cover works only in the app, give the owner the files, caption, and exact steps, and ask them to send back the video URL.
+- `bio_link_ineligible`: If the profile cannot show a clickable link, remove 'link in bio' from the caption and post with a call to follow or visit the profile instead.
+
+### 14. Read this goal's numbers on TikTok (result numbers)
+
+Record the numbers this goal is judged on, for the account's videos before and after the new video, so rounds are compared on real numbers from video to profile to website to sale. record_numbers lists exactly which numbers it needs.
+
+- **C-TT-METRICS.01** Confirm the TikTok handle, which videos you are measuring, the date range, and the time zone. For a baseline, use the account's recent videos over a range of the same length as this round; for current, use this round's video URL over this round's range. Note whether the profile has a clickable website link.  
+  _Done when:_ The handle, the video URLs, the date range with time zone, and whether a profile link exists.
+- **C-TT-METRICS.02** Pass only this goal's metric components, by these exact names: followers for net followers; completed_views and video_starts for completion rate; profile_visits and video_views for profile visit rate; website_clicks and profile_visits for profile link rate; external_purchases and attributed_sessions for site purchase rate. Decide where each is read before reading anything, and never borrow a number from another goal.  
+  _Done when:_ A list of each component name and the source it will be read from.
+- **C-TT-METRICS.03** Open the video's analytics and the account's analytics, or ask the owner for screenshots if you cannot, and read the numbers exactly as displayed. video_views and video_starts are the views TikTok shows for the video. If full watches are shown only as a percentage, multiply it by the views on the same screen, round down, and say so in source. For followers, record the net change in the range, the end count minus the start count, and say so in source.  
+  _Done when:_ The numbers as displayed, the screen they came from, and the time they were read.
+- **C-TT-METRICS.04** Keep each stage separate: video views are not profile visits, profile visits are not website clicks, and website clicks are not site visits. Read website_clicks from the round's tracked link, split by ?v= label if there are versions. If the baseline period had no tracked link, read website clicks for both baseline and current from TikTok's analytics and give the tracked-link count in source as a cross-check.  
+  _Done when:_ Each stage's number with its own source, and no stage filled in from another.
+- **C-TT-METRICS.05** Read attributed_sessions from the owner's site analytics with TikTok as the source; if there is none, use clicks on the round's tracked link and say in source that these are clicks, not sessions. Read external_purchases from the sale counter or payment records, count each paid order once, and leave out refunds and the owner's own test payments. Do not add new tracking code.  
+  _Done when:_ Site visit and purchase counts with their sources, and any orders excluded and why.
+- **C-TT-METRICS.06** If the account has no history for a number, record 0 and say in source that there is no history. If TikTok does not show a number, write 'not shown' and never estimate it. If the video is less than 48 hours old, label the numbers early and read again later.  
+  _Done when:_ Each zero or missing number with its reason.
+- **C-TT-METRICS.07** Call record_numbers with each component by its exact name and a source naming the screen, screenshot, link, or record and the time read. If a rate's bottom number is 0, still record both numbers and do not claim any improvement.  
+  _Done when:_ The record_numbers call with every component, its value, and its source.
+
+**If stuck:**
+- `cannot_open_analytics`: If you cannot open TikTok's analytics, ask the owner for screenshots of the video's and the account's analytics for the exact date range.
+- `analytics_not_ready`: If analytics is empty or the video is less than 48 hours old, label any numbers early and read them again after the delay.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If a screenshot shows a different handle or other videos, do not use those numbers and ask again.
+- `bio_link_ineligible`: If the profile has no clickable link, record website clicks and site visits from TikTok as 'not available' in source and do not estimate them.
+- `purchase_source_missing`: If there is no sale counter, site analytics, or payment record, say so in source and do not count any purchases.

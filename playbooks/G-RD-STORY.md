@@ -1,7 +1,7 @@
-# Reddit真實創辦人故事帶來合格詢問
+# Reddit: get qualified inquiries from a true founder story
 
 - **Goal id:** `G-RD-STORY`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** reddit
 - **Metric:** `qualified_inquiries` = `qualified_inquiries`, should increase
 - **Observation window:** 168 hours after publishing
@@ -179,31 +179,36 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備Reddit帳號、登入與授權
+### 8. Confirm the Reddit account and each subreddit's rules
 
-準備Reddit帳號、登入與授權
+Settle which Reddit account posts, who presses publish, and what each target subreddit allows, so every reply or post stays within the rules and is not removed or banned.
 
-- **C-REDDIT-ACCESS.01** 核對目標username與已授權工具，先讀社群原文和目前版規再決定是否需要登入  
-  _Done when:_ username、原文與rules URL
-- **C-REDDIT-ACCESS.02** 登入使用官方流程；商用API資料使用另核對買家現有許可，不能因公開頁就當任意批量API權限  
-  _Done when:_ 登入與資料取得依據
-- **C-REDDIT-ACCESS.03** 確認社群自推、連結、帳齡／karma、flair與私訊規則，不主動累積假互動  
-  _Done when:_ 規則全文與核對時間
-- **C-REDDIT-ACCESS.04** 帳號資格不足、CAPTCHA或限制由本人處理；不建立替身帳號繞限制  
-  _Done when:_ 限制種類與續接位置
-- **C-REDDIT-ACCESS.05** 核對是否已有本品牌在原串回覆、被移除或被要求停止  
-  _Done when:_ 原串歷史與去重鍵
-- **C-REDDIT-ACCESS.06** 讀目前可用的comment／post工具；執行前讀回品牌揭露方式與可用回執  
-  _Done when:_ 允許動作與回執能力
+- **C-REDDIT-ACCESS.01** Ask the owner for the Reddit username that will post. Open its public profile and note the account age, karma and recent activity, and whether its history is only about the product.  
+  _Done when:_ The username, profile URL, account age, karma, and a one-line note on its history.
+- **C-REDDIT-ACCESS.02** From the buyer situation, pick three to five subreddits where these buyers ask for help. For each, read the rules in the sidebar and the wiki, and copy the parts on self-promotion, links, private messages, minimum account age or karma, flair, required disclosure and promotion days.  
+  _Done when:_ Each subreddit with its rules URL, the copied rule text, and the time you read it.
+- **C-REDDIT-ACCESS.03** Mark each subreddit 'reply with a product mention allowed', 'story post allowed', 'answers only, no product' or 'no promotion'. If the rules are unclear, draft a short message to the moderators asking what is allowed and show it to the owner; it is sent, by the owner or by the agent's signed-in browser, only after the owner says yes.  
+  _Done when:_ Each subreddit marked with what is allowed, and any moderator question with its approval.
+- **C-REDDIT-ACCESS.04** Decide who publishes: the owner, or the agent's own browser if it is already signed in to that username. If nobody is signed in, the owner signs in on the official Reddit page. Never ask for a password; CAPTCHAs and checks are left to the owner.  
+  _Done when:_ Who will publish, and confirmation that the right username is signed in.
+- **C-REDDIT-ACCESS.05** Create a new account only if the owner asked for one in this conversation; you may use inbox_address and inbox_latest for the verification email. Use one real account only. Never create extra accounts to get around limits, never buy or trade upvotes or karma, and never ask others to vote.  
+  _Done when:_ The owner's request and the new username, or a note that the existing account is used.
+- **C-REDDIT-ACCESS.06** Check the account's past comments in the target subreddits, and, if whoever is signed in can open it, the account's inbox, for removals, moderator warnings, bans, or people asking the brand to stop. Note any thread where the brand already replied, so it is not answered twice.  
+  _Done when:_ A list of past brand activity, removals and stop requests, or 'none found'.
+- **C-REDDIT-ACCESS.07** Read Reddit pages one at a time with read_page or a browser. Do not scrape in bulk or pull data through Reddit's API for business use unless the owner already has permission for that.  
+  _Done when:_ A note of how Reddit pages will be read this round.
+- **C-REDDIT-ACCESS.08** Agree a one-line disclosure with the owner, for example 'Disclosure: I built this.' Then confirm whoever publishes can open the comment box in each allowed subreddit.  
+  _Done when:_ The approved disclosure line, and the subreddits where the comment box opens.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
+**Hand back:** `username`, `subreddit_rules`, `who_publishes`, `disclosure_line`
 
 **If stuck:**
-- `community_no_promo`: 排除此社群推廣，不換拼字或私訊規避。
-- `removed_by_automod`: 保留原comment ID與移除原因，不重貼；有正常申訴入口才準備說明。
-- `api_commercial_permission`: 等待買家現有授權，不能自行購買或聲稱免費商用。
-- `old_or_resolved_thread`: 排除已解決／過期需求，不做銷售跟進。
-- `no_results`: 修正問題詞與社群假設，回報真實零則。
+- `community_no_promo`: If a subreddit forbids promotion, leave it out of product replies and posts; never get around it with altered spelling or private messages.
+- `account_below_minimum`: If the account is too new or has too little karma for a subreddit, skip that subreddit this round and tell the owner; never farm karma or use another account.
+- `owner_action_needed`: If a CAPTCHA, verification or terms screen appears, stop and tell the owner which screen to finish, then resume on the same account.
+- `banned_or_removed_before`: If the account was banned or warned in a subreddit, leave that subreddit out and tell the owner.
+- `api_commercial_permission`: If the round needs Reddit data beyond reading pages one at a time, wait for the owner's existing permission; never buy access or claim free business use.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed username, stop and ask the owner to switch or to post themselves.
 
 ### 9. Write the post from proven facts
 
@@ -229,66 +234,86 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. Reddit需求回覆後實際結果 (baseline numbers)
+### 10. Read this goal's numbers from Reddit and sales records (baseline numbers)
 
-Reddit需求回覆後實際結果
+Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.
 
-- **C-RD-METRICS.01** 列本輪post/comment IDs及已核對公開可見狀態  
-  _Done when:_ permalinks與visibility
-- **C-RD-METRICS.02** 只計新買方回覆、已解決、要求連結／示範，不把upvotes當成交  
-  _Done when:_ qualified events
-- **C-RD-METRICS.03** 從已接CRM與付款來源對應同人／訂單，不能把未回覆補成興趣  
-  _Done when:_ CRM與economic IDs
-- **C-RD-METRICS.04** 核對網站來源與成本，明示匿名流量歸因限制  
-  _Done when:_ observations與limitations
-
-**If stuck:**
-- `community_no_promo`: 排除此社群推廣，不換拼字或私訊規避。
-- `removed_by_automod`: 保留原comment ID與移除原因，不重貼；有正常申訴入口才準備說明。
-- `api_commercial_permission`: 等待買家現有授權，不能自行購買或聲稱免費商用。
-- `old_or_resolved_thread`: 排除已解決／過期需求，不做銷售跟進。
-- `no_results`: 修正問題詞與社群假設，回報真實零則。
-
-### 11. Reddit創辦人故事與版規適配
-
-Reddit創辦人故事與版規適配
-
-- **C-RD-STORY.01** 選允許此類分享的subreddit，核對flair與自推規則  
-  _Done when:_ rules與flair
-- **C-RD-STORY.02** 用自己品牌真實事件／數字寫故事，沒有收入證據就省略收入  
-  _Done when:_ fact_ids與source
-- **C-RD-STORY.03** 核對標題和正文符合當前社群，不複製熱門帖或偽裝路人  
-  _Done when:_ original draft
-- **C-RD-STORY.04** prepare發布單篇，保留post ID及AutoMod狀態  
-  _Done when:_ operation_key與post ID
-- **C-RD-STORY.05** 重讀公開原帖，若被移除保留原因，不重貼或換社群洗版  
-  _Done when:_ publications與visibility
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
+- **C-RD-METRICS.01** Confirm the username, the list of this round's post and reply URLs, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days.  
+  _Done when:_ Username, the URLs measured, and the date range with time zone.
+- **C-RD-METRICS.02** Open each URL in a signed-out or private window and mark it 'visible', 'removed' or 'locked'. A removed reply can get no answers, so list it separately rather than hiding it.  
+  _Done when:_ Each URL with its visibility and the time it was checked.
+- **C-RD-METRICS.03** Count real responses only: a qualified reply or inquiry is a different person who asks for the link, a price or a demo, asks how to use the product, or says they will try it. Upvotes, thanks without a question, and the owner's or the agent's own comments never count. Count each person once and keep the URL of each one counted.  
+  _Done when:_ The list of counted responses, each with its URL and the person's username.
+- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
+  _Done when:_ Each component name with its number and a one-line note on how it was counted.
+- **C-RD-METRICS.05** For a purchase goal, count 'external_purchases' only from the round's sale counter in tracking or the owner's payment records, within the date range. Leave out the owner's or team's own test payments and refunded orders, and say plainly when a sale cannot be tied to Reddit.  
+  _Done when:_ Each purchase counted with its source and date, and the ones left out with the reason.
+- **C-RD-METRICS.06** Add website visits only if the owner already has a source for them, such as the tracked link or site analytics. If the owner already uses a CRM, check it for the same people; never turn a silent reader into a counted lead.  
+  _Done when:_ Each extra figure names its source, and unknown links between Reddit and the result are stated.
+- **C-RD-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
 
 **If stuck:**
-- `community_no_promo`: 排除此社群推廣，不換拼字或私訊規避。
-- `removed_by_automod`: 保留原comment ID與移除原因，不重貼；有正常申訴入口才準備說明。
-- `api_commercial_permission`: 等待買家現有授權，不能自行購買或聲稱免費商用。
-- `old_or_resolved_thread`: 排除已解決／過期需求，不做銷售跟進。
-- `no_results`: 修正問題詞與社群假設，回報真實零則。
+- `removed_by_automod`: If a reply or post was removed, keep its URL and the removal reason, count it as removed, and never post it again; if the subreddit offers a normal way to appeal, draft a short appeal and show it to the owner before anything is sent.
+- `no_sales_source`: If there is no sale counter and no payment record to read, record no purchases for this round, say there is no source, and ask the owner to add the tracking sale counter to the page shown after payment.
+- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `cannot_tell_who_responded`: If you cannot tell whether a response comes from a real prospect or from the owner's side, leave it out and say so.
+- `too_early_to_read`: If the replies or posts are less than 24 hours old, report the numbers as early and read them again later.
 
-### 12. Reddit需求回覆後實際結果 (result numbers)
+### 11. Post a true founder story in a subreddit that allows it
 
-Reddit需求回覆後實際結果
+Post one honest founder story in a community whose rules allow it, so readers who share the problem learn something useful and some of them ask about the product.
 
-- **C-RD-METRICS.01** 列本輪post/comment IDs及已核對公開可見狀態  
-  _Done when:_ permalinks與visibility
-- **C-RD-METRICS.02** 只計新買方回覆、已解決、要求連結／示範，不把upvotes當成交  
-  _Done when:_ qualified events
-- **C-RD-METRICS.03** 從已接CRM與付款來源對應同人／訂單，不能把未回覆補成興趣  
-  _Done when:_ CRM與economic IDs
-- **C-RD-METRICS.04** 核對網站來源與成本，明示匿名流量歸因限制  
-  _Done when:_ observations與limitations
+- **C-RD-STORY.01** Find one to three subreddits where the buyer spends time and where the rules allow founder stories or self-promotion. Read each rules page, sidebar, wiki and pinned posts. Note any required flair, set promotion days, a weekly thread to use instead, or a minimum account age or karma. Pick the single best fit for this round.  
+  _Done when:_ Each subreddit with its rules URL, the exact rule that allows this post, any flair or account requirement, and the one chosen.
+- **C-RD-STORY.02** Confirm with the owner which real Reddit account will post. Use one real account only, never a second or fake one. The owner signs in themselves. Check that the account meets the subreddit's age and karma rules.  
+  _Done when:_ The username, and whether it meets each subreddit's requirements.
+- **C-RD-STORY.03** Collect the true story from the owner: what happened, what went wrong, what they learned, and any numbers they can show. If there is no proof of revenue or growth figures, leave those figures out.  
+  _Done when:_ The story outline with each fact and number marked with its source, or marked as left out.
+- **C-RD-STORY.04** Write the post in the owner's voice. Title under 300 characters, honest and without clickbait. Open with the lesson that helps the reader, and say clearly 'I'm the founder of ...'. Do not copy a popular post and never pose as an outside user.  
+  _Done when:_ The title and body draft, with the line that states the founder's relationship to the product.
+- **C-RD-STORY.05** Add a link only if the rules allow links. Use the round's tracked link, with ?v=A or ?v=B if there are two versions, and open it once to confirm it loads.  
+  _Done when:_ The link and its version label, or a note that the rules do not allow links.
+- **C-RD-STORY.06** Show the owner the title, body, chosen subreddit and flair word for word, and get a clear yes.  
+  _Done when:_ The approved post and the owner's approval message.
+- **C-RD-STORY.07** Post it once, in one subreddit, with the right flair. The owner posts it, or the agent's own browser does if it is signed in and the owner said yes.  
+  _Done when:_ Who posted it, the subreddit, and the time.
+- **C-RD-STORY.08** After 10 minutes, open the post's public URL in a signed-out or private browser window and confirm it is visible. If it was removed, record the reason given. Do not repost it, and do not post the same story in any other subreddit this round.  
+  _Done when:_ The public URL and whether it is visible or removed, with any removal reason.
+- **C-RD-STORY.09** For the next 48 hours, read the comments. Draft short answers to real questions for the owner to approve, and do not argue with critics.  
+  _Done when:_ The comments that asked about the product, with their URLs and the approved answers.
+
+**Hand back:** `post_url`, `published_text`, `subreddit_rules`
 
 **If stuck:**
-- `community_no_promo`: 排除此社群推廣，不換拼字或私訊規避。
-- `removed_by_automod`: 保留原comment ID與移除原因，不重貼；有正常申訴入口才準備說明。
-- `api_commercial_permission`: 等待買家現有授權，不能自行購買或聲稱免費商用。
-- `old_or_resolved_thread`: 排除已解決／過期需求，不做銷售跟進。
-- `no_results`: 修正問題詞與社群假設，回報真實零則。
+- `community_no_promo`: If a subreddit's rules do not allow this kind of post, leave it out; never reword the post or switch to DMs to get around the rule.
+- `removed_by_moderators`: If the post is removed, record the reason and do not repost; if the rules offer a way to appeal, draft a short note to the moderators for the owner to approve.
+- `account_not_eligible`: If the account does not meet the age or karma rule, tell the owner and choose another subreddit; never use another account.
+- `owner_has_not_approved`: If the owner has not said yes to this exact post, do not publish; show it to them and wait.
+- `no_true_story`: If the owner cannot confirm the facts of the story, do not post it; ask them for one real event to build it on.
+
+### 12. Read this goal's numbers from Reddit and sales records (result numbers)
+
+Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.
+
+- **C-RD-METRICS.01** Confirm the username, the list of this round's post and reply URLs, the date range and the time zone. For the baseline use the same number of days just before the round; for the current reading use the round's own days.  
+  _Done when:_ Username, the URLs measured, and the date range with time zone.
+- **C-RD-METRICS.02** Open each URL in a signed-out or private window and mark it 'visible', 'removed' or 'locked'. A removed reply can get no answers, so list it separately rather than hiding it.  
+  _Done when:_ Each URL with its visibility and the time it was checked.
+- **C-RD-METRICS.03** Count real responses only: a qualified reply or inquiry is a different person who asks for the link, a price or a demo, asks how to use the product, or says they will try it. Upvotes, thanks without a question, and the owner's or the agent's own comments never count. Count each person once and keep the URL of each one counted.  
+  _Done when:_ The list of counted responses, each with its URL and the person's username.
+- **C-RD-METRICS.04** Fill the goal's components by their exact names. 'read_requests' and 'qualified_requests' come from the search step's counts of posts read and kept. 'eligible_requests' is the number of different request threads the round replied to. 'qualified_replies' and 'qualified_inquiries' are the people counted in the step before; inquiries may also include private messages or emails the owner reports, if they mention Reddit.  
+  _Done when:_ Each component name with its number and a one-line note on how it was counted.
+- **C-RD-METRICS.05** For a purchase goal, count 'external_purchases' only from the round's sale counter in tracking or the owner's payment records, within the date range. Leave out the owner's or team's own test payments and refunded orders, and say plainly when a sale cannot be tied to Reddit.  
+  _Done when:_ Each purchase counted with its source and date, and the ones left out with the reason.
+- **C-RD-METRICS.06** Add website visits only if the owner already has a source for them, such as the tracked link or site analytics. If the owner already uses a CRM, check it for the same people; never turn a silent reader into a counted lead.  
+  _Done when:_ Each extra figure names its source, and unknown links between Reddit and the result are stated.
+- **C-RD-METRICS.07** Pass the goal's exact component names to record_numbers with the source of each. If there is no history, record 0 and say in source that there is no history. Never estimate a missing number; leave it out and name it as missing.  
+  _Done when:_ The record_numbers entry with every component, its source, and any missing number named.
+
+**If stuck:**
+- `removed_by_automod`: If a reply or post was removed, keep its URL and the removal reason, count it as removed, and never post it again; if the subreddit offers a normal way to appeal, draft a short appeal and show it to the owner before anything is sent.
+- `no_sales_source`: If there is no sale counter and no payment record to read, record no purchases for this round, say there is no source, and ask the owner to add the tracking sale counter to the page shown after payment.
+- `no_history`: If there is no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `cannot_tell_who_responded`: If you cannot tell whether a response comes from a real prospect or from the owner's side, leave it out and say so.
+- `too_early_to_read`: If the replies or posts are less than 24 hours old, report the numbers as early and read them again later.

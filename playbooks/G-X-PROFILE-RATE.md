@@ -1,7 +1,7 @@
-# X提高串文到profile造訪率
+# X: raise profile visits per thread impression
 
 - **Goal id:** `G-X-PROFILE-RATE`
-- **Language:** English and 繁體中文
+- **Language:** English
 - **Channel:** x
 - **Metric:** `profile_visit_rate` = `profile_visits` / `impressions`, should increase
 - **Observation window:** 48 hours after publishing
@@ -179,53 +179,61 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
 - `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
-### 8. 準備X帳號、登入與授權
+### 8. Confirm the X account and who posts
 
-準備X帳號、登入與授權
+Settle which X account will post, who presses post, and what limits that account has, so threads and replies go out under the right brand without stopping the owner halfway.
 
-- **C-X-ACCESS.01** 核對X handle及已連接API的使用者身分、讀寫權限與現有額度  
-  _Done when:_ handle、scope與額度來源
-- **C-X-ACCESS.02** 分開官方登入與API授權；一般頁面登入不代表有自動發文／搜尋API能力  
-  _Done when:_ 工具能力清單
-- **C-X-ACCESS.03** 正常登入僅沿官方允許流程；自動寫入用獲授權API，不把腳本控制網站當API替代  
-  _Done when:_ 合法工具路徑
-- **C-X-ACCESS.04** API不足時先完成查詢單與草稿，保留待本人／工具連接；不買方案、不換帳號逃限  
-  _Done when:_ 缺少的能力與已完成成果
-- **C-X-ACCESS.05** 需要Email／手機或CAPTCHA驗證時由本人完成，沿同一帳號續接  
-  _Done when:_ 驗證checkpoint
-- **C-X-ACCESS.06** 讀目前發文、串文、媒體與回覆工具schema；記錄真實剩餘限額及重置時間  
-  _Done when:_ schema與rate-limit時間
+- **C-X-ACCESS.01** Ask the owner for the URL of the X profile that will post. Open it and confirm the handle, display name, bio and website link match the brand.  
+  _Done when:_ The profile URL and handle, with the owner's confirmation that it is theirs.
+- **C-X-ACCESS.02** Decide who presses post: the owner on their own device, or the agent only through a posting tool the owner connected that uses X's official API. X's automation rules forbid scripting the x.com website and can suspend the account, so the agent never posts by driving x.com in a browser. Write down which tools actually exist.  
+  _Done when:_ Who will post, and the tool or device they will use.
+- **C-X-ACCESS.03** If the owner needs to sign in, they do it themselves on x.com or in the X app. Never ask for a password, and never sign in for them.  
+  _Done when:_ The owner's confirmation that they are signed in, and the handle shown after sign-in.
+- **C-X-ACCESS.04** If X asks for an email or phone code, a CAPTCHA, terms or an identity check, stop and tell the owner exactly which screen needs it. Return to the same account once they finish.  
+  _Done when:_ A note of what the owner had to do and where work resumed.
+- **C-X-ACCESS.05** Note the account's limits that affect this round: whether it can post more than 280 characters, whether it can add images or video, and whether the owner can open post analytics. Do not buy an X plan or API access; if a step needs one, tell the owner the price shown and let them decide.  
+  _Done when:_ A short list of what the account can and cannot do this round.
+- **C-X-ACCESS.06** Use only this one real account. Never create extra accounts or switch accounts to get around limits; if X shows a limit, write down when it resets.  
+  _Done when:_ Confirmation that one account is used, and any limit seen with its reset time.
+- **C-X-ACCESS.07** If the account cannot post right now, finish what does not need posting, such as search phrases and drafts, and list the one thing the owner must do to unblock posting.  
+  _Done when:_ The work already done and the single owner action still needed, or 'none'.
 
-**Hand back:** `subject_id`, `brand_match`, `actual_scopes`, `observed_at`
-
-**If stuck:**
-- `api_tier_missing`: 等待已授權API能力，不改用網站腳本繞過。
-- `rate_limited`: 依回傳reset時間退避，保留cursor與原任務。
-- `reply_restricted`: 讀作者回覆限制；不改用提及或私訊騷擾。
-- `thread_partial`: 保存已發tweet IDs，從未完成部分接續而非重發第一篇。
-
-### 9. X近期購買訊號搜尋
-
-X近期購買訊號搜尋
-
-- **C-X-INTENT.01** 用已授權搜尋API按query、start_time與pagination token查問題詞  
-  _Done when:_ API request來源與next_token
-- **C-X-INTENT.02** 核對author ID、created_at、conversation ID與完整串，不只讀轉推  
-  _Done when:_ 原帖與conversation_id
-- **C-X-INTENT.03** 辨識換工具、找服務與目前解法；promo、徵才與已解決分開排除  
-  _Done when:_ evidence_quote與context_type
-- **C-X-INTENT.04** 讀原串回覆限制，確認產品能解決原問題  
-  _Done when:_ fit與reply eligibility
-- **C-X-INTENT.05** 保存cursor與剩餘rate limit；交demand_posts，不額外挖Email  
-  _Done when:_ demand_posts與limit
-
-**Hand back:** `original_url`, `identity`, `observed_need`, `inferred_fit_separately`, `exclusions`
+**Hand back:** `account_handle`, `profile_url`, `who_publishes`, `account_limits`
 
 **If stuck:**
-- `api_tier_missing`: 等待已授權API能力，不改用網站腳本繞過。
-- `rate_limited`: 依回傳reset時間退避，保留cursor與原任務。
-- `reply_restricted`: 讀作者回覆限制；不改用提及或私訊騷擾。
-- `thread_partial`: 保存已發tweet IDs，從未完成部分接續而非重發第一篇。
+- `handle_not_the_brand`: If the signed-in account is a personal account or a different brand, stop before any posting and ask the owner which account to use.
+- `owner_action_needed`: If a verification code, CAPTCHA, terms screen or identity check appears, stop and tell the owner which screen and which button; never enter codes or accept terms for them.
+- `no_official_posting_tool`: If the agent has no posting tool that uses X's official API, set who_publishes to 'owner' and plan to hand them the final text to post.
+- `account_limited`: If X shows the account is locked or limited, stop posting, tell the owner what X shows, and continue drafting until it is cleared.
+- `paid_plan_needed`: If the round needs something only a paid X plan or paid API access offers, tell the owner what it is and the price shown, and let them decide; never buy it.
+
+### 9. Find recent public posts on X where buyers ask for help
+
+Collect recent public X posts where real people describe the problem the product solves, in their own words, because these show who to speak to and what to say, which is what moves the goal's main number.
+
+- **C-X-INTENT.01** Write 3 to 5 search phrases from the buyer quotes and segments, such as "looking for" plus the task, "any recommendations" plus the category, or "alternative to" plus a tool buyers name. Add -filter:retweets and since: with a date 14 days back.  
+  _Done when:_ The exact search phrases.
+- **C-X-INTENT.02** Run each phrase on X search's Latest tab. If the owner connected a search tool that uses X's official API, the agent may use it; otherwise give the owner the phrases to run and ask them to paste back the post links, or use the agent's own web search for public x.com posts. Never script x.com or collect results in bulk, and stop if X shows a limit message.  
+  _Done when:_ For each phrase, who ran it, the date run, and the number of posts looked at.
+- **C-X-INTENT.03** Open each promising post itself, not a repost or quote, with read_page or through the owner if it does not load, and read the whole thread. Write down the post URL, author handle, date, and the person's exact words about their need.  
+  _Done when:_ A list of posts with URL, handle, date and exact quote.
+- **C-X-INTENT.04** Sort each post: keep it only if the person wants to switch tools, is looking for a product or service, or is stuck with their current way. Exclude promotions, job posts, vendors, bots, and needs already solved, with a reason.  
+  _Done when:_ Kept and excluded posts, each with a one-line reason.
+- **C-X-INTENT.05** For each kept post, check the product can actually solve this need using the fact sheet. Write what the person said and what you infer as two separate lines.  
+  _Done when:_ For each kept post, the stated need and the inferred fit written separately.
+- **C-X-INTENT.06** Check each kept post can be answered: replies are open to the owner's account, it is less than 7 days old, and the owner has not already replied to that person about it. Keep one entry per person.  
+  _Done when:_ Each kept post marked 'can reply' or 'cannot reply', with one entry per person.
+- **C-X-INTENT.07** Stop at 10 qualified posts or after 50 posts reviewed, whichever comes first. Hand back the list. Do not look up emails, phone numbers or other personal details beyond the public post.  
+  _Done when:_ The final list with counts of posts reviewed, kept and excluded.
+
+**Hand back:** `demand_posts`, `excluded_posts`, `search_phrases`
+
+**If stuck:**
+- `cannot_search_x`: If no official X search tool is connected and web search finds nothing usable, give the owner the exact phrases to run and ask them to paste back the post links.
+- `rate_limited`: If X shows a limit message, stop, note the time, and continue from the same phrase after the limit resets.
+- `no_matching_posts`: If no phrase finds a real need in the last 14 days, try two new phrases from different buyer quotes, then report zero with the phrases tried.
+- `reply_restricted`: If the author limits replies, mark the post 'cannot reply'; never plan a mention or DM instead.
+- `personal_data_requested`: If a later step asks for emails or phone numbers of these people, refuse and keep only the public post details.
 
 ### 10. Write the post from proven facts
 
@@ -251,63 +259,85 @@ Write the post or message that opens with the buyer's own situation and offers o
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
 - `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 11. X漲粉／串文／網站指標 (baseline numbers)
+### 11. Read this goal's numbers on X (baseline numbers)
 
-X漲粉／串文／網站指標
+Record the numbers this goal is judged on for the account and its threads, for a fixed range before and after the new post, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
 
-- **C-X-METRICS.01** 按user ID及thread IDs讀有權Analytics／API報表  
-  _Done when:_ account/window
-- **C-X-METRICS.02** 分followers快照、impressions、profile visits、url clicks；不可用指標留null  
-  _Done when:_ raw fields
-- **C-X-METRICS.03** 串文用單篇或全串一致口徑，不能把曝光重複當唯一人數  
-  _Done when:_ denominator definition
-- **C-X-METRICS.04** 用既有UTM／付款資料比對外部結果，無資料不推購買  
-  _Done when:_ attribution與limitations
-
-**If stuck:**
-- `api_tier_missing`: 等待已授權API能力，不改用網站腳本繞過。
-- `rate_limited`: 依回傳reset時間退避，保留cursor與原任務。
-- `reply_restricted`: 讀作者回覆限制；不改用提及或私訊騷擾。
-- `thread_partial`: 保存已發tweet IDs，從未完成部分接續而非重發第一篇。
-
-### 12. X串文逐篇發布與部分成功恢復
-
-X串文逐篇發布與部分成功恢復
-
-- **C-X-POST.01** 核對獲授權API user ID和近期串文，查是否已發布本輪第一篇  
-  _Done when:_ user ID及existing IDs
-- **C-X-POST.02** 逐篇核對目前工具字數／媒體限制、序號、父篇關係與事實  
-  _Done when:_ thread manifest
-- **C-X-POST.03** prepare第一篇後送API並保存tweet ID；其他篇依序回覆前篇  
-  _Done when:_ operation_key及tweet IDs
-- **C-X-POST.04** 若中段失敗先讀已發篇全文，從未完成篇接，不重發首篇  
-  _Done when:_ partial completion journal
-- **C-X-POST.05** 讀整串公開URL、作者、順序與全文，不能以API HTTP成功代替內容核對  
-  _Done when:_ publications
-
-**Hand back:** `original_operation_id`, `platform_object_id`, `account_ref`, `published_state`, `exact_content_readback`, `permalink`
+- **C-X-METRICS.01** Confirm the X handle, the post or thread URLs being measured, whether this is the baseline or the current reading, the date range, and the time zone. Check whether you can open the post's analytics; if not, ask the owner for a screenshot or the numbers.  
+  _Done when:_ Handle, post URLs, baseline or current, date range with time zone, and how the numbers will be obtained.
+- **C-X-METRICS.02** If the goal needs followers, read the follower count on the profile at the start and the end of the range, at about the same time of day. Record the end count as followers and put the start count in source.  
+  _Done when:_ Both follower counts with the time each was read.
+- **C-X-METRICS.03** If the goal needs impressions, profile_visits or url_clicks, read them from each post's analytics. For a thread, decide once whether you use the first post only or the sum of all posts, and use the same choice for baseline and current. Impressions are views, not unique people.  
+  _Done when:_ Each number as shown, the post it came from, and whether it is the first post or the thread total.
+- **C-X-METRICS.04** For url_clicks, prefer the click count of the round's tracked link from tracking when the post used it, and note X's link click number next to it. Say which one you recorded, and use the same one for baseline and current.  
+  _Done when:_ The click number recorded, its source, and the other number for comparison.
+- **C-X-METRICS.05** If the goal needs qualified_conversations or qualified_replies, count each different person once who showed a real need for the product, with the URL of their reply or the date of their message. Do not count the owner's or the agent's own replies, bots or vendors. If it needs eligible_requests, count the public requests on the round's list that were still open to a reply in the range.  
+  _Done when:_ Each count, with one URL or date per person or request and a one-line reason each qualifies.
+- **C-X-METRICS.06** Add website visits or purchases only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which post led to a sale, say so plainly; never infer a purchase.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links are stated.
+- **C-X-METRICS.07** Call record_numbers with the goal's exact metric component names as listed for this goal, each with its source. If there is no history, record 0 and say so in source. Never estimate; if a number is not shown, say which one and why.  
+  _Done when:_ The record_numbers call with each component, its value and its source.
 
 **If stuck:**
-- `api_tier_missing`: 等待已授權API能力，不改用網站腳本繞過。
-- `rate_limited`: 依回傳reset時間退避，保留cursor與原任務。
-- `reply_restricted`: 讀作者回覆限制；不改用提及或私訊騷擾。
-- `thread_partial`: 保存已發tweet IDs，從未完成部分接續而非重發第一篇。
+- `cannot_open_analytics`: If you cannot open the post's analytics, ask the owner for a screenshot of it or for the numbers this goal needs.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If the screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
+- `thread_counted_differently`: If the baseline used a different thread counting choice, read the baseline again the same way before comparing.
+- `too_early_to_read`: If the post is less than 24 hours old, report the numbers as early and read them again when the 48-hour range ends.
 
-### 13. X漲粉／串文／網站指標 (result numbers)
+### 12. Publish an approved X thread in order and confirm it
 
-X漲粉／串文／網站指標
+Publish the approved thread once, post by post in the right order under the right account, and hand back its public URL, because the thread must be live and complete before anything it does to the goal's main number can be measured.
 
-- **C-X-METRICS.01** 按user ID及thread IDs讀有權Analytics／API報表  
-  _Done when:_ account/window
-- **C-X-METRICS.02** 分followers快照、impressions、profile visits、url clicks；不可用指標留null  
-  _Done when:_ raw fields
-- **C-X-METRICS.03** 串文用單篇或全串一致口徑，不能把曝光重複當唯一人數  
-  _Done when:_ denominator definition
-- **C-X-METRICS.04** 用既有UTM／付款資料比對外部結果，無資料不推購買  
-  _Done when:_ attribution與limitations
+- **C-X-POST.01** Confirm with the owner which X handle will post and who presses Post: the owner, or the agent's own browser if it is signed in to that account. Look at the profile's recent posts to make sure this round's first post is not already live.  
+  _Done when:_ The handle, who will publish, and a note on the recent posts checked.
+- **C-X-POST.02** Lay out the thread as a numbered list. Keep each post under 280 characters unless the account clearly allows longer posts, and keep the thread to 2 to 8 posts. The first post must make sense on its own. Attach images in the planned order with short alt text.  
+  _Done when:_ The numbered thread with each post's character count and its images in order.
+- **C-X-POST.03** If the thread links to the product, put the link only in the last post, using the round's tracked link. If there are two versions of the thread, add ?v=A to one and ?v=B to the other, and open the link once to confirm it loads.  
+  _Done when:_ The exact link with its version label and confirmation it opens the product, or a note that the thread has no link.
+- **C-X-POST.04** Check every post against the product fact sheet; remove any number, result, quote or promise you cannot support.  
+  _Done when:_ The list of claims in the thread, each with its fact source.
+- **C-X-POST.05** Show the owner the full thread word for word, with images, and get a clear yes before anything is posted.  
+  _Done when:_ The approved thread and the owner's approval message.
+- **C-X-POST.06** Publish the first post once. Then publish each next post as a reply to the one before it, in order, using X's own thread composer or reply button. Use only normal X features; never use scripts to get around X's rules.  
+  _Done when:_ The URL of each post as it went live, in order.
+- **C-X-POST.07** If publishing stops halfway, open the profile and find which posts are live. Continue from the first missing post as a reply to the last live one. Never post the first post again.  
+  _Done when:_ A note of where it stopped and where it resumed, or a note that it ran without a break.
+- **C-X-POST.08** Open the first post's public URL and read the whole thread: author handle, order, full text of each post, and that the link opens the product page.  
+  _Done when:_ The thread's public URL, its text as it appears, and confirmation the link works.
+
+**Hand back:** `thread_url`, `post_urls`, `published_text`
 
 **If stuck:**
-- `api_tier_missing`: 等待已授權API能力，不改用網站腳本繞過。
-- `rate_limited`: 依回傳reset時間退避，保留cursor與原任務。
-- `reply_restricted`: 讀作者回覆限制；不改用提及或私訊騷擾。
-- `thread_partial`: 保存已發tweet IDs，從未完成部分接續而非重發第一篇。
+- `owner_has_not_approved`: If the owner has not said yes to this exact thread, do not post; show it to them and wait.
+- `wrong_account_signed_in`: If the signed-in account is not the agreed handle, stop and ask the owner to switch accounts or post it themselves.
+- `thread_partial`: If only part of the thread went live, continue from the first missing post as a reply to the last live one; never repost the first post.
+- `rate_limited`: If X says you have hit a limit, wait until it lifts and then continue the same thread; never switch to another account.
+- `agent_cannot_publish`: If the agent's browser cannot post, give the owner the numbered thread to post and ask them to send back the first post's URL.
+- `link_does_not_open`: If the tracked link does not open the product page, stop before posting and fix the link with the owner.
+
+### 13. Read this goal's numbers on X (result numbers)
+
+Record the numbers this goal is judged on for the account and its threads, for a fixed range before and after the new post, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
+
+- **C-X-METRICS.01** Confirm the X handle, the post or thread URLs being measured, whether this is the baseline or the current reading, the date range, and the time zone. Check whether you can open the post's analytics; if not, ask the owner for a screenshot or the numbers.  
+  _Done when:_ Handle, post URLs, baseline or current, date range with time zone, and how the numbers will be obtained.
+- **C-X-METRICS.02** If the goal needs followers, read the follower count on the profile at the start and the end of the range, at about the same time of day. Record the end count as followers and put the start count in source.  
+  _Done when:_ Both follower counts with the time each was read.
+- **C-X-METRICS.03** If the goal needs impressions, profile_visits or url_clicks, read them from each post's analytics. For a thread, decide once whether you use the first post only or the sum of all posts, and use the same choice for baseline and current. Impressions are views, not unique people.  
+  _Done when:_ Each number as shown, the post it came from, and whether it is the first post or the thread total.
+- **C-X-METRICS.04** For url_clicks, prefer the click count of the round's tracked link from tracking when the post used it, and note X's link click number next to it. Say which one you recorded, and use the same one for baseline and current.  
+  _Done when:_ The click number recorded, its source, and the other number for comparison.
+- **C-X-METRICS.05** If the goal needs qualified_conversations or qualified_replies, count each different person once who showed a real need for the product, with the URL of their reply or the date of their message. Do not count the owner's or the agent's own replies, bots or vendors. If it needs eligible_requests, count the public requests on the round's list that were still open to a reply in the range.  
+  _Done when:_ Each count, with one URL or date per person or request and a one-line reason each qualifies.
+- **C-X-METRICS.06** Add website visits or purchases only if the owner already has a source for them, such as the tracked link, site analytics or payment records. Where you cannot tell which post led to a sale, say so plainly; never infer a purchase.  
+  _Done when:_ Each visit or sales figure names its source, and unknown links are stated.
+- **C-X-METRICS.07** Call record_numbers with the goal's exact metric component names as listed for this goal, each with its source. If there is no history, record 0 and say so in source. Never estimate; if a number is not shown, say which one and why.  
+  _Done when:_ The record_numbers call with each component, its value and its source.
+
+**If stuck:**
+- `cannot_open_analytics`: If you cannot open the post's analytics, ask the owner for a screenshot of it or for the numbers this goal needs.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
+- `numbers_from_wrong_account`: If the screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
+- `thread_counted_differently`: If the baseline used a different thread counting choice, read the baseline again the same way before comparing.
+- `too_early_to_read`: If the post is less than 24 hours old, report the numbers as early and read them again when the 48-hour range ends.

@@ -350,7 +350,7 @@ def _step(store, owner, product, state):
             step['publishing'] = 'This step changes or sends something outside. Show the owner exactly what will be sent before it goes out.'
         if not info['identity'] and hasattr(store, 'tracked_link'):
             step['tracked_link'] = {'url': store.tracked_link(owner, state['round'], product),
-                                    'use': 'Whenever this round\'s copy, post or message points to the product, use this link instead of the bare URL, and keep it in what you deliver. It forwards to the product page and the engine counts the clicks itself (from browsers; known robots and link previews are left out). Add ?p=/some/page to land on another page of the same site. If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
+                                    'use': 'Whenever this round\'s copy, post or message points to the product, use this link instead of the bare URL, and keep it in what you deliver. It forwards to the product page and the engine counts the clicks itself (from browsers; known robots and link previews are left out). If you publish more than one version, give each its own label, for example ?v=A and ?v=B, and the engine counts clicks per version (the round is still judged on the total). Add ?p=/some/page to land on another page of the same site (combine with &). If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
     lessons = [{'round': r['round'], 'change': r.get('change'), 'metric': r.get('metric'), 'verdict': r.get('verdict')} for r in state['rounds']]
     step.update(delivered_so_far=_recent(store, owner), sources_read=state.get('sources', [])[-6:], lessons_from_earlier_rounds=lessons, rules=RULES)
     return step
@@ -513,7 +513,7 @@ def tracking(store, owner, product, args):
         return {'available': False, 'note': 'This local server does not count clicks or sales. Read numbers from the platform and pass them to record_numbers. The hosted service at https://engine.nuluno.com counts them itself.'}
     state = _load(store, owner); counter = store.sale_counter(owner)
     return {'available': True, 'tracked_link': store.tracked_link(owner, max(state['round'], 1), product),
-            'tracked_link_use': 'Put this link in posts, bios and messages instead of the bare product URL. Clicks from browsers are counted; known robots and link previews are left out.',
+            'tracked_link_use': 'Put this link in posts, bios and messages instead of the bare product URL. Clicks from browsers are counted; known robots and link previews are left out. For several versions of a post, add ?v=A, ?v=B and so on; counted_this_round then shows clicks_by_version.',
             'sale_counter': {'image_tag': '<img src="' + counter + '.gif" width="1" height="1" alt="">', 'redirect_url': counter,
                              'use': 'Sales are counted when a buyer reaches the page shown after payment. Either the owner pastes image_tag into that page, or sets the payment provider\'s after-payment redirect to redirect_url (it forwards to the product page). Add ?value=<amount in cents>&order=<order id, URL-encoded> when known; the same order is counted once, and without an order id the same buyer is counted once a day. This needs the owner once; ask them only when the goal is about purchases.'},
             'counted_this_round': _counted(store, owner, state), 'counted_all_time': store.measured(owner, 0, time.time(), None)}

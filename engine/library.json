@@ -687,7 +687,7 @@
     "audience": "A-SEGMENTS",
     "motivation": "A-MOTIVES",
     "angle": "A-ANGLES",
-    "message": "C-TH-INTENT",
+    "message": "A-COPY",
     "data": "C-TH-METRICS"
    },
    "plan": [
@@ -9196,7 +9196,7 @@
   },
   "A-SEGMENTS": {
    "title": "Group buyers by situation and trigger",
-   "purpose": "Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because a post aimed at one clear situation gets more clicks than a post aimed at everyone.",
+   "purpose": "Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because copy aimed at one clear situation gets more response than copy aimed at everyone.",
    "steps": [
     {
      "id": "A-SEGMENTS.01",
@@ -9220,7 +9220,7 @@
     },
     {
      "id": "A-SEGMENTS.05",
-     "do": "Choose the one group you can reach on Threads now and that the product can serve today. Record why you chose it and what would show the choice is wrong.",
+     "do": "Choose the one group you can reach on this goal's channel now and that the product can serve today. Record why you chose it and what would show the choice is wrong.",
      "evidence": "The chosen group, the reason, and at least one case that argues against it."
     }
    ],
@@ -9462,7 +9462,7 @@
   },
   "A-ANGLES": {
    "title": "Design the sales angle test",
-   "purpose": "Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the numbers decide which one earns more link clicks.",
+   "purpose": "Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.",
    "steps": [
     {
      "id": "A-ANGLES.01",
@@ -9486,7 +9486,7 @@
     },
     {
      "id": "A-ANGLES.05",
-     "do": "Choose the main number: qualified inquiries, sign-ups, payments, or another number named in advance (in this playbook, link clicks divided by views). Likes are supporting information only, and state when the test stops.",
+     "do": "Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.",
      "evidence": "The main number, the rule for stopping, and the versions ready to be written as posts."
     }
    ],
@@ -9510,8 +9510,8 @@
      "do": "If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof."
     },
     {
-     "code": "cannot_measure_clicks",
-     "do": "If link clicks cannot be read anywhere, ask the owner how they can be checked, and do not declare a winner from likes."
+     "code": "cannot_measure_main_number",
+     "do": "If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes."
     }
    ],
    "needs_link": false,
@@ -9724,7 +9724,7 @@
   },
   "A-COPY": {
    "title": "Write the post from proven facts",
-   "purpose": "Write the Threads post that opens with the buyer's own situation and offers one true step forward with a link, because a specific, believable post is what makes a reader click through to the product site.",
+   "purpose": "Write the post or message that opens with the buyer's own situation and offers one true step forward, because specific, believable copy is what makes a reader act.",
    "steps": [
     {
      "id": "A-COPY.01",
@@ -9776,7 +9776,7 @@
     },
     {
      "code": "text_too_long",
-     "do": "If the text is over the Threads length limit, cut it to one situation, one benefit, and one link."
+     "do": "If the text is over the channel's length limit, cut it to one situation, one benefit, and one link."
     }
    ],
    "needs_link": false,
@@ -10187,15 +10187,15 @@
    "identity": true,
    "title_zh": "確認Threads帳號與發文者",
    "deliver_help": {
-    "account_handle": "The Threads handle that will post. Example: '@notavue'.",
+    "account_handle": "The Threads handle that will post. Example: '@yourbrand'.",
     "profile_url": "The public URL of that profile, opened and confirmed to exist.",
     "who_publishes": "'owner' or 'agent browser', plus one line on why."
    },
    "tested": true
   },
   "C-TH-METRICS": {
-   "title": "Read views and link clicks on Threads",
-   "purpose": "Record views and link clicks for the account's posts, before and after the new post, so the link click rate (link clicks divided by views) can be compared using real numbers.",
+   "title": "Read this goal's numbers on Threads",
+   "purpose": "Record the numbers this goal is judged on, for the account's posts before and after the new post, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.",
    "steps": [
     {
      "id": "C-TH-METRICS.01",
@@ -10219,23 +10219,22 @@
     }
    ],
    "deliver": [
-    "views",
-    "link_clicks",
+    "numbers",
     "where_read",
     "date_range"
    ],
    "blockers": [
     {
      "code": "cannot_open_insights",
-     "do": "If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the two numbers: views and link clicks."
+     "do": "If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the numbers this goal needs."
     },
     {
      "code": "link_clicks_not_shown",
-     "do": "If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source; otherwise record 'not available'."
+     "do": "If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source. If there is no source at all, say so; do not estimate."
     },
     {
-     "code": "no_earlier_posts_with_link",
-     "do": "If the account has no earlier posts with a link, record the baseline as 'none' and state that the first post sets it."
+     "code": "no_history",
+     "do": "If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline."
     },
     {
      "code": "numbers_from_wrong_account",
@@ -10250,12 +10249,6 @@
    "writes": false,
    "identity": false,
    "title_zh": "讀取瀏覽與連結點擊數",
-   "deliver_help": {
-    "views": "Views for each measured post, as displayed. Write 'not available' if they could not be read.",
-    "link_clicks": "Link clicks for each measured post, as displayed. Write 'not available' if Threads does not show them, and do not calculate a click rate from a missing number.",
-    "where_read": "Where the numbers came from and when. Example: 'Owner's screenshot of Threads insights, 2026-11-21 14:00 Taipei time'.",
-    "date_range": "The start and end dates covered, with the time zone."
-   },
    "tested": true
   },
   "C-TH-POST": {
@@ -14245,63 +14238,63 @@
    "identity": false
   },
   "S02": {
-   "title": "找出誰會買、為什麼現在買",
-   "purpose": "找出誰會買、為什麼現在買",
+   "title": "Find who buys and why now",
+   "purpose": "Find the groups of people most likely to buy and what makes them start looking now, so later copy speaks to a real situation instead of to everyone.",
    "steps": [
     {
      "id": "S02.01",
-     "do": "讀取產品與這輪目標：確認要找首批用戶、試用、購買或續購。",
-     "evidence": "研究目標與現有方案相符。"
+     "do": "Read the product and this round's goal: first users, trials, purchases, or repeat purchases.",
+     "evidence": "The research goal matches what is actually on offer."
     },
     {
      "id": "S02.02",
-     "do": "列出候選使用情境：依實際任務、替代方案與使用者類型提出候選分組。",
-     "evidence": "每組描述的是具體情境。"
+     "do": "List candidate situations of use: propose groups by the real task, what they use instead today, and the kind of user.",
+     "evidence": "Each group describes a concrete situation."
     },
     {
      "id": "S02.03",
-     "do": "收集需求原話：查可用討論、詢問、評價、訪談與交易背景。",
-     "evidence": "原話有日期、來源及情境。"
+     "do": "Collect what people say about the need in their own words: public discussions, questions, reviews, interviews, and the context of past purchases.",
+     "evidence": "Each quote has a date, a source, and its situation."
     },
     {
      "id": "S02.04",
-     "do": "區分使用者與付款者：辨識誰操作、誰受益、誰付錢或批准。",
-     "evidence": "角色有依據，未知者保留。"
+     "do": "Separate who uses it from who pays: work out who operates it, who benefits, and who pays or approves.",
+     "evidence": "Each role has a source; unknown roles stay unknown."
     },
     {
      "id": "S02.05",
-     "do": "整理想改善的結果：記錄省時、省錢、收入、便利、安心、身分或其他實際動機。",
-     "evidence": "動機連到需求原話與工作情境。"
+     "do": "Write down the result each group wants: time saved, money saved, income, convenience, peace of mind, status, or another real motive.",
+     "evidence": "Each motive links to a quote and a situation."
     },
     {
      "id": "S02.06",
-     "do": "找出現在開始找解法的原因：核對事件、期限、工作量或替代方案失效。",
-     "evidence": "有可觀察的觸發條件。"
+     "do": "Find why they start looking for a solution now: an event, a deadline, more work, or a current solution that stopped working.",
+     "evidence": "Each group has a trigger that can be observed."
     },
     {
      "id": "S02.07",
-     "do": "整理顧慮與不購買原因：記錄信任、價格、學習成本、既有習慣與風險等。",
-     "evidence": "能對應真實疑問。"
+     "do": "List hesitations and reasons not to buy: trust, price, effort to learn, habits, and risk.",
+     "evidence": "Each hesitation matches a real question someone asked."
     },
     {
      "id": "S02.08",
-     "do": "判斷購買階段：分清剛發現問題、比較方案、準備採購及已買等狀態。",
-     "evidence": "內容與跟進可按狀態選用。"
+     "do": "Mark the buying stage: just noticed the problem, comparing options, ready to buy, or already bought.",
+     "evidence": "Content and follow-up can be chosen by stage."
     },
     {
      "id": "S02.09",
-     "do": "評估可接觸程度與價值：比較需求強度、可達渠道、成本與適配。",
-     "evidence": "優先順序有理由。"
+     "do": "Compare the groups on strength of need, ways to reach them, cost, and fit with the product.",
+     "evidence": "The order of priority has a stated reason."
     },
     {
      "id": "S02.10",
-     "do": "交付客群與訊息對照：列每組的情境、動機、證據、顧慮與可測切角。",
-     "evidence": "S06、S08、S10、S30能直接取用。"
+     "do": "Hand over a table of groups and messages: for each group the situation, motive, evidence, hesitations, and angles worth testing.",
+     "evidence": "Later steps can use the table directly."
     },
     {
      "id": "S02.11",
-     "do": "接收實際結果修訂：以新回覆、試用及付款更新分組。",
-     "evidence": "保留前後版本與修改理由。"
+     "do": "Revise the groups when real results come in: new replies, trials, and payments.",
+     "evidence": "Earlier versions are kept with the reason for each change."
     }
    ],
    "deliver": [
@@ -14309,10 +14302,26 @@
     "hypotheses",
     "unknowns"
    ],
-   "blockers": [],
+   "blockers": [
+    {
+     "code": "no_real_quotes",
+     "do": "If you cannot find people describing the need in their own words, ask the owner for customer messages or reviews, and label every group as a guess."
+    },
+    {
+     "code": "only_demographics",
+     "do": "If all you have is age, gender, or job title, do not build groups from it; ask the owner what happened just before recent customers bought."
+    }
+   ],
    "needs_link": false,
    "writes": false,
-   "identity": false
+   "identity": false,
+   "title_zh": "找出誰會買、為什麼現在買",
+   "deliver_help": {
+    "sourced_segments": "The groups, each with its situation, trigger, motive and the quotes behind it.",
+    "hypotheses": "What you believe about each group that is not yet proven.",
+    "unknowns": "What is still unknown, such as who pays or how big each group is."
+   },
+   "tested": true
   },
   "S33": {
    "title": "彙整成效並核對付款與成本",

@@ -2,7 +2,9 @@
 
 Each playbook is one sales goal: an ordered list of steps, the number that decides success, and what to change when a round misses.
 
-The research and messaging steps that the playbooks share are written in plain English. Playbooks marked English are in English end to end. In the others, the steps that are specific to the channel are in Traditional Chinese.
+Playbooks marked English are in English end to end. The others mix steps in English with steps in Traditional Chinese.
+
+The pages are written from [`engine/library.json`](../engine/library.json) by `python3 engine/pages.py`; edit the library, then run it.
 
 | Goal | Channel | Metric | Steps | Language |
 |---|---|---|---|---|

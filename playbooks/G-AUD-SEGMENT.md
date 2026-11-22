@@ -1,7 +1,7 @@
 # 找出目前最值得賣給哪個購買情境受眾
 
 - **Goal id:** `G-AUD-SEGMENT`
-- **Language:** English (research and messaging steps) and 繁體中文 (channel steps)
+- **Language:** English and 繁體中文
 - **Channel:** audience
 - **Metric:** `qualified_inquiry_rate` = `qualified_inquiries` / `eligible_exposures`, should increase
 - **Observation window:** 168 hours after publishing
@@ -41,34 +41,38 @@ Build one dated fact sheet of what the product does, what it costs, and what is 
 - `pages_disagree`: If two pages state different prices or features, list both versions with their URLs and ask the owner which one is current.
 - `broken_buy_link`: If a sign-up or buy link fails or lands on the wrong page, report it to the owner before any post sends people there.
 
-### 2. 找出誰會買、為什麼現在買
+### 2. Find who buys and why now
 
-找出誰會買、為什麼現在買
+Find the groups of people most likely to buy and what makes them start looking now, so later copy speaks to a real situation instead of to everyone.
 
-- **S02.01** 讀取產品與這輪目標：確認要找首批用戶、試用、購買或續購。  
-  _Done when:_ 研究目標與現有方案相符。
-- **S02.02** 列出候選使用情境：依實際任務、替代方案與使用者類型提出候選分組。  
-  _Done when:_ 每組描述的是具體情境。
-- **S02.03** 收集需求原話：查可用討論、詢問、評價、訪談與交易背景。  
-  _Done when:_ 原話有日期、來源及情境。
-- **S02.04** 區分使用者與付款者：辨識誰操作、誰受益、誰付錢或批准。  
-  _Done when:_ 角色有依據，未知者保留。
-- **S02.05** 整理想改善的結果：記錄省時、省錢、收入、便利、安心、身分或其他實際動機。  
-  _Done when:_ 動機連到需求原話與工作情境。
-- **S02.06** 找出現在開始找解法的原因：核對事件、期限、工作量或替代方案失效。  
-  _Done when:_ 有可觀察的觸發條件。
-- **S02.07** 整理顧慮與不購買原因：記錄信任、價格、學習成本、既有習慣與風險等。  
-  _Done when:_ 能對應真實疑問。
-- **S02.08** 判斷購買階段：分清剛發現問題、比較方案、準備採購及已買等狀態。  
-  _Done when:_ 內容與跟進可按狀態選用。
-- **S02.09** 評估可接觸程度與價值：比較需求強度、可達渠道、成本與適配。  
-  _Done when:_ 優先順序有理由。
-- **S02.10** 交付客群與訊息對照：列每組的情境、動機、證據、顧慮與可測切角。  
-  _Done when:_ S06、S08、S10、S30能直接取用。
-- **S02.11** 接收實際結果修訂：以新回覆、試用及付款更新分組。  
-  _Done when:_ 保留前後版本與修改理由。
+- **S02.01** Read the product and this round's goal: first users, trials, purchases, or repeat purchases.  
+  _Done when:_ The research goal matches what is actually on offer.
+- **S02.02** List candidate situations of use: propose groups by the real task, what they use instead today, and the kind of user.  
+  _Done when:_ Each group describes a concrete situation.
+- **S02.03** Collect what people say about the need in their own words: public discussions, questions, reviews, interviews, and the context of past purchases.  
+  _Done when:_ Each quote has a date, a source, and its situation.
+- **S02.04** Separate who uses it from who pays: work out who operates it, who benefits, and who pays or approves.  
+  _Done when:_ Each role has a source; unknown roles stay unknown.
+- **S02.05** Write down the result each group wants: time saved, money saved, income, convenience, peace of mind, status, or another real motive.  
+  _Done when:_ Each motive links to a quote and a situation.
+- **S02.06** Find why they start looking for a solution now: an event, a deadline, more work, or a current solution that stopped working.  
+  _Done when:_ Each group has a trigger that can be observed.
+- **S02.07** List hesitations and reasons not to buy: trust, price, effort to learn, habits, and risk.  
+  _Done when:_ Each hesitation matches a real question someone asked.
+- **S02.08** Mark the buying stage: just noticed the problem, comparing options, ready to buy, or already bought.  
+  _Done when:_ Content and follow-up can be chosen by stage.
+- **S02.09** Compare the groups on strength of need, ways to reach them, cost, and fit with the product.  
+  _Done when:_ The order of priority has a stated reason.
+- **S02.10** Hand over a table of groups and messages: for each group the situation, motive, evidence, hesitations, and angles worth testing.  
+  _Done when:_ Later steps can use the table directly.
+- **S02.11** Revise the groups when real results come in: new replies, trials, and payments.  
+  _Done when:_ Earlier versions are kept with the reason for each change.
 
 **Hand back:** `sourced_segments`, `hypotheses`, `unknowns`
+
+**If stuck:**
+- `no_real_quotes`: If you cannot find people describing the need in their own words, ask the owner for customer messages or reviews, and label every group as a guess.
+- `only_demographics`: If all you have is age, gender, or job title, do not build groups from it; ask the owner what happened just before recent customers bought.
 
 ### 3. Collect real buyer quotes
 
@@ -95,7 +99,7 @@ Gather the exact words real people use for this problem and the result they want
 
 ### 4. Group buyers by situation and trigger
 
-Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because a post aimed at one clear situation gets more clicks than a post aimed at everyone.
+Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because copy aimed at one clear situation gets more response than copy aimed at everyone.
 
 - **A-SEGMENTS.01** Read the collected quotes and the product fact sheet. Do not work out why people buy from their age or gender.  
   _Done when:_ Each observation points to a quote or a product fact.
@@ -105,7 +109,7 @@ Split buyers into groups by the moment the problem shows up, then choose one gro
   _Done when:_ Each group shows its quote or the word 'guess', plus who it leaves out.
 - **A-SEGMENTS.04** Leave ability to pay, who decides, budget, and timing as 'unknown' unless a source says otherwise. Do not answer these from a job title.  
   _Done when:_ A list of unknowns for each group.
-- **A-SEGMENTS.05** Choose the one group you can reach on Threads now and that the product can serve today. Record why you chose it and what would show the choice is wrong.  
+- **A-SEGMENTS.05** Choose the one group you can reach on this goal's channel now and that the product can serve today. Record why you chose it and what would show the choice is wrong.  
   _Done when:_ The chosen group, the reason, and at least one case that argues against it.
 
 **Hand back:** `buyer_groups`, `chosen_group`, `why_chosen`, `unknowns`
@@ -187,7 +191,7 @@ Translate each real feature into the benefit and result a buyer cares about, and
 
 ### 8. Design the sales angle test
 
-Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the numbers decide which one earns more link clicks.
+Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.
 
 - **A-ANGLES.01** Name one buyer group in one situation, the quote that represents them, the motive, and the benefit the product can deliver.  
   _Done when:_ Group, quote, motive, and benefit written in four short lines.
@@ -197,7 +201,7 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
   _Done when:_ Each angle has supporting facts, unknowns, and banned wording next to it.
 - **A-ANGLES.04** Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.  
   _Done when:_ A test plan written before the first post, showing the guess, the duration, the win number, and the cost.
-- **A-ANGLES.05** Choose the main number: qualified inquiries, sign-ups, payments, or another number named in advance (in this playbook, link clicks divided by views). Likes are supporting information only, and state when the test stops.  
+- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.  
   _Done when:_ The main number, the rule for stopping, and the versions ready to be written as posts.
 
 **Hand back:** `test_guess`, `angles`, `facts_used`, `win_rule`
@@ -206,11 +210,11 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `no_main_motive`: If no main motive has been chosen, go back and choose one before writing angles.
 - `angle_needs_unproven_claim`: If an angle only works with a claim that has no proof, rewrite it as an invitation to try or drop the angle.
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
-- `cannot_measure_clicks`: If link clicks cannot be read anywhere, ask the owner how they can be checked, and do not declare a winner from likes.
+- `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
 ### 9. Write the post from proven facts
 
-Write the Threads post that opens with the buyer's own situation and offers one true step forward with a link, because a specific, believable post is what makes a reader click through to the product site.
+Write the post or message that opens with the buyer's own situation and offers one true step forward, because specific, believable copy is what makes a reader act.
 
 - **A-COPY.01** Read the chosen angle, the buyer quotes, and the product fact sheet. Open the post with the situation the reader is in right now, in words close to how buyers describe it.  
   _Done when:_ The opening line, with the quote and facts it draws on.
@@ -230,7 +234,7 @@ Write the Threads post that opens with the buyer's own situation and offers one 
 - `fact_missing_for_claim`: If a sentence needs a fact you do not have, remove the sentence or ask the owner; never fill the gap with a guess.
 - `no_working_link`: If you do not have a product link that you have opened and seen load, ask the owner which URL to use.
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
-- `text_too_long`: If the text is over the Threads length limit, cut it to one situation, one benefit, and one link.
+- `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
 ### 10. 彙整成效並核對付款與成本 (baseline numbers)
 

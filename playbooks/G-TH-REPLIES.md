@@ -1,13 +1,11 @@
 # Threads: start qualified buyer conversations
 
-Threads增加合格買方對話
-
 - **Goal id:** `G-TH-REPLIES`
 - **Language:** English
 - **Channel:** threads
 - **Metric:** `qualified_conversations` = `qualified_conversations`, should increase
 - **Observation window:** 48 hours after publishing
-- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `C-TH-INTENT`), data (the next round starts with `C-TH-METRICS`)
+- **If the target is missed, the agent picks one bottleneck:** audience (the next round starts with `A-SEGMENTS`), motivation (the next round starts with `A-MOTIVES`), angle (the next round starts with `A-ANGLES`), message (the next round starts with `A-COPY`), data (the next round starts with `C-TH-METRICS`)
 
 ## Steps
 
@@ -68,7 +66,7 @@ Gather the exact words real people use for this problem and the result they want
 
 ### 3. Group buyers by situation and trigger
 
-Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because a post aimed at one clear situation gets more clicks than a post aimed at everyone.
+Split buyers into groups by the moment the problem shows up, then choose one group to speak to, because copy aimed at one clear situation gets more response than copy aimed at everyone.
 
 - **A-SEGMENTS.01** Read the collected quotes and the product fact sheet. Do not work out why people buy from their age or gender.  
   _Done when:_ Each observation points to a quote or a product fact.
@@ -78,7 +76,7 @@ Split buyers into groups by the moment the problem shows up, then choose one gro
   _Done when:_ Each group shows its quote or the word 'guess', plus who it leaves out.
 - **A-SEGMENTS.04** Leave ability to pay, who decides, budget, and timing as 'unknown' unless a source says otherwise. Do not answer these from a job title.  
   _Done when:_ A list of unknowns for each group.
-- **A-SEGMENTS.05** Choose the one group you can reach on Threads now and that the product can serve today. Record why you chose it and what would show the choice is wrong.  
+- **A-SEGMENTS.05** Choose the one group you can reach on this goal's channel now and that the product can serve today. Record why you chose it and what would show the choice is wrong.  
   _Done when:_ The chosen group, the reason, and at least one case that argues against it.
 
 **Hand back:** `buyer_groups`, `chosen_group`, `why_chosen`, `unknowns`
@@ -160,7 +158,7 @@ Translate each real feature into the benefit and result a buyer cares about, and
 
 ### 7. Design the sales angle test
 
-Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the numbers decide which one earns more link clicks.
+Set up a fair comparison of two or three ways to present the same true benefit, with the win rule written before posting, so the goal's own number decides which one works.
 
 - **A-ANGLES.01** Name one buyer group in one situation, the quote that represents them, the motive, and the benefit the product can deliver.  
   _Done when:_ Group, quote, motive, and benefit written in four short lines.
@@ -170,7 +168,7 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
   _Done when:_ Each angle has supporting facts, unknowns, and banned wording next to it.
 - **A-ANGLES.04** Change only one thing between versions and keep the same channel, audience, and destination link. Before posting, write the guess being tested, how long the test runs, the number that counts as a win, and the cost in time or money.  
   _Done when:_ A test plan written before the first post, showing the guess, the duration, the win number, and the cost.
-- **A-ANGLES.05** Choose the main number: qualified inquiries, sign-ups, payments, or another number named in advance (in this playbook, link clicks divided by views). Likes are supporting information only, and state when the test stops.  
+- **A-ANGLES.05** Choose the main number: the goal's metric, shown with this step (for example link clicks divided by views, followers gained, or purchases). Likes are supporting information only, and state when the test stops.  
   _Done when:_ The main number, the rule for stopping, and the versions ready to be written as posts.
 
 **Hand back:** `test_guess`, `angles`, `facts_used`, `win_rule`
@@ -179,7 +177,7 @@ Set up a fair comparison of two or three ways to present the same true benefit, 
 - `no_main_motive`: If no main motive has been chosen, go back and choose one before writing angles.
 - `angle_needs_unproven_claim`: If an angle only works with a claim that has no proof, rewrite it as an invitation to try or drop the angle.
 - `too_few_views_expected`: If the account is too small for the versions to get comparable views, say so and report the result as an early signal, not as proof.
-- `cannot_measure_clicks`: If link clicks cannot be read anywhere, ask the owner how they can be checked, and do not declare a winner from likes.
+- `cannot_measure_main_number`: If the goal's main number cannot be read anywhere, ask the owner how it can be checked, and do not declare a winner from likes.
 
 ### 8. Confirm the Threads account and who publishes
 
@@ -209,7 +207,7 @@ Settle which Threads account will post and who presses publish (the owner, or th
 
 ### 9. Write the post from proven facts
 
-Write the Threads post that opens with the buyer's own situation and offers one true step forward with a link, because a specific, believable post is what makes a reader click through to the product site.
+Write the post or message that opens with the buyer's own situation and offers one true step forward, because specific, believable copy is what makes a reader act.
 
 - **A-COPY.01** Read the chosen angle, the buyer quotes, and the product fact sheet. Open the post with the situation the reader is in right now, in words close to how buyers describe it.  
   _Done when:_ The opening line, with the quote and facts it draws on.
@@ -229,11 +227,11 @@ Write the Threads post that opens with the buyer's own situation and offers one 
 - `fact_missing_for_claim`: If a sentence needs a fact you do not have, remove the sentence or ask the owner; never fill the gap with a guess.
 - `no_working_link`: If you do not have a product link that you have opened and seen load, ask the owner which URL to use.
 - `owner_voice_unknown`: If you do not know how the owner writes, ask for two of their past posts and match that tone.
-- `text_too_long`: If the text is over the Threads length limit, cut it to one situation, one benefit, and one link.
+- `text_too_long`: If the text is over the channel's length limit, cut it to one situation, one benefit, and one link.
 
-### 10. Read views and link clicks on Threads (baseline numbers)
+### 10. Read this goal's numbers on Threads (baseline numbers)
 
-Record views and link clicks for the account's posts, before and after the new post, so the link click rate (link clicks divided by views) can be compared using real numbers.
+Record the numbers this goal is judged on, for the account's posts before and after the new post, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
 
 - **C-TH-METRICS.01** Confirm which Threads profile and which posts you are measuring, the date range, and the time zone. Check whether you can open the Threads insights screen; if you cannot, ask the owner for a screenshot or the numbers.  
   _Done when:_ Profile handle, post URLs, date range with time zone, and how the numbers will be obtained.
@@ -245,9 +243,9 @@ Record views and link clicks for the account's posts, before and after the new p
   _Done when:_ Each visit or sales figure names its source, and unknown links between post and sale are stated.
 
 **If stuck:**
-- `cannot_open_insights`: If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the two numbers: views and link clicks.
-- `link_clicks_not_shown`: If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source; otherwise record 'not available'.
-- `no_earlier_posts_with_link`: If the account has no earlier posts with a link, record the baseline as 'none' and state that the first post sets it.
+- `cannot_open_insights`: If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the numbers this goal needs.
+- `link_clicks_not_shown`: If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source. If there is no source at all, say so; do not estimate.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
 - `numbers_from_wrong_account`: If the screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
 - `too_early_to_read`: If the post is less than 24 hours old, report the numbers as early and read them again later.
 
@@ -275,9 +273,9 @@ Publish the approved post once, under the right account, and hand back its publi
 - `post_not_visible`: If the post does not show up after publishing, check the profile again after a few minutes before any retry, and never post the same text twice.
 - `link_does_not_open`: If the link in the post does not open the product site, stop before publishing and fix the link with the owner.
 
-### 12. Read views and link clicks on Threads (result numbers)
+### 12. Read this goal's numbers on Threads (result numbers)
 
-Record views and link clicks for the account's posts, before and after the new post, so the link click rate (link clicks divided by views) can be compared using real numbers.
+Record the numbers this goal is judged on, for the account's posts before and after the new post, so rounds are compared on real numbers. record_numbers lists exactly which numbers it needs.
 
 - **C-TH-METRICS.01** Confirm which Threads profile and which posts you are measuring, the date range, and the time zone. Check whether you can open the Threads insights screen; if you cannot, ask the owner for a screenshot or the numbers.  
   _Done when:_ Profile handle, post URLs, date range with time zone, and how the numbers will be obtained.
@@ -289,8 +287,8 @@ Record views and link clicks for the account's posts, before and after the new p
   _Done when:_ Each visit or sales figure names its source, and unknown links between post and sale are stated.
 
 **If stuck:**
-- `cannot_open_insights`: If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the two numbers: views and link clicks.
-- `link_clicks_not_shown`: If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source; otherwise record 'not available'.
-- `no_earlier_posts_with_link`: If the account has no earlier posts with a link, record the baseline as 'none' and state that the first post sets it.
+- `cannot_open_insights`: If you cannot open the Threads insights screen, ask the owner for a screenshot of it or for the numbers this goal needs.
+- `link_clicks_not_shown`: If Threads shows no link clicks for the post, ask the owner for clicks from the site analytics or link tool they already use and name that source. If there is no source at all, say so; do not estimate.
+- `no_history`: If the account has no history for these numbers, record 0 and say in source that there is no history; the first round then sets the baseline.
 - `numbers_from_wrong_account`: If the screenshot or screen shows a different handle from the agreed one, do not use those numbers and ask again.
 - `too_early_to_read`: If the post is less than 24 hours old, report the numbers as early and read them again later.

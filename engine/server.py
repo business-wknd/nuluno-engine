@@ -5,12 +5,12 @@
 
 Add it to any MCP client that can start a local command, for example:
 
-    claude mcp add nuluno-engine -- python3 /path/to/engine/server.py --product https://your-product.com/
+    claude mcp add --scope user nuluno-engine -- python3 /path/to/engine/server.py --product https://your-product.com/
 
 Everything the agent delivers is kept in one JSON file per product under
 ~/.nuluno-engine/ (or --data DIR), so a new chat continues where the last one stopped.
 """
-import argparse, hashlib, json, os, re, sys, tempfile, time
+import argparse, hashlib, json, os, re, sys, tempfile, time, urllib.parse
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -32,6 +32,8 @@ class FileStore:
 
     def _read(self, owner):
         path = self._path(owner)
+        legacy = self.folder / (re.sub(r'[^a-z0-9.-]+', '-', owner.lower()).strip('-')[:80] + '.json')  # file name used by 0.1.0
+        if not path.exists() and legacy.exists(): legacy.rename(path)
         return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'state': core.new_state(), 'log': []}
 
     def _write(self, owner, data):
@@ -93,7 +95,7 @@ def serve(product, store):
         elif method == 'tools/call':
             name, arguments = params.get('name'), params.get('arguments')
             if not isinstance(arguments, dict): arguments = {}
-            if name not in core.TOOLS:
+            if not isinstance(name, str) or name not in core.TOOLS:
                 reply(message_id, error={'code': -32602, 'message': 'Unknown tool: ' + str(name)}); continue
             try:
                 value = core.TOOLS[name](store, owner, product, arguments)
@@ -109,7 +111,9 @@ def main():
     parser.add_argument('--product', required=True, help='public https URL of the product to sell')
     parser.add_argument('--data', default='~/.nuluno-engine', help='folder for saved progress')
     args = parser.parse_args()
-    if not re.fullmatch(r'https://[^\s/]+\.[^\s]+', args.product): raise SystemExit('--product must be a public https URL')
+    parts = urllib.parse.urlsplit(args.product)
+    if parts.scheme != 'https' or not parts.hostname or '.' not in parts.hostname or parts.username or parts.password or re.search(r'\s', args.product):
+        raise SystemExit('--product must be a public https URL')
     serve(args.product, FileStore(args.data))
 
 

@@ -11,11 +11,12 @@ content) -> receipt, outputs(owner, limit), count_outputs(owner),
 last_blocked(owner).
 
 A store may also measure for itself (the hosted service does): tracked_link(owner,
-round, target) -> a redirect URL that counts human clicks, sale_counter(owner) -> a
-URL that counts one sale per visit, and measured(owner, since, until, round) ->
-{'clicks', 'sales', 'revenue_minor'}. With those, numbers the engine can count are never typed
-in by the agent, and a round whose metric is fully countable is judged with no one
-reading anything.
+round, target) -> a redirect URL that counts clicks from browsers, sale_counter(owner)
+-> a URL that counts a sale when a buyer reaches it, and measured(owner, since, until,
+round) -> {'clicks', 'sales', 'revenue_minor'}. Once a counter is shown to be in place
+(the round's copy uses the tracked link, or the sale counter has recorded a sale), its
+count replaces what the agent reports for that number, and when every number of a
+goal is counted that way, auto_judge closes the round when its window ends.
 """
 import hashlib, ipaddress, json, math, re, socket, time, urllib.error, urllib.parse, urllib.request
 from functools import lru_cache
@@ -63,14 +64,25 @@ def plan_for(goal_id):
 
 
 def goal_status(goal_id):
-    """in_live_test: being run on a real product. rewritten_not_run: every step is in plain language but the goal has not been run. experimental: generated draft."""
+    """running_on_a_live_product, english (every step in English) or english_and_chinese."""
     goal = goals()[goal_id]
-    if goal.get('live_test'): return 'in_live_test'
-    return 'rewritten_not_run' if all(skill(n['skill']).get('tested') for n in goal['plan']) else 'experimental'
+    if goal.get('live_test'): return 'running_on_a_live_product'
+    return 'english' if all(skill(n['skill']).get('tested') for n in goal['plan']) else 'english_and_chinese'
 
 
 def new_state():
     return {'status': 'no_goal', 'round': 0, 'nodes': [], 'cursor': 0, 'rounds': [], 'sources': []}
+
+
+def _load(store, owner):
+    """Load a state and bring one saved by an earlier version up to date: a result step that is waiting without a window
+    (research playbooks before 0.1.1) gets one, and a window that an old next_step switched to 'working' is observed again."""
+    state = store.load(owner)
+    if state.get('status') == 'working' and state.get('nodes') and state['nodes'][state['cursor']]['measure'] == 'current' and not state.get('after'):
+        if state.get('wait_until'): state['status'] = 'observing'
+        else: _start_window(state, goals()[state['goal']['id']])
+        store.save(owner, state)
+    return state
 
 
 def _recent(store, owner, limit_chars=9000):
@@ -88,8 +100,20 @@ def _recent(store, owner, limit_chars=9000):
 # ---------- metric ----------
 
 def _num(value):
-    """A real, finite number. True/False, NaN and infinity are not measurements."""
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    """A real, finite, non-negative number. True/False, NaN, infinity and negative counts are not measurements."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool): return False
+    try: return math.isfinite(value) and value >= 0
+    except OverflowError: return False  # an integer too large for a float
+
+
+def _channel(node):
+    """Which channel a measurement node belongs to, for playbooks that measure several channels in one round."""
+    parts = node['node'].split('.')
+    return parts[2] if len(parts) > 3 and parts[0] == 'flow' else ''
+
+
+def _baseline_for(state, node):
+    return (state.get('baselines') or {}).get(_channel(node)) or state.get('baseline')
 
 
 def _metric(goal, values):
@@ -100,10 +124,10 @@ def _metric(goal, values):
     return None if bottom == 0 else top / bottom
 
 
-def _verdict(goal, state, value, counted_this_round=False):
+def _verdict(goal, state, value, counted_this_round=False, baseline=None):
     """Did the round reach the target. counted_this_round: the count came from the engine's own counter, which
     starts at zero when the round is published, so it already is the gain and no baseline is subtracted."""
-    spec = goal['metric']; target = state['goal'].get('target'); base = (state.get('baseline') or {}).get('metric')
+    spec = goal['metric']; target = state['goal'].get('target'); base = (baseline if baseline is not None else (state.get('baseline') or {})).get('metric')
     up = spec['direction'] == 'increase'
     if value is None:
         return False, {'value': None, 'note': 'The denominator is zero after the observation window: nothing happened to measure, so the round counts as a miss.'}
@@ -158,15 +182,17 @@ def _start_window(state, goal):
 
 def _close_round(store, owner, state, goal, node, reading, counted):
     """Judge the round on a final reading. Steps that come after the result in the playbook (pause the ads, the next
-    channel) are still handed out; the verdict takes effect when they are done."""
-    value = reading['metric']
-    reached, detail = _verdict(goal, state, value, goal['metric']['components'][0] in (reading.get('engine_counted') or []))
-    state['current'] = reading
+    channel) are still handed out; the verdict takes effect when they are done. When one round measures several
+    channels, each is compared with its own baseline and the round is reached if any channel reached it."""
+    value = reading['metric']; channel = _channel(node); base = _baseline_for(state, node)
+    reached, detail = _verdict(goal, state, value, goal['metric']['components'][0] in (reading.get('engine_counted') or []), base)
+    state['current'] = reading; state.setdefault('currents', {})[channel] = reading
     store.log(owner, state['round'], node['node'], 'numbers', {'role': 'current', **reading, 'reached': reached, 'detail': detail})
-    entry = {'round': state['round'], 'metric': value, 'baseline': (state.get('baseline') or {}).get('metric'), 'verdict': 'reached' if reached else 'missed', 'detail': detail, 'at': time.time()}
+    entry = {'round': state['round'], 'metric': value, 'baseline': (base or {}).get('metric'), 'verdict': 'reached' if reached else 'missed', 'detail': detail, 'at': time.time()}
     if counted is not None: entry['counted_by_engine'] = counted
+    if sum(1 for n in state['nodes'] if n['measure'] == 'current') > 1: entry['channel'] = channel
     state['rounds'].append(entry)
-    verdict = 'reached' if reached else 'diagnose'
+    verdict = 'reached' if reached or state.get('after') == 'reached' else 'diagnose'
     state.update(wait_until=None, round_published_at=state.get('published_at'), published_at=None)
     if state['cursor'] + 1 < len(state['nodes']): state.update(status='working', cursor=state['cursor'] + 1, after=verdict)
     else: state.update(status=verdict, after=None)
@@ -177,14 +203,14 @@ def _close_round(store, owner, state, goal, node, reading, counted):
 def auto_judge(store, owner, product):
     """Called by a host on a timer. When the observation window is over and every number in the metric is one the
     engine counts itself, the round is judged without anyone reading anything. Returns what happened, or None."""
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] != 'observing' or time.time() < state.get('wait_until', 0): return None
     goal = goals()[state['goal']['id']]; node = state['nodes'][state['cursor']]
     if node['measure'] != 'current': return None
     counted = _counted(store, owner, state); values = _countable(goal, _in_place(store, owner, state, counted))
     if len(values) < len(goal['metric']['components']):
-        if state.get('asked_round') == state['round']: return None
-        state['asked_round'] = state['round']; store.save(owner, state)
+        if state.get('asked_window') == state['wait_until']: return None  # one reminder per observation window
+        state['asked_window'] = state['wait_until']; store.save(owner, state)
         return {'event': 'numbers_needed', 'round': state['round'], 'goal': goal['title'], 'counted_by_engine': counted,
                 'still_needed': [p for p in goal['metric']['components'] if p not in values]}
     reading = {'values': values, 'metric': _metric(goal, values), 'source': 'Counted by the engine: tracked link and sale counter', 'at': time.time(), 'engine_counted': sorted(values)}
@@ -215,7 +241,12 @@ def fetch_public(url, limit=400000):
         request = urllib.request.Request(url, headers={'user-agent': 'NulunoEngine/1.0 (+https://engine.nuluno.com)', 'accept': 'text/html,text/plain;q=0.9,*/*;q=0.5'})
         try:
             with opener.open(request, timeout=15) as response:
-                return response.status, response.headers.get_content_type(), response.read(limit), url
+                body, deadline = b'', time.time() + 20  # a page that trickles in slowly is cut off, not waited on
+                while len(body) < limit and time.time() < deadline:
+                    chunk = response.read(min(65536, limit - len(body)))
+                    if not chunk: break
+                    body += chunk
+                return response.status, response.headers.get_content_type(), body, url
         except urllib.error.HTTPError as error:
             if error.code in (301, 302, 303, 307, 308) and error.headers.get('location'):
                 url = urllib.parse.urljoin(url, error.headers['location']); continue
@@ -319,7 +350,7 @@ def _step(store, owner, product, state):
             step['publishing'] = 'This step changes or sends something outside. Show the owner exactly what will be sent before it goes out.'
         if not info['identity'] and hasattr(store, 'tracked_link'):
             step['tracked_link'] = {'url': store.tracked_link(owner, state['round'], product),
-                                    'use': 'Whenever this round\'s copy, post or message points to the product, use this link instead of the bare URL, and keep it in what you deliver. It forwards to the product page and the engine counts real human clicks itself. Add ?p=/some/page to land on another page of the same site. If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
+                                    'use': 'Whenever this round\'s copy, post or message points to the product, use this link instead of the bare URL, and keep it in what you deliver. It forwards to the product page and the engine counts the clicks itself (from browsers; known robots and link previews are left out). Add ?p=/some/page to land on another page of the same site. If a redirect link is not acceptable on this platform, use the product URL and read clicks from the platform instead.'}
     lessons = [{'round': r['round'], 'change': r.get('change'), 'metric': r.get('metric'), 'verdict': r.get('verdict')} for r in state['rounds']]
     step.update(delivered_so_far=_recent(store, owner), sources_read=state.get('sources', [])[-6:], lessons_from_earlier_rounds=lessons, rules=RULES)
     return step
@@ -328,7 +359,7 @@ def _step(store, owner, product, state):
 # ---------- tools ----------
 
 def where_are_we(store, owner, product, args):
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] == 'no_goal':
         catalog = goals()
         return {'state': 'no_goal_yet', 'product_url': product,
@@ -337,7 +368,8 @@ def where_are_we(store, owner, product, args):
                 'all_goals': [{'goal_id': gid, 'title': g['title']} for gid, g in catalog.items()], 'rules': RULES}
     goal = goals()[state['goal']['id']]
     blocked = store.last_blocked(owner); waiting_on_owner = None
-    if blocked and state['status'] == 'working' and blocked.get('round') == state['round'] and blocked['node'] == state['nodes'][state['cursor']]['node']:
+    if (blocked and state['status'] == 'working' and blocked.get('round') == state['round'] and blocked['node'] == state['nodes'][state['cursor']]['node']
+            and blocked.get('created', 0) >= state['goal'].get('set_at', 0)):
         waiting_on_owner = {'step': blocked['node'], 'needs': blocked['content'].get('needs'), 'since': blocked['created']}
     return {'state': state['status'], 'product_url': product, 'goal': {'goal_id': state['goal']['id'], 'title': goal['title'], 'title_local': goal.get('title_zh'), 'metric': goal['metric'], 'target': state['goal'].get('target')},
             'round': state['round'], 'steps_delivered': store.count_outputs(owner), 'baseline': state.get('baseline'), 'latest_numbers': state.get('current'), 'rounds': state['rounds'],
@@ -348,8 +380,8 @@ def set_goal(store, owner, product, args):
     goal_id = str(args.get('goal_id', '')).strip()
     if goal_id not in goals(): return {'accepted': False, 'error': 'Unknown goal_id. Call where_are_we to see the list.'}
     target = args.get('target')
-    if target is not None and not _num(target): return {'accepted': False, 'error': 'target must be a finite number, or omitted.'}
-    state = store.load(owner)
+    if target is not None and not _num(target): return {'accepted': False, 'error': 'target must be a finite number of 0 or more, or omitted.'}
+    state = _load(store, owner)
     if state.get('goal', {}).get('id') == goal_id and state['status'] not in ('reached', 'stopped'):
         state['goal']['target'] = target if target is not None else state['goal'].get('target')  # same goal: only the target changes
     else:
@@ -358,19 +390,20 @@ def set_goal(store, owner, product, args):
         store.log(owner, 1, 'goal', 'goal', {'goal_id': goal_id, 'target': target, 'why': str(args.get('why', ''))[:1000]})
     store.save(owner, state)
     return {'accepted': True, 'goal': goals()[goal_id]['title'], 'target': state['goal'].get('target'),
-            'target_rule': 'With no target, a round succeeds when the metric is 20% better than baseline (counts: +10).', 'next': _step(store, owner, product, state)}
+            'target_rule': 'For a rate or cost the target is the value to reach. For a count (followers, purchases) the target is the increase over the baseline. With no target, a round succeeds when a rate is 20% better than baseline, or a count grows by 10.', 'next': _step(store, owner, product, state)}
 
 
 def next_step(store, owner, product, args):
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] == 'no_goal': return where_are_we(store, owner, product, args)
     return _step(store, owner, product, state)  # reading the step never changes the state
 
 
 def submit_step(store, owner, product, args):
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] == 'no_goal': return {'accepted': False, 'error': 'No goal yet. Call set_goal first.'}
     step_id = str(args.get('step_id', '')); status = args.get('status', 'done'); output = args.get('output')
+    if status not in ('done', 'blocked'): return {'accepted': False, 'error': 'status is "done" or "blocked".'}
     if isinstance(output, str):
         try: output = json.loads(output)
         except ValueError: output = {'result': output}
@@ -378,16 +411,22 @@ def submit_step(store, owner, product, args):
     goal = goals()[state['goal']['id']]
     if state['status'] == 'diagnose':
         if step_id != 'diagnose:r%d' % state['round']: return {'accepted': False, 'error': 'A different step is current.', 'next': _step(store, owner, product, state)}
-        if not isinstance(output, dict) or output.get('bottleneck') not in goal['bottleneck_routes'] or not isinstance(output.get('one_change'), str) or not output['one_change'].strip():
+        if not isinstance(output, dict) or not isinstance(output.get('bottleneck'), str) or output['bottleneck'] not in goal['bottleneck_routes'] or not isinstance(output.get('one_change'), str) or not output['one_change'].strip():
             return {'accepted': False, 'error': 'Deliver a JSON object with bottleneck (one of %s), reason and one_change.' % ', '.join(goal['bottleneck_routes'])}
-        choice = output['bottleneck']; same = lambda text: ' '.join(str(text).lower().split())
+        choice = output['bottleneck']; same = lambda text: ' '.join(re.findall(r'\w+', str(text).lower()))
         repeated = next((r['round'] for r in state['rounds'] if r.get('change') and same(r['change']) == same(output['one_change'][:500])), None)
         if repeated: return {'accepted': False, 'error': 'That change was already tried after round %d. Name a different one.' % repeated, 'already_tried': [r.get('change') for r in state['rounds'] if r.get('change')]}
         store.log(owner, state['round'], 'diagnose', 'output', {'title': 'Why the target was missed', 'output': output})
         stage = [n for n in plan_for(state['goal']['id']) if '.common.' not in n['node'] and 'ACCESS' not in n['skill'] and n['measure'] != 'baseline']
         route = goal['bottleneck_routes'][choice]
         state['rounds'][-1]['change'] = str(output['one_change'])[:500]
-        state.update(round=state['round'] + 1, status='working', cursor=0, baseline=state.get('current'), current=None, wait_until=None, round_published_at=None, after=None,
+        # The next round is compared with this round's result. A count the engine made itself is a gain, not a platform
+        # total, so a count goal keeps its last typed baseline when the agent will read the next result from the platform.
+        counted_gain = goal['metric']['formula'] == 'count' and goal['metric']['components'][0] in ((state.get('current') or {}).get('engine_counted') or [])
+        next_base = state.get('baseline') if counted_gain else state.get('current')
+        next_bases = {ch: r for ch, r in (state.get('currents') or {}).items() if not (goal['metric']['formula'] == 'count' and goal['metric']['components'][0] in (r.get('engine_counted') or []))}
+        state.update(round=state['round'] + 1, status='working', cursor=0, baseline=next_base, baselines={**(state.get('baselines') or {}), **next_bases}, currents={},
+                     current=None, wait_until=None, round_published_at=None, after=None,
                      nodes=[{'node': 'fix.' + route, 'skill': route, 'measure': None}] + [n for n in stage if n['skill'] != route or n['measure']])
         store.save(owner, state)
         return {'accepted': True, 'message': 'Round %d opened with one change: %s' % (state['round'], state['rounds'][-1]['change']), 'next': _step(store, owner, product, state)}
@@ -404,7 +443,7 @@ def submit_step(store, owner, product, args):
                 'message': 'Recorded. The step stays open and nothing is lost. Ask the owner for exactly this one thing, then finish the step and submit it as done.'}
     missing = [key for key in info['deliver'] if not (isinstance(output, dict) and output.get(key) not in (None, '', [], {}))]
     if missing: return {'accepted': False, 'error': 'Deliverables missing: ' + ', '.join(missing) + '. Submit output as a JSON object with these keys.', 'deliver': info['deliver']}
-    links = [str(u)[:600] for u in (args.get('links') or []) if isinstance(u, str)][:5]
+    links = args.get('links'); links = [u[:600] for u in links if isinstance(u, str)][:5] if isinstance(links, list) else []
     checked = None
     if info['needs_link']:
         if not links or not links[0].startswith('https://'):
@@ -424,7 +463,7 @@ def submit_step(store, owner, product, args):
 
 
 def record_numbers(store, owner, product, args):
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] in ('no_goal', 'reached', 'stopped', 'diagnose'): return {'accepted': False, 'error': 'No measurement is expected right now.', 'next': next_step(store, owner, product, {})}
     goal = goals()[state['goal']['id']]; values = args.get('values') or {}; source = str(args.get('source', ''))[:500]
     if not isinstance(values, dict) or not source: return {'accepted': False, 'error': 'Pass values (numbers by name) and source (where the numbers were read).'}
@@ -435,13 +474,13 @@ def record_numbers(store, owner, product, args):
     typed = {part: values[part] for part in filled if _num(values.get(part)) and values[part] != filled[part]}
     values = {**values, **filled}
     lacking = [p for p in parts if not _num(values.get(p))]
-    if lacking: return {'accepted': False, 'error': 'Missing numbers: ' + ', '.join(lacking) + '. Each must be a finite number. Unknown stays unknown; do not estimate.'}
+    if lacking: return {'accepted': False, 'error': 'Missing numbers: ' + ', '.join(lacking) + '. Each must be a number of 0 or more. Unknown stays unknown; do not estimate.'}
     value = _metric(goal, values)
     reading = {'values': {k: values[k] for k in values if _num(values[k])}, 'metric': value, 'source': source, 'at': time.time()}
     if filled: reading['engine_counted'] = sorted(filled)
     if typed: reading['agent_reported_instead'] = typed
     if node['measure'] == 'baseline' and state['status'] == 'working':
-        state['baseline'] = reading; state['cursor'] += 1
+        state['baseline'] = reading; state.setdefault('baselines', {})[_channel(node)] = reading; state['cursor'] += 1
         if state['nodes'][state['cursor']]['measure'] == 'current': _start_window(state, goal)  # the result comes straight after the baseline
         store.log(owner, state['round'], node['node'], 'numbers', {'role': 'baseline', **reading}); store.save(owner, state)
         return {'accepted': True, 'recorded_as': 'baseline', 'metric': value, 'next': _step(store, owner, product, state)}
@@ -460,7 +499,7 @@ def read_page(store, owner, product, args):
     except Exception: return {'read': False, 'error': 'The page could not be reached.'}
     if not 200 <= status < 300: return {'read': False, 'http_status': status, 'url': final}
     text = _readable(raw, kind); digest = hashlib.sha256(raw).hexdigest()
-    state = store.load(owner)
+    state = _load(store, owner)
     entry = {'url': final, 'sha256': digest, 'read_at': time.time(), 'characters': len(text)}
     state['sources'] = ([s for s in state.get('sources', []) if s['url'] != final] + [entry])[-20:]
     store.save(owner, state)
@@ -472,16 +511,16 @@ def tracking(store, owner, product, args):
     """The tracked link for this round, the sale counter, and what has been counted so far."""
     if not hasattr(store, 'tracked_link'):
         return {'available': False, 'note': 'This local server does not count clicks or sales. Read numbers from the platform and pass them to record_numbers. The hosted service at https://engine.nuluno.com counts them itself.'}
-    state = store.load(owner); counter = store.sale_counter(owner)
+    state = _load(store, owner); counter = store.sale_counter(owner)
     return {'available': True, 'tracked_link': store.tracked_link(owner, max(state['round'], 1), product),
-            'tracked_link_use': 'Put this link in posts, bios and messages instead of the bare product URL. Human clicks are counted; link-preview robots are not.',
+            'tracked_link_use': 'Put this link in posts, bios and messages instead of the bare product URL. Clicks from browsers are counted; known robots and link previews are left out.',
             'sale_counter': {'image_tag': '<img src="' + counter + '.gif" width="1" height="1" alt="">', 'redirect_url': counter,
-                             'use': 'Sales are counted when a buyer reaches the page shown after payment. Either the owner pastes image_tag into that page, or sets the payment provider\'s after-payment redirect to redirect_url (it forwards to the product page). Add ?value=<amount in cents>&order=<order id> when known. This needs the owner once; ask them only when the goal is about purchases.'},
+                             'use': 'Sales are counted when a buyer reaches the page shown after payment. Either the owner pastes image_tag into that page, or sets the payment provider\'s after-payment redirect to redirect_url (it forwards to the product page). Add ?value=<amount in cents>&order=<order id, URL-encoded> when known; the same order is counted once, and without an order id the same buyer is counted once a day. This needs the owner once; ask them only when the goal is about purchases.'},
             'counted_this_round': _counted(store, owner, state), 'counted_all_time': store.measured(owner, 0, time.time(), None)}
 
 
 def stop_goal(store, owner, product, args):
-    state = store.load(owner)
+    state = _load(store, owner)
     if state['status'] == 'no_goal': return {'stopped': False}
     state['status'] = 'stopped'; store.log(owner, state['round'], 'goal', 'goal', {'stopped': True}); store.save(owner, state)
     return {'stopped': True, 'message': 'Stopped. Everything delivered stays on record.'}
@@ -496,7 +535,7 @@ TOOL_SPECS = [
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
     {'name': 'read_page', 'description': 'Read one public https page (default: the product page) and get its text with a content hash. Use it to collect product facts; never invent facts that are not on a page you read.',
      'inputSchema': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'additionalProperties': False}},
-    {'name': 'set_goal', 'description': 'Choose the sales goal (goal_id from where_are_we). Optional numeric target for the goal metric; without one a round succeeds at 20% better than baseline. Calling it again with the same goal only changes the target.',
+    {'name': 'set_goal', 'description': 'Choose the sales goal (goal_id from where_are_we). Optional numeric target: for a rate or cost, the value to reach; for a count (followers, purchases), the increase over the baseline. Without one a round succeeds when a rate is 20% better than baseline or a count grows by 10. Calling it again with the same goal only changes the target.',
      'inputSchema': {'type': 'object', 'properties': {'goal_id': {'type': 'string'}, 'target': {'type': 'number'}, 'why': {'type': 'string'}}, 'required': ['goal_id'], 'additionalProperties': False}},
     {'name': 'next_step', 'description': 'Get the current step: what to do, the checklist, what to deliver, what was already delivered and lessons from earlier rounds. Call it whenever you are unsure what to do next.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},

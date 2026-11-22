@@ -42,11 +42,12 @@ next_step         -> "waiting for results until 2026-11-23 08:15 UTC".
 record_numbers    -> results. Target reached: done. Missed: pick one bottleneck,
                      change one thing, round 2 starts.
 
-Hosted only: every step hands the agent a tracked link for the round. Human clicks
-on it, and sales on your thank-you page once the sale counter is on it, are counted
-by the engine and used in place of whatever the agent reports. When the whole metric
-is countable that way (12 of the 99 goals), the engine judges the round by itself
-when the window ends.
+Hosted only: every step that writes copy hands the agent the round's tracked link.
+Clicks on it from browsers (known robots and link previews are left out) and sales
+recorded by the sale counter on your thank-you page are counted by the engine and
+used in place of whatever the agent reports. When every number of a goal is counted
+that way (12 of the 99 goals), the engine judges the round by itself when the
+window ends.
 ```
 
 The baseline numbers are from a real run on our own product.
@@ -57,7 +58,7 @@ The baseline numbers are from a real run on our own product.
 - **Deliverables, not "done".** Each step names what must be handed back; missing pieces are rejected.
 - **Published means a public URL.** A publishing step is not accepted without the https URL of what went live. The engine fetches it and records whether it could be read.
 - **Numbers decide.** Only recorded numbers with a stated source can end a goal. No self-scoring. On the hosted service, clicks and sales counted by the engine replace whatever the agent reports for them.
-- **One change per round.** After a miss the agent must name one bottleneck and one change, and a change that was already tried is refused.
+- **One change per round.** After a miss the agent must name one bottleneck and one change, and the same change cannot be submitted twice.
 - **A person only when a person is needed.** Logins and approvals are recorded as "waiting on the owner" with the one thing to do; the step stays open.
 
 ## Tools
@@ -75,9 +76,9 @@ The baseline numbers are from a real run on our own product.
 
 ## Playbooks
 
-[`playbooks/`](playbooks/) holds 99 goals across Threads, Instagram, X, TikTok, YouTube, Reddit, LinkedIn, Product Hunt, Meta and Google ads, email and webinars. The engine runs [`engine/library.json`](engine/library.json); the pages in `playbooks/` are generated from it for reading.
+[`playbooks/`](playbooks/) holds 99 goals across Threads, Instagram, X, TikTok, YouTube, Reddit, LinkedIn, Product Hunt, Meta and Google ads, email and webinars. The engine runs [`engine/library.json`](engine/library.json); `python3 engine/pages.py` writes the pages in `playbooks/` from it.
 
-The research and messaging steps that the playbooks share are written in plain English. The Threads link-click playbook is in English end to end and is running on a live product. In the other channels, the channel-specific steps are in Traditional Chinese. Each page shows its language.
+Three Threads playbooks are in English end to end, and the link-click one is running on a live product. The others mix steps in English with steps in Traditional Chinese. Each page shows its language.
 
 The most useful contribution is running one playbook on a real product and sending back what was unclear or wrong.
 
@@ -85,20 +86,21 @@ The most useful contribution is running one playbook on a real product and sendi
 
 - **Agent frameworks** (LangGraph and others) give you durable graphs to build your own agent. Nuluno Engine is not a framework. It is one finished loop, selling, that plugs into the agent you already use over MCP. There is nothing to build.
 - **Website optimizers** (Coframe and others) run experiments on copy on a site you own. Nuluno Engine works off-site too, where most small products actually find buyers: posts, replies, launches, email. The experiment discipline is the same: a baseline, one change per round, numbers decide.
-- **A prompt or a skills folder** tells an agent what to do once. The engine remembers across chats, refuses work that is not finished, and ends a round only on recorded numbers.
+- **A prompt or a skills folder** tells an agent what to do once. The engine remembers across chats, refuses a step until everything it asks for is handed in, and ends a round only on recorded numbers.
 
 ## Open source and hosted
 
-Everything needed to run the loop is here under Apache-2.0: the engine, the MCP server and every playbook. Fork it, run it locally, and edit `engine/library.json` to change a playbook.
+Everything needed to run the loop is here under Apache-2.0: the engine, the MCP server and every playbook. Fork it, run it locally, and edit `engine/library.json` to change a playbook (then run `engine/pages.py`).
 
 The hosted service at [engine.nuluno.com](https://engine.nuluno.com/?lang=en) adds what needs a server that stays on:
 
-| | Local (this repo) | Hosted, free |
-|---|---|---|
-| Guided loop, all 99 playbooks | yes | yes |
-| One connection address that works from any device | | yes |
-| Tracked links and sale counter; countable rounds judged by the engine | | yes |
-| Agent inbox for verification mail | [mail Worker included](access-inbox/) | 10 messages a month |
+| | Local (this repo) | Hosted, free | Hosted Pro, US$39/month |
+|---|---|---|---|
+| Guided loop, all 99 playbooks | yes | yes | yes |
+| One connection address that works from any device | | yes | yes |
+| Tracked links and sale counter; countable rounds judged by the engine | | yes | yes |
+| Agent inbox for verification mail | [mail Worker included](access-inbox/) | 10 messages a month | 500 messages a month |
+| Products per account | one per data folder | 1 | 5 |
 
 The free plan has no time limit. The code and the playbooks stay free.
 

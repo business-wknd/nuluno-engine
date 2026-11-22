@@ -62,6 +62,7 @@ say('%s until %s. One change per round, so no new variant yet.' % (step['state']
 state = store.load('demo'); state['wait_until'] = time.time() - 1; store.save('demo', state)
 print('\n  (two days later)')
 step = call('next_step')
+say('the window is over; it asks for the result numbers: ' + ', '.join(step.get('values_needed') or []))
 answer = call('record_numbers', values={'link_clicks': 7, 'views': 240}, source='Threads insights for the new post')
 say('result %.2f%% against a 4%% target: %s' % (answer['metric'] * 100, 'reached' if answer['reached'] else 'MISSED'))
 step = answer['next']

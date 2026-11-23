@@ -1,23 +1,36 @@
-# Nuluno Engine
+<h1 align="center">Nuluno Engine</h1>
 
-**Give your AI a sales goal: it works step by step, and if the numbers fall short it changes one thing and runs another round.**
+<p align="center"><b>Your AI agent writes a marketing plan, then forgets it.<br>Nuluno Engine keeps it on one sales number until the number moves.</b></p>
 
-[Start free](https://engine.nuluno.com/?lang=en) · [Playbooks](playbooks/) · [Changelog](CHANGELOG.md)
+<p align="center">24 Agent Skills · 99 sales playbooks · an MCP server · Python 3.9+, no dependencies · Apache-2.0</p>
 
-[![CI](https://github.com/business-wknd/nuluno-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/business-wknd/nuluno-engine/actions/workflows/ci.yml) ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue) ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue) ![Agent Skills](https://img.shields.io/badge/Agent_Skills-24-black)
+<p align="center">English · <a href="README.zh-TW.md">繁體中文</a> · <a href="https://engine.nuluno.com/?lang=en">Hosted (free)</a> · <a href="playbooks/">Playbooks</a> · <a href="CHANGELOG.md">Changelog</a></p>
 
-I kept asking Claude to help sell my side projects and getting one good answer followed by nothing. The missing piece wasn't intelligence. It was something outside the model that remembers the goal, refuses half-finished work and holds the agent to a number. This is that piece: 99 sales playbooks built from 155 reusable steps with 1,116 checklist items, packed as 24 Agent Skills, plus a small engine your AI works through. Your AI does the work; the engine needs no model key.
+<p align="center"><a href="https://github.com/business-wknd/nuluno-engine/actions/workflows/ci.yml"><img src="https://github.com/business-wknd/nuluno-engine/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <img src="https://img.shields.io/badge/Agent_Skills-24-black" alt="24 Agent Skills"> <img src="https://img.shields.io/badge/playbooks-99-black" alt="99 playbooks"> <img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="Apache-2.0"></p>
+
+```sh
+npx skills add business-wknd/nuluno-engine
+```
+
+Then tell your agent: **"Sell https://your-product.com with Nuluno Engine."**
+
+**Works with** any agent that reads Agent Skills (Codex, Cursor, Claude Code, Gemini CLI and others), any MCP client, and chat apps that accept a custom MCP connector, such as Claude and ChatGPT Business, through one free connection address from [engine.nuluno.com](https://engine.nuluno.com/?lang=en).
+
+<p align="center"><img src="docs/loop.gif" width="760" alt="The engine refuses a half-finished step and a profile link, waits for numbers, calls a miss and opens round 2 with one change"></p>
+
+| Your agent on its own | With Nuluno Engine |
+|---|---|
+| Writes a plan and calls it done | Works one step at a time; a step with any hand-back item missing is refused |
+| "Posted!" | Needs the post's own public URL; a profile page or a dead link is refused |
+| "It went well" | A round ends only on numbers recorded with a source |
+| A new chat starts over | Progress is saved; the next chat continues at the same step |
+| Changes five things at once | One named change per round; a change worded like an earlier one is refused |
+
+The engine never posts, sends or spends. Your agent does the work, and you approve every publish, send and spend.
 
 ## Install
 
-**Claude Code** (skills and engine tools together):
-
-```sh
-claude plugin marketplace add business-wknd/nuluno-engine
-claude plugin install nuluno-engine@nuluno-engine
-```
-
-**Any agent that reads Agent Skills** (Claude Code, Codex, Cursor and others):
+**Any agent that reads Agent Skills:**
 
 ```sh
 npx skills add business-wknd/nuluno-engine
@@ -25,28 +38,37 @@ npx skills add business-wknd/nuluno-engine
 npx skills add business-wknd/nuluno-engine --skill sales-goal threads-growth
 ```
 
-Running `npx skills` from inside an agent session? Add `-a claude-code` (or your agent's name) so it installs where that agent looks.
+Running it from inside an agent session? Add `-a <your agent>` (for example `-a claude-code` or `-a codex`) so it installs where that agent looks. The `sales-goal` skill runs the engine from the command line (`python3 scripts/nuluno.py`), and progress is saved in `~/.nuluno-engine/`.
 
-Then say: *"Sell https://your-product.com with Nuluno Engine."* The `sales-goal` skill runs the engine from the command line (`python3 scripts/nuluno.py`, Python 3.9+, no dependencies), and progress is saved in `~/.nuluno-engine/`, so a new chat continues where the last one stopped.
-
-**Any MCP client that starts a local command:**
+**Claude Code plugin** (skills and engine tools together):
 
 ```sh
-claude mcp add --scope user nuluno-engine -- python3 /path/to/nuluno-engine/engine/server.py
+claude plugin marketplace add business-wknd/nuluno-engine
+claude plugin install nuluno-engine@nuluno-engine
 ```
 
-The agent asks for the product URL the first time (`use_product`).
+**Hosted, one connection address** (free at [engine.nuluno.com](https://engine.nuluno.com/?lang=en); the hosted engine also counts link clicks and sales itself):
 
-**Claude.ai, nothing to install:** get one connection address at [engine.nuluno.com](https://engine.nuluno.com/?lang=en) and add it as a custom connector. Free.
+| AI | How to add it |
+|---|---|
+| Claude (web and desktop) | Settings, Connectors, Add, Add custom connector; paste the address |
+| ChatGPT (Business, Enterprise, Edu) | chatgpt.com/plugins, +, Add custom MCP server; paste the address, No authentication |
+| Claude Code | `claude mcp add --transport http nuluno-engine YOUR_ADDRESS` |
+| Codex | `codex mcp add nuluno-engine --url YOUR_ADDRESS` |
+| Gemini CLI | `gemini mcp add --transport http nuluno-engine YOUR_ADDRESS` |
+| Cursor, VS Code, Perplexity and other MCP clients | Add a remote MCP server (Streamable HTTP) with the address; no sign-in |
 
-**Just want to see it? Five seconds, no agent, no network:**
+**Local MCP server** for any client that starts a command: `python3 /path/to/nuluno-engine/engine/server.py` (for example `claude mcp add --scope user nuluno-engine -- python3 /path/to/nuluno-engine/engine/server.py`). The agent is asked for the product URL the first time.
 
-```sh
-git clone https://github.com/business-wknd/nuluno-engine.git
-python3 nuluno-engine/engine/demo.py
-```
+**Would rather not connect an AI at all:** [Nuluno.com](https://nuluno.com/?ref=github) has a built-in AI marketing team in your browser.
 
-A scripted agent works one goal and you watch the engine refuse a half-finished step, refuse skipping ahead, wait for numbers, call a miss, and open round 2 with one change.
+<details><summary><b>For AI agents setting this up for a user</b></summary>
+
+1. Install with `npx skills add business-wknd/nuluno-engine -a <your agent>`, or connect the user's hosted address as an MCP server.
+2. Call `where_are_we` (or run `python3 scripts/nuluno.py status`) first in every chat.
+3. Ask the user only for the product's public https URL. Never ask for a password.
+
+</details>
 
 ## Skills
 
@@ -78,17 +100,6 @@ A scripted agent works one goal and you watch the engine refuse a half-finished 
 | [`social-ads`](skills/social-ads/) | 10 | TikTok, LinkedIn, Reddit and Pinterest ads: lower cost per conversion, lead and purchase, and higher click rates |
 
 Each channel skill lists its goals with the metric and how long to wait before judging, and keeps every full playbook in `references/`. The skills are written from [`engine/library.json`](engine/library.json) by `python3 engine/pack.py`.
-
-## First real run (22 Nov 2026)
-
-We added the hosted connection address to Claude.ai as a custom connector and typed only *"用 Nuluno Engine 幫我賣這個產品"* ("Use Nuluno Engine to sell this product") for Notavue, a tool that turns YouTube piano covers into sheet music. Without further prompting, Claude:
-
-1. read the product site and chose the goal "Threads: raise the link click rate from a post to your site", because piano learners in Taiwan are active there;
-2. searched the web for real complaints and picked one buyer group: adults who love a specific YouTube cover and cannot find sheet music for that version;
-3. wrote three opening lines to compare, kept every claim to what the site supports, and put the round's tracked link in the post;
-4. finished 7 of the 12 steps, then stopped and asked the owner which Threads account would post and who presses publish. It asked for no password and published nothing.
-
-Round 1 result: due 23 Nov 2026; it will be added here.
 
 ## What a round looks like
 
@@ -151,13 +162,12 @@ The engine itself never posts, sends or spends anything.
 
 Every playbook starts with the same research steps (product facts, buyer quotes, buyer groups, motives, the strongest motive, provable benefits, an angle test) and then adds the steps for its channel and metric. The 155 reusable steps hold 1,116 distinct checklist items; that is not a total across playbooks. Every checklist item says what counts as done, and every step says what to hand back and what to do when stuck.
 
-The Threads link-click playbook was tried on a live product (Notavue) on 22 November 2026: the agent finished 7 of its 12 steps, then stopped to ask which Threads account would post.
 
 The most useful contribution is running one playbook on a real product and [reporting](https://github.com/business-wknd/nuluno-engine/issues/new?template=playbook-report.md) what was unclear or wrong.
 
 ## Tests
 
-`python3 -m unittest discover tests` runs the engine tests in [`tests/`](tests/) with the standard library only; [CI](.github/workflows/ci.yml) runs them on every push and pull request.
+`python3 engine/demo.py` replays the run in the animation above in five seconds, with no agent and no network. `python3 -m unittest discover tests` runs the engine tests in [`tests/`](tests/) with the standard library only; [CI](.github/workflows/ci.yml) runs them on every push and pull request.
 
 ## How this is different
 

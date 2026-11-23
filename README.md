@@ -28,6 +28,21 @@ Then tell your agent: **"Sell https://your-product.com with Nuluno Engine."**
 
 The engine never posts, sends or spends. Your agent does the work, and you approve every publish, send and spend.
 
+## Month target mode
+
+Give the engine a number for the month, such as 100 paying customers in 30 days, and it works out what each channel needs every day.
+
+```sh
+python3 engine/nuluno.py target 100 --days 30 --price 39 --currency USD
+python3 engine/nuluno.py plan G-TH-LINK-RATE G-RD-PURCHASES G-EM-PURCHASE
+python3 engine/nuluno.py month
+```
+
+- **Daily numbers.** `set_month_target` and `plan_month` turn the target into paying customers, sign-ups and visits per day, and split the visits across 1 to 5 goals on different channels, each run as its own lane: equally at first, from day 3 by each lane's clicks. A rate nobody has measured is shown as an assumption (2% of visits pay) until 100 visits and one paying customer are counted.
+- **One round a day.** A lane's round waits at most 24 hours for its numbers. `month_status` shows paid customers so far, pace, each lane's step and quota, and `next`: the lane to work on now. Every goal tool takes `lane`.
+- **Approve once.** `submit_batch` hands you a week of posts, replies, emails and ads; `request_ad_budget` asks for one daily ad cap. You approve, either on your private owner page when hosted or by running `nuluno.py approve <batch_id> --all` or `nuluno.py approve-budget` yourself in a real terminal, where you type yes; there is no flag that skips this. In a month target lane, the engine refuses a publishing or sending step without an `approved_item`, and the published text must match the approved text word for word. Spend above the approved cap is flagged `over_budget`.
+- **Hosted.** Free: a month plan with 1 lane and weekly approval on your owner page, counted from the sale counter and the numbers you record; visits come from tracked links. Pro: 5 products, up to 5 lanes, paying customers read from Stripe with a restricted read-only key per product, and a daily auto-run with your own Anthropic key, up to a daily spend cap you set.
+
 ## Install
 
 **Any agent that reads Agent Skills:**
@@ -151,6 +166,12 @@ The engine itself never posts, sends or spends anything.
 | `record_numbers` | Baseline and results; the engine judges the round |
 | `tracking` | Hosted: the round's tracked link, the sale counter, and what the engine has counted. Local: says it does not count |
 | `stop_goal` | Stop; the record stays |
+| `set_month_target` | Month target mode: a number of paying customers (or revenue) in 7 to 90 days |
+| `plan_month` | Choose 1 to 5 lanes (goal ids); returns what is needed per day and each lane's daily quota |
+| `month_status` | Paid customers and visits so far, pace, each lane's state, approvals waiting, and the lane to work on now |
+| `submit_batch` | Hand the owner up to 50 items for the coming 7 days to approve in one go |
+| `batch_status` | Every batch and the state of each item |
+| `request_ad_budget` | Ask the owner to approve one daily ad budget cap |
 | `use_product` | Local, when the server was started without `--product`: set the product's public https URL once |
 | `add_product` | Hosted: add another product to the account (Pro: up to 5) |
 | `inbox_address` | Hosted: an email address for this account that receives verification mail |
@@ -173,6 +194,7 @@ The most useful contribution is running one playbook on a real product and [repo
 
 - **Agent frameworks** (LangGraph and others) give you durable graphs to build your own agent. Nuluno Engine is not a framework. It is one finished loop, selling, that plugs into the agent you already use.
 - **Website optimizers** (Coframe and others) run experiments on the pages of a site you own. Nuluno Engine works off-site too: posts, replies, launches, email.
+- Neither works back from a sales target to what has to happen today. Month target mode does.
 - **A prompt or a skills folder** tells an agent what to do once. These skills come with an engine that remembers the goal and the numbers across chats.
 
 ## Open source and hosted
@@ -184,11 +206,15 @@ Everything needed to run the loop is here under Apache-2.0: the engine, the MCP 
 | Guided loop, all 99 playbooks | yes | yes | yes |
 | One connection address on every device | | yes | yes |
 | Tracked links and sale counter | | yes | yes |
+| Month target mode | yes, up to 5 channels | 1 channel | up to 5 channels at once |
+| Approve a week of content at once | yes, in your terminal | yes, on your owner page | yes, on your owner page |
+| Paying customers read from Stripe | | | yes |
+| Daily auto-run with your own AI key | | | yes |
 | AI inbox for verification mail | [receiving Worker only](access-inbox/); you build the rest | 10 messages a month | 500 messages a month |
 | Products | any number, one at a time | 1 | 5 |
 | Price | free | free, no time limit | US$39/month, cancel any time |
 
-The hosted server (accounts, tracked links, sale counter, inbox) is not in this repo; `engine/core.py` decides when the hosted counts replace the numbers the agent records; the counting itself (robot filter, one sale per buyer per day) runs on the hosted server. Locally there is no server, so the engine cannot count clicks or sales itself and uses the numbers you record. Pro pays for the server that stays on to count clicks and receive mail; one Pro plan covers both Engine and Access.
+The hosted server (accounts, tracked links, sale counter, inbox) is not in this repo; `engine/core.py` decides when the hosted counts replace the numbers the agent records; the counting itself (robot filter, one sale per buyer per day) runs on the hosted server. Locally there is no server, so the engine cannot count clicks or sales itself and uses the numbers you record. Pro pays for the server that stays on to count clicks, read Stripe, receive mail and run the daily loop; one Pro plan covers both Engine and Access.
 
 ## Security and data
 

@@ -12,6 +12,10 @@ call use_product with the owner's product URL.
 
 Everything the agent delivers is kept in one JSON file per product under
 ~/.nuluno-engine/ (or --data DIR), so a new chat continues where the last one stopped.
+
+Every tool in core.TOOLS is served, including the month target tools; goal tools take
+lane. Approving a weekly batch or an ad budget is not a tool: the owner runs
+`nuluno.py approve` or `nuluno.py approve-budget` in their own terminal.
 """
 import argparse, hashlib, json, os, re, sys, tempfile, time, urllib.parse
 from pathlib import Path
@@ -19,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import core
 
-VERSION = '0.2.0'
+VERSION = '0.3.0'
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 
 

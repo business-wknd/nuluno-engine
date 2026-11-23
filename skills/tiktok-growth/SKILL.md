@@ -2,7 +2,7 @@
 name: tiktok-growth
 description: "TikTok: more followers, videos watched to the end, profile visits, website clicks and purchases. Use when the user wants these results. 5 goals, each judged by one number: TikTok: grow net followers with short videos; TikTok: raise the share of viewers who watch to the end; TikTok: turn more video views into profile visits; TikTok: raise website clicks from profile visits; TikTok: turn more site visits from TikTok into purchases. Each goal is a step-by-step playbook with the number that decides success; if a round misses, change one thing and run another. Works with the sales-goal skill or the Nuluno Engine tools."
 metadata:
-  version: 0.2.0
+  version: 0.3.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
@@ -16,6 +16,7 @@ TikTok: more followers, videos watched to the end, profile visits, website click
 2. If the Nuluno Engine tools are connected (`where_are_we`, `set_goal`, `next_step`), call `set_goal` with the goal id and follow `next_step`. The engine accepts only the current step, only with every hand-back item filled in. A publishing step needs the public URL of the post itself; the engine opens it, and refuses a profile page or a link that does not exist. It then waits out the observation window and judges the round.
 3. If they are not connected, run the same engine from the `sales-goal` skill: `python3 <sales-goal skill folder>/scripts/nuluno.py start <product url>`, then `... goal <your goal id>`, then `next`, `submit`, `numbers` as that skill explains. Progress is saved, so a new chat continues where the last one stopped.
 4. If neither can run, open the goal's playbook in `references/` and work it top to bottom under the rules below.
+5. For a month target (several channels at once toward a number of paying customers by a date), a goal here can be one lane: see the `sales-goal` skill, and pass `lane` with the goal id (`--lane` on the command line).
 
 ## Goals
 

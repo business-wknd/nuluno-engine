@@ -30,6 +30,21 @@ npx skills add business-wknd/nuluno-engine
 
 Engine 自己不發文、不寄信、不花錢；AI 做事，每一次發布、寄出、花費都由你核准。
 
+## 月目標模式
+
+給 Engine 一個月的數字，例如「30 天 100 個付費客戶」，它算出每個渠道每天要做到多少。
+
+```sh
+python3 engine/nuluno.py target 100 --days 30 --price 39 --currency USD
+python3 engine/nuluno.py plan G-TH-LINK-RATE G-RD-PURCHASES G-EM-PURCHASE
+python3 engine/nuluno.py month
+```
+
+- **每天的數字：** `set_month_target` 和 `plan_month` 把目標換算成每天要多少付費客戶、註冊和造訪，並把造訪分給 1 到 5 個不同渠道的目標，每個目標是一條獨立的線：一開始平均分，第 3 天起依每條線的點擊分。還沒量到的轉換率會標成假設（造訪的 2% 付費），直到數到 100 次造訪和 1 位付費客戶。
+- **每天一輪：** 每條線每一輪最多等 24 小時看數字。`month_status` 顯示目前付費人數、進度、每條線的步驟和今天的額度，以及 `next`：現在該做哪條線。每個目標工具都接受 `lane`。
+- **一次核准：** `submit_batch` 把一週的貼文、回覆、Email 和廣告一次交給你；`request_ad_budget` 只請你核准一次廣告每日上限。核准由你來做：雲端版在你的私人頁面，本機版由你自己在真正的終端機執行 `nuluno.py approve <batch_id> --all` 或 `nuluno.py approve-budget` 並輸入 yes，沒有可以跳過這一步的參數。在月目標的線上，發布或寄出的步驟沒有附 `approved_item` 一律被拒絕，而且發出的文字必須和核准的一字不差。超過核准上限的花費會標記 `over_budget`。
+- **雲端版：** 免費版：1 條線的月計畫，每週在你的私人頁面核准一次，付費人數來自成交計數器和你記錄的數字，造訪由追蹤連結計算。Pro：5 個產品，最多 5 條線，每個產品用自己的 Stripe 限制型唯讀金鑰讀取付費人數，並用你自己的 Anthropic 金鑰每天自動跑，花費不超過你設定的每日上限。
+
 ## 內容
 
 99 個銷售作法，由 155 個可重複使用的步驟組成（共 1,116 個檢查項目），整理成 24 個 Agent Skills，涵蓋 Threads、Instagram、X、TikTok、YouTube、Reddit、LinkedIn、Product Hunt、Meta／Google 等廣告、Email、線上講座、合作夥伴、App Store 與 Google Play。作法本身用英文寫成，AI 會用你的語言跟你溝通。

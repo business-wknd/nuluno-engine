@@ -19,14 +19,15 @@ Every request is an https GET with the user agent `NulunoEngine/1.0`. The host m
 
 The connection address from engine.nuluno.com works like a password: anyone who has it can use your account and read its inbox. Don't paste it in public chats, issues or repositories. If it leaks, open the private recovery link you were given at sign-up and press "Issue a new address"; the old address stops working at once.
 
-## Keys stored by the hosted service
+## What the hosted service connects and stores for month target mode
 
-Month target mode on the hosted service can keep two keys the owner pastes on their private owner page (reached through the recovery link from sign-up; the AI's connection address cannot open it):
+Everything below is managed on the owner's private page (reached through the recovery link from sign-up; the AI's connection address cannot open it):
 
-- **Stripe:** only a restricted key (`rk_live_` or `rk_test_`) with read access, used to count paying customers. Secret keys (`sk_`) are refused.
-- **AI key (Pro auto-run):** the owner's own Anthropic API key, used only for the daily run, which stops at the daily spend cap the owner sets.
+- **Stripe:** where it is switched on, the owner presses one Connect Stripe button and approves read-only access on Stripe's own screen. The service keeps the connected account id, never a key, and uses it only to count paying customers. Nobody types a key. A restricted read-only key (`rk_live_` or `rk_test_`) pasted under the earlier version keeps working until the owner removes it; it is stored encrypted with a server-side key, and only its last four characters are ever shown.
+- **Daily auto-run:** where it is switched on, it is included in Pro and runs on Nuluno's own AI account, capped per account per day. The service does not ask for or keep the owner's own AI key; keys stored under the earlier version were deleted.
+- **Member list:** a CSV the owner uploads (email, name, status, last purchase; up to 20,000 rows) is stored for that product only, is used only to hand the agent the next recipients of a template the owner approved, never more than its daily cap a day, and is deleted with the Delete button.
 
-Both are stored encrypted with a server-side key, are never returned to any page, tool or AI (only the last four characters are shown), and are deleted with the Remove button on the owner page. On the hosted service, approving a batch or an ad budget is possible only from that page, and in a month target lane the engine refuses a publishing or sending step that does not name an approved item. The local engine stores no keys.
+Approving a batch, a message template or an ad budget is possible only from that page, and in a month target lane the engine refuses a publishing or sending step that does not name an approved item. The local engine stores no keys and no lists.
 
 ## Approvals on the local engine
 

@@ -574,7 +574,19 @@ def submit_step(store, owner, product, args, approval=None):
     if approval is not None:
         if not (info['needs_link'] or info['writes']):
             return {'accepted': False, 'error': 'approved_item is only for a step that publishes or sends something, and this step does not. Submit it without approved_item.', 'next': _step(store, owner, product, state)}
-        if _same_text(approval['text']) not in {_same_text(text) for text in _texts(output)}:
+        if approval.get('kind') == 'template':
+            links = _link_prefixes(store, owner, product, approval, state['round'])
+            checked = [(text,) + _template_fill(approval['text'], text, links) for text in _texts(output)]
+            sent = [text for text, fits, _ in checked if fits]
+            if not sent:
+                why = next((why for text, fits, why in checked if why and len(text) > 20), None)
+                return {'accepted': False, 'error': 'No text in output is a message built from template %s: the fixed text unchanged and each placeholder filled with a short value of its own (%s). Put each message you sent in output as its own string.%s' % (
+                            approval['id'], TEMPLATE_VALUE_RULE, ' Closest refusal: %s.' % why if why else ''),
+                        'approved_template': approval['text'], 'next': _step(store, owner, product, state)}
+            if len(sent) > approval['remaining_today']:
+                return {'accepted': False, 'error': 'Template %s allows %d messages a day and %d were already counted today, so %d more fit today, not %d. Send the rest tomorrow.' % (
+                    approval['id'], approval['daily_cap'], approval['sent_today'], approval['remaining_today'], len(sent)), 'next': _step(store, owner, product, state)}
+        elif _same_text(approval['text']) not in {_same_text(text) for text in _texts(output)}:
             return {'accepted': False, 'error': 'No text in output matches approved item %s word for word. Publish exactly the approved text and put it in output, or show the owner the new text and get it approved first.' % approval['id'],
                     'approved_text': approval['text'], 'next': _step(store, owner, product, state)}
     links = args.get('links'); links = [u[:600] for u in links if isinstance(u, str)][:5] if isinstance(links, list) else []
@@ -591,6 +603,7 @@ def submit_step(store, owner, product, args, approval=None):
     logged = {'title': info['title'], 'output': output, 'links': links, 'link_read_back': checked}
     if approval is not None:
         logged['owner_approved_item'] = {key: approval.get(key) for key in ('id', 'batch_id', 'approved_by', 'approved_at')}
+        if approval.get('kind') == 'template': logged['owner_approved_item'].update(kind='template', daily_cap=approval['daily_cap'], messages_counted=len(sent))
     receipt = store.log(owner, state['round'], node['node'], 'output', logged)
     last = state['cursor'] + 1 >= len(state['nodes'])
     state['cursor'] = min(state['cursor'] + 1, len(state['nodes']) - 1)
@@ -602,7 +615,11 @@ def submit_step(store, owner, product, args, approval=None):
         if following['measure'] == 'current' and not last: _start_window(state, goal)
     store.save(owner, state)
     result = {'accepted': True, 'receipt': receipt, 'link_read_back': checked, 'next': _step(store, owner, product, state)}
-    if approval is not None:
+    if approval is not None and approval.get('kind') == 'template':
+        result['template_messages_counted'] = len(sent)
+        result['owner_approval'] = 'The owner approved template %s in batch %s (up to %d messages a day, approved by %s at %s). %d message(s) counted today, %d left today. Noted in the receipt.' % (
+            approval['id'], approval.get('batch_id'), approval['daily_cap'], approval.get('approved_by'), _when(approval.get('approved_at')), approval['sent_today'] + len(sent), approval['remaining_today'] - len(sent))
+    elif approval is not None:
         result['owner_approval'] = 'The owner approved this exact text in batch %s (item %s, approved by %s at %s). Noted in the receipt.' % (
             approval.get('batch_id'), approval['id'], approval.get('approved_by'), time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime(approval.get('approved_at') or 0)))
     return result
@@ -689,7 +706,16 @@ def stop_goal(store, owner, product, args):
 DAY = 86400
 MAX_LANES = 5
 MONTH_KINDS = ('paid_customers', 'revenue_minor')
-ITEM_KINDS = ('post', 'reply', 'email', 'ad', 'message')
+ITEM_KINDS = ('post', 'reply', 'email', 'ad', 'message', 'template')
+MAX_TEMPLATE_CAP = 2000  # messages a day one approved template may send
+MAX_PLACEHOLDERS = 10
+PLACEHOLDER_MAX_CHARS = 200  # the most a template may allow for one placeholder ({topic:200})
+PLACEHOLDER_DEFAULT_CHARS = 80  # a placeholder without its own limit
+NAME_PLACEHOLDER_CHARS = 40  # first_name, last_name, name, full_name, company: a name, not a sentence
+TEMPLATE_VALUE_RULE = ('at most %d characters, or %d for a name, unless the template sets {name:N} up to %d; one line; no link, domain or email address '
+                       'except the product link or the round\'s tracked link in a {link} placeholder; no new sentence') % (PLACEHOLDER_DEFAULT_CHARS, NAME_PLACEHOLDER_CHARS, PLACEHOLDER_MAX_CHARS)
+TEMPLATE_MIN_FIXED = 20  # characters (spaces left out) a template keeps the same in every message
+_PLACEHOLDER = re.compile(r'\{([A-Za-z_][A-Za-z0-9_]{0,39})(?::([0-9]{1,4}))?\}')
 FUNNEL_KEYS = ('visit_to_paid', 'visit_to_signup', 'signup_to_paid')
 DEFAULT_VISIT_TO_PAID = 0.02
 MEASURED_MIN_VISITS = 100  # fewer visits than this are too few to measure a buying rate
@@ -865,7 +891,7 @@ def _plan_text(record, math_):
     lines = ['Target: %s by %s (%d days left).' % (what, time.strftime('%Y-%m-%d', time.gmtime(target['end'])), math_['days_left']),
              'Needed: %.2f paying customers a day (%d still to win).' % (need['paid_per_day'], math_['remaining_customers']),
              'At %.1f%% of visitors paying (%s), that is %d visits a day%s.' % (rate['value'] * 100, rate['basis'], need['visits_per_day'],
-                                                                             ' and %d sign-ups a day' % need['signups_per_day'] if 'signups_per_day' in need else '')]
+                                                                             ' and %d %s a day' % (need['signups_per_day'], SIGNUP_WORD.get(record.get('preset'), 'sign-ups')) if 'signups_per_day' in need else '')]
     if math_['daily_visit_quota_per_lane']:
         lines.append('Visits a day per lane (%s): ' % math_['split'] + ', '.join('%s (%s) %d' % (goals()[lane]['title'].split(':')[0], lane, n) for lane, n in math_['daily_visit_quota_per_lane'].items()) + '.')
     if rate['basis'] == 'assumed': lines.append('The buying rate is an assumption until real visits and payments are counted; the plan is recalculated every day.')
@@ -875,6 +901,667 @@ def _plan_text(record, math_):
 def _summary(record):
     target = record['target']
     return {'kind': target['kind'], 'amount': target['amount'], 'days': target['days'], 'start': _when(target['start']), 'end': _when(target['end']), 'status': record['status'], 'lanes': record.get('lanes') or []}
+
+
+# ---------- presets and feasibility ----------
+#
+# A preset is a starting plan for one kind of business: the lanes it runs (goal ids; a goal this library does not have
+# is skipped and said so, and the next goal of the same kind is used), the questions only the owner can answer, and the
+# rates assumed until real numbers replace them. Feasibility works out, lane by lane, how many paying customers each
+# lane can bring by the end with what is known now, says honestly whether that reaches the target, and names exactly
+# what would close the gap. Every rate it uses is either given, measured, or listed as assumed.
+
+ORGANIC = {'instagram': 'G-IG-LINK-RATE', 'threads': 'G-TH-LINK-RATE', 'tiktok': 'G-TT-LINK-RATE', 'youtube': 'G-YT-SITE-CLICKS', 'x': 'G-X-LINK-RATE',
+           'linkedin': 'G-LI-INQUIRIES', 'pinterest': 'G069'}
+ADS = {'meta_ads': 'G-META-PURCHASE-CPA', 'google_ads': 'G-GA-PURCHASE-RATE', 'tiktok_ads': 'G-TA-CPA', 'reddit_ads': 'G095', 'pinterest_ads': 'G097',
+       'microsoft_ads': 'G093', 'linkedin_ads': 'G-LA-CPA'}
+COMMUNITY = {'reddit': 'G-RD-PURCHASES', 'facebook_groups': 'G072', 'threads': 'G-TH-INTENT', 'discord': 'G074', 'several': 'G065'}
+
+# Each lane slot lists goal ids in order of preference; '@organic', '@ads', '@community' and '@acquisition' follow the
+# agent's channel choice in inputs, and a slot starting with '?has_trial' is used only when the product has a trial.
+PRESETS = {
+    'new_brand': {'title': 'A new consumer brand with no paying customers yet', 'b2b': False,
+                  'asks': ['price', 'free_trial', 'ad_daily_cap'],
+                  'lanes': [['G-CREATOR-COLLAB', 'G086'], ['@organic'], ['@ads'], ['@community', 'G065']]},
+    'existing_base': {'title': 'A brand with existing members or customers', 'b2b': False,
+                      'asks': ['members', 'paid', 'list_size', 'message_channels', 'capacity_per_week', 'price'],
+                      'lanes': [['G-BASE-REACTIVATE', 'G088'], ['G-BASE-REFERRAL', 'G086'], ['G-BASE-UPGRADE', 'G-EM-PURCHASE'], ['@acquisition']]},
+    'b2b_self_serve': {'title': 'Software with a free trial or free plan and a low price', 'b2b': True,
+                       'asks': ['price', 'trials_per_week', 'trial_to_paid', 'competitors'],
+                       'lanes': [['G-B2B-LTD', 'G-PH-LAUNCH-PURCHASE'], ['G-B2B-ALTERNATIVES', 'G-GA-PURCHASE-RATE'], ['G-B2B-INTENT', 'G065'],
+                                 ['G-B2B-TRIAL-CONVERT', 'G087'], ['G-B2B-MARKETPLACE', 'G084']],
+                       'funnel': {'visit_to_signup': ('visit_to_trial', 0.04, 'visitors who start a trial'), 'signup_to_paid': ('trial_to_paid', 0.15, 'trials that become paying')}},
+    'b2b_sales': {'title': 'Software sold through demos', 'b2b': True,
+                  'asks': ['acv', 'sales_cycle_days', 'demos_per_week', 'has_trial'],
+                  'lanes': [['G-B2B-OUTBOUND', 'G-LI-MEETINGS'], ['G-B2B-INTENT', 'G065'], ['G-B2B-ALTERNATIVES', 'G-GA-PURCHASE-RATE'], ['G-B2B-PARTNERS', 'G086'],
+                            ['?has_trial', 'G-B2B-TRIAL-CONVERT', 'G087']],
+                  'funnel': {'visit_to_signup': ('visit_to_demo', 0.01, 'visitors who ask for a demo'), 'signup_to_paid': ('demo_to_paid', 0.2, 'demos that become paying')}},
+}
+
+# Inputs: (type, what it is). Owner inputs are asked for by the preset; the agent decides the channels and may pass
+# rates it measured. Types: number (0 or more), count (whole number), rate (above 0, at most 1), yes_no, list, url, or a
+# dict of allowed choices.
+INPUTS = {
+    'price': ('number', 'What does one customer pay, in the main currency unit (39 for US$39)?'),
+    'acv': ('number', 'What does one customer pay per year (the contract value), in the main currency unit?'),
+    'free_trial': ('yes_no', 'Can buyers try it free first (a free trial or a free preview)?'),
+    'has_trial': ('yes_no', 'Can buyers start a free trial without a demo?'),
+    'ad_daily_cap': ('number', 'What is the most you will spend on ads per day, all channels together (0 for no ads)?'),
+    'daily_send_cap': ('count', 'How many personalised messages a day do you allow, all lanes together?'),
+    'members': ('count', 'How many members or contacts do you have in total?'),
+    'paid': ('count', 'How many paying users do you have now?'),
+    'list_size': ('count', 'How many contacts are on the member list you can message?'),
+    'message_channels': ('list', 'Where can you message your members (email, LINE, WhatsApp, Instagram)?'),
+    'capacity_per_week': ('count', 'How many more paying customers can you serve per week (free seats, tables or stock)?'),
+    'trials_per_week': ('number', 'How many new trials start per week now?'),
+    'trial_to_paid': ('rate', 'Of every 100 trials, how many become paying, if you know (0.15 means 15)?'),
+    'competitors': ('list', 'Which products do buyers compare you with, if you know (otherwise the agent researches them)?'),
+    'sales_cycle_days': ('count', 'How many days does it usually take from the first demo to a paid deal?'),
+    'demos_per_week': ('count', 'How many demos can your team run per week?'),
+    'sending_domain_verified': ('yes_no', 'Is the sending domain set up with SPF, DKIM and DMARC?'),
+    'mailboxes': ('count', 'How many warmed-up mailboxes can send outreach?'),
+    'ltd_live_in_days': ('count', 'In how many days does the launch deal go live on the marketplace?'),
+    'ltd_listing_url': ('url', 'The public link of the launch deal once it is live.'),
+    'listings_live': ('count', 'How many marketplace or directory listings are live now?'),
+    'listing_urls': ('list', 'The public links of the live listings.'),
+    'organic_channel': (ORGANIC, 'Agent choice: the organic channel where the buyers are.'),
+    'ads_channel': (ADS, 'Agent choice: the ad channel.'),
+    'community_channel': (COMMUNITY, 'Agent choice: where buyers ask for help in public.'),
+    'acquisition_channel': (dict(ORGANIC, **ADS), 'Agent choice: the channel that brings new people (existing_base).'),
+    'posts_per_day': ('number', 'Posts a day on the organic lane.'),
+    'replies_per_day': ('number', 'Replies a day on a community lane.'),
+    'visits_per_post': ('number', 'Visits one post brings, measured.'),
+    'cpc': ('number', 'Cost of one ad click, in the main currency unit.'),
+    'list_click_rate': ('rate', 'Share of messages to the list that get a click.'),
+    'click_to_paid': ('rate', 'Share of clicks from the list that pay.'),
+    'reply_rate': ('rate', 'Share of outreach messages that get a reply.'),
+    'demo_to_paid': ('rate', 'Share of demos that become paying.'),
+    'visit_to_trial': ('rate', 'Share of visitors who start a trial.'),
+    'visit_to_demo': ('rate', 'Share of visitors who ask for a demo.'),
+}
+OPTIONAL_ASKS = ('trial_to_paid', 'competitors')
+
+# Rates and amounts assumed until the owner gives them or the engine measures them. Each one used is listed in the plan.
+ASSUMED = {'posts_per_day': 1, 'visits_per_post': 30, 'replies_per_day': 5, 'b2b_replies_per_day': 10, 'visits_per_reply': 4, 'reply_to_trial': 0.08,
+           'cpc_usd': 1.0, 'b2b_cpc_usd': 3.0, 'list_click_rate': 0.03, 'click_to_paid': 0.08, 'list_touches': 2,
+           'creator_outreach_per_day': 10, 'creator_yes_rate': 0.05, 'visits_per_creator_post': 100, 'creator_lead_days': 7,
+           'referral_share_rate': 0.1, 'paid_per_sharer': 0.5, 'referral_lead_days': 3,
+           'ltd_sales_low': 30, 'ltd_sales_high': 300, 'ltd_live_in_days': 21,
+           'listings_planned': 3, 'installs_per_listing_per_day': 1, 'listing_lead_days': 10,
+           'reply_rate': 0.05, 'reply_to_demo': 0.4, 'sends_per_mailbox': 40, 'mailboxes': 1, 'first_reply_days': 3, 'sales_cycle_days': 21,
+           'partner_outreach_per_day': 5, 'partner_yes_rate': 0.1, 'paid_per_partner_per_month': 1, 'partner_lead_days': 14,
+           'trial_to_paid': 0.15, 'trial_lift': 0.3, 'launch_day_visits': 800, 'launch_day_lead_days': 7}
+# A brand-new consumer brand starts from accounts with few or no followers: fewer visits per post and per reply.
+NEW_ACCOUNT = {'visits_per_post': 10, 'visits_per_reply': 2}
+# What a sign-up is in each preset's funnel, for the plan text.
+SIGNUP_WORD = {'b2b_sales': 'demo requests', 'b2b_self_serve': 'trials', 'new_brand': 'trials'}
+# Main currency units per US dollar, only to turn the default cost per click into the target's currency.
+CPC_FACTOR = {'USD': 1.0, 'TWD': 32.0, 'EUR': 0.95, 'GBP': 0.8, 'JPY': 150.0, 'CAD': 1.4, 'AUD': 1.5, 'SGD': 1.35, 'HKD': 7.8}
+MAX_POSTS_PER_DAY, MAX_REPLIES_PER_DAY, MAX_CREATOR_OUTREACH, MAX_PARTNER_OUTREACH = 3, 20, 25, 15
+STRETCH_SHARE = 0.6  # the lanes bring at least this share of what is still needed: possible but tight
+
+# What each kind of lane does, by goal id first, then by channel.
+MODEL_OF = {'G-CREATOR-COLLAB': 'creators', 'G-BASE-REACTIVATE': 'list', 'G-BASE-UPGRADE': 'list', 'G-BASE-REFERRAL': 'referral', 'G-B2B-LTD': 'launch',
+            'G-B2B-ALTERNATIVES': 'ads', 'G-B2B-INTENT': 'replies', 'G-B2B-TRIAL-CONVERT': 'trials', 'G-B2B-MARKETPLACE': 'directory', 'G-B2B-OUTBOUND': 'outreach',
+            'G-B2B-PARTNERS': 'partners', 'G065': 'replies', 'G-TH-INTENT': 'replies', 'G-RD-REPLIES': 'replies', 'G-YT-REQUESTS': 'replies', 'G087': 'trials',
+            'G088': 'list', 'G089': 'list', 'G-LI-MEETINGS': 'outreach', 'G085': 'partners', 'G086': 'partners', 'G083': 'directory', 'G084': 'directory'}
+CHANNEL_MODEL = {'email': 'list', 'line': 'list', 'whatsapp': 'list', 'reddit': 'replies', 'facebook_groups': 'replies', 'discord': 'replies', 'multi': 'replies',
+                 'partnerships': 'partners', 'reviews': 'directory', 'producthunt': 'launch_day'}
+INHERITED = ('list', 'referral', 'ads', 'replies', 'trials', 'directory', 'outreach')  # models a stand-in goal can take over from a missing one
+
+
+def _model_of(goal_id, record=None):
+    """How a lane brings customers. A goal used in place of a missing preset goal does the same job (record lane_models)."""
+    kept = ((record or {}).get('lane_models') or {}).get(goal_id)
+    if kept: return kept
+    if goal_id in MODEL_OF: return MODEL_OF[goal_id]
+    channel = goals()[goal_id].get('channel', '')
+    return 'ads' if channel.endswith('_ads') else CHANNEL_MODEL.get(channel, 'posts')
+
+
+def _yes(value): return value is True
+
+
+def _parse_inputs(given):
+    """{name: value} checked against INPUTS -> clean dict, or an error string."""
+    if given in (None, {}): return {}
+    if not isinstance(given, dict): return 'inputs is an object such as {"price": 9.99, "free_trial": "yes"}.'
+    out = {}
+    for name, value in given.items():
+        if name not in INPUTS: return 'Unknown input %s. Known inputs: %s.' % (name, ', '.join(sorted(INPUTS)))
+        kind = INPUTS[name][0]
+        if isinstance(kind, dict):
+            value = str(value or '').strip().lower()
+            if value not in kind: return '%s is one of %s.' % (name, ', '.join(kind))
+        elif kind == 'yes_no':
+            words = {'yes': True, 'y': True, 'true': True, 'no': False, 'n': False, 'false': False}
+            value = value if isinstance(value, bool) else words.get(str(value).strip().lower())
+            if value is None: return '%s is yes or no.' % name
+        elif kind == 'list':
+            if isinstance(value, str): value = [part for part in value.split(',')]
+            if not isinstance(value, list) or not all(isinstance(v, str) for v in value): return '%s is a list of words, or one comma-separated string.' % name
+            value = [v.strip()[:120] for v in value if v.strip()][:20]
+        elif kind == 'url':
+            if not isinstance(value, str) or not value.startswith('https://') or len(value) > 600: return '%s is a public https link.' % name
+        else:
+            if isinstance(value, str):
+                try: value = float(value.strip())
+                except ValueError: return '%s is a number.' % name
+            if not _num(value) or value > 1e9: return '%s is a number of 0 or more.' % name
+            if kind == 'rate' and not 0 < value <= 1: return '%s is a rate above 0 and at most 1 (0.15 means 15%%).' % name
+            if kind == 'count':
+                if value != int(value): return '%s is a whole number.' % name
+                value = int(value)
+            if name in ('price', 'acv') and value <= 0: return '%s must be above 0.' % name
+        out[name] = value
+    return out
+
+
+def _default_lanes(preset_id, inputs):
+    """(lanes, skipped, models) for a preset. A goal this library does not have is skipped and the next one in its slot is used;
+    when the stand-in does the same job, models keeps the missing goal's way of counting for it."""
+    lanes, skipped, models = [], [], {}
+    choose = {'@organic': ORGANIC[inputs.get('organic_channel') or 'instagram'], '@ads': ADS[inputs.get('ads_channel') or 'meta_ads'],
+              '@community': COMMUNITY[inputs.get('community_channel') or 'reddit']}
+    acquisition = inputs.get('acquisition_channel') or ('meta_ads' if (inputs.get('ad_daily_cap') or 0) > 0 else 'instagram')
+    choose['@acquisition'] = ADS.get(acquisition) or ORGANIC[acquisition]
+    for slot in PRESETS[preset_id]['lanes']:
+        if slot[0] == '?has_trial':
+            if not _yes(inputs.get('has_trial')): continue
+            slot = slot[1:]
+        wanted = [choose.get(goal_id, goal_id) for goal_id in slot]
+        found = next((goal_id for goal_id in wanted if goal_id in goals() and goal_id not in lanes), None)
+        for goal_id in wanted:
+            if goal_id == found: break
+            if goal_id not in goals(): skipped.append({'goal_id': goal_id, 'why': 'not in this library version', 'used_instead': found})
+        if found:
+            lanes.append(found)
+            if found != wanted[0] and MODEL_OF.get(wanted[0]) in INHERITED: models[found] = MODEL_OF[wanted[0]]
+    return lanes, skipped, models
+
+
+def _preset_funnel(preset_id, inputs):
+    """The funnel layers a preset assumes. A new brand with a free trial or preview counts visits -> trials -> paying
+    (8 of 100 visitors start it, 25 of 100 trials pay: the same 2 of 100 visitors paying, with the trial layer to watch)."""
+    if preset_id == 'new_brand':
+        if not _yes(inputs.get('free_trial')): return {}
+        return {'visit_to_signup': ('visit_to_trial', 0.08, 'visitors who start the free trial or preview'), 'signup_to_paid': ('trial_to_paid', 0.25, 'trials that become paying')}
+    return PRESETS[preset_id].get('funnel') or {}
+
+
+def _seed_funnel(record, preset_id, inputs):
+    """Rates a preset works with: given by the owner (inputs) or the preset's assumption. Rates passed in funnel stay;
+    a preset assumption that no longer applies (another preset, or no free trial any more) is removed."""
+    funnel = record.setdefault('funnel', {}); layers = _preset_funnel(preset_id, inputs)
+    for key in [key for key, value in funnel.items() if (value.get('preset_default') or value.get('from_input')) and key not in layers]: del funnel[key]
+    for key, (name, default, what) in layers.items():
+        if inputs.get(name) is not None:
+            funnel[key] = {'value': float(inputs[name]), 'basis': 'measured', 'source': 'Given by the owner (%s).' % name, 'from_input': name}
+        elif key not in funnel or funnel[key].get('preset_default'):
+            funnel[key] = {'value': default, 'basis': 'assumed', 'preset_default': True,
+                           'source': 'Assumption of the %s preset: %g of every 100 %s. Replaced once the owner gives it or it is measured.' % (preset_id, default * 100, what)}
+
+
+def _list_size(store, owner, inputs):
+    """(contacts that can be messaged, where the number comes from)."""
+    found, _ = _hook(store, 'list_size', owner)
+    if _num(found) and found > 0: return int(found), 'the uploaded list'
+    if inputs.get('list_size'): return inputs['list_size'], 'list size given by the owner'
+    if inputs.get('members'):
+        rest = max(0, inputs['members'] - (inputs.get('paid') or 0))
+        return rest, 'members who are not paying now (%d members - %d paying), a count given by the owner; the list itself is not uploaded yet' % (inputs['members'], inputs.get('paid') or 0)
+    return 0, 'no list yet'
+
+
+def _template_caps(record, lane, now=None):
+    """Daily caps of the approved, unexpired message templates of one lane, added up."""
+    now = now or time.time()
+    return sum(item['daily_cap'] for batch in record.get('batches') or [] if now <= batch['valid_until'] for item in batch['items']
+               if item['lane'] == lane and item.get('kind') == 'template' and item['state'] == 'approved')
+
+
+def _context(store, owner, record, math_):
+    inputs = record.get('inputs') or {}; preset = PRESETS.get(record.get('preset')) or {}; lanes = record.get('lanes') or []
+    models = {lane: _model_of(lane, record) for lane in lanes}
+    rates = math_['funnel']; currency = record.get('currency') or 'USD'
+    budget = record.get('ad_budget') or {}
+    if budget.get('approved_at'): ad_cap, ad_basis = budget['daily_cap_minor'] / 100.0, 'approved by the owner'
+    elif inputs.get('ad_daily_cap') is not None: ad_cap, ad_basis = float(inputs['ad_daily_cap']), 'stated by the owner, not approved yet'
+    else: ad_cap, ad_basis = 0.0, 'no ad budget given'
+    b2b = bool(preset.get('b2b'))
+    if inputs.get('cpc'): cpc, cpc_basis = float(inputs['cpc']), 'given'
+    else:
+        cpc = ASSUMED['b2b_cpc_usd' if b2b else 'cpc_usd'] * CPC_FACTOR.get(currency, 1.0); cpc_basis = 'assumed'
+    signup = rates.get('signup_to_paid') or {}
+    trial_to_paid = signup.get('value') or inputs.get('trial_to_paid') or ASSUMED['trial_to_paid']
+    contacts, contacts_basis = _list_size(store, owner, inputs)
+    defaults = dict(ASSUMED, **NEW_ACCOUNT) if record.get('preset') == 'new_brand' else ASSUMED
+    return {'inputs': inputs, 'preset': record.get('preset'), 'b2b': b2b, 'days': math_['days_left'], 'models': models, 'defaults': defaults,
+            'v2p': rates['visit_to_paid']['value'], 'v2p_assumed': rates['visit_to_paid']['basis'] == 'assumed',
+            'to_paid': trial_to_paid, 'to_paid_assumed': not (signup.get('basis') == 'measured' or inputs.get('trial_to_paid') is not None),
+            'price': record['price_minor'] / 100.0 if record.get('price_minor') else None, 'currency': currency, 'cpc': cpc, 'cpc_basis': cpc_basis,
+            'ad_cap': ad_cap, 'ad_basis': ad_basis, 'ad_lanes': max(1, sum(1 for m in models.values() if m == 'ads')),
+            'list_lanes': max(1, sum(1 for m in models.values() if m == 'list')), 'send_lanes': max(1, sum(1 for m in models.values() if m in ('list', 'outreach'))),
+            'contacts': contacts, 'contacts_basis': contacts_basis,
+            'cycle': (inputs.get('sales_cycle_days') if inputs.get('sales_cycle_days') is not None else ASSUMED['sales_cycle_days']) if record.get('preset') == 'b2b_sales' else 0}
+
+
+def _lane_row(store, owner, record, ctx, lane):
+    """What one lane can bring: units a day, paid customers per unit, when it starts, and every assumption used."""
+    model = ctx['models'][lane]; inputs = ctx['inputs']; days = ctx['days']; assumed = []; new_account = []
+    def get(name, key=None):
+        if inputs.get(name) is not None: return inputs[name]
+        assumed.append(name)
+        if (key or name) in NEW_ACCOUNT and ctx['defaults'] is not ASSUMED: new_account.append(key or name)
+        return ctx['defaults'][key or name]
+    def v2p():
+        if ctx['v2p_assumed']: assumed.append('visit_to_paid')
+        return ctx['v2p']
+    def to_paid():
+        if ctx['to_paid_assumed']: assumed.append('trial_to_paid' if ctx['preset'] != 'b2b_sales' else 'demo_to_paid')
+        return ctx['to_paid']
+    approved = _template_caps(record, lane)
+    start, extra = 0, {}
+    if model == 'posts':
+        posts = get('posts_per_day'); measured = None
+        clicks, rounds, _ = _lane_clicks(store, owner, record, lane)
+        if rounds and clicks > 0: measured = clicks / float(rounds)
+        visits = measured if measured is not None else get('visits_per_post')
+        units, per, unit = posts * visits, v2p(), 'visits a day'
+        basis = '%g post(s) a day x %g visits per post (%s)' % (posts, round(visits, 1), 'measured' if measured is not None else
+                                                                ('assumed for a new account' if 'visits_per_post' in new_account else 'given' if inputs.get('visits_per_post') is not None else 'assumed'))
+        extra = {'posts': posts, 'visits_per_post': visits}
+    elif model == 'replies':
+        replies = get('replies_per_day', 'b2b_replies_per_day' if ctx['b2b'] else 'replies_per_day')
+        if ctx['b2b']:
+            per = ASSUMED['reply_to_trial'] * to_paid(); assumed.append('reply_to_trial')
+            basis = '%g replies a day to people asking for this x %g%% start a trial or ask for a demo' % (replies, ASSUMED['reply_to_trial'] * 100)
+        else:
+            visits = get('visits_per_reply'); per = visits * v2p()
+            basis = '%g helpful replies a day x %g visits each%s' % (replies, visits, ' (assumed for a new account)' if 'visits_per_reply' in new_account else '')
+        units, unit = replies, 'replies a day'; extra = {'replies': replies}
+    elif model == 'ads':
+        cap = ctx['ad_cap'] / ctx['ad_lanes']
+        if ctx['cpc_basis'] == 'assumed': assumed.append('cpc')
+        units, per, unit, start = cap / ctx['cpc'], v2p(), 'visits a day from ads', 1 if cap else 0
+        basis = '%s %.2f a day (%s) / %s %.2f a click' % (ctx['currency'], cap, ctx['ad_basis'], ctx['currency'], ctx['cpc'])
+        extra = {'cap': cap}
+    elif model == 'list':
+        available = ctx['contacts'] * get('list_touches') / float(max(days, 1)) / ctx['list_lanes']
+        if approved: allowed, allowed_basis = approved, 'approved template cap'
+        elif inputs.get('daily_send_cap') is not None: allowed, allowed_basis = inputs['daily_send_cap'] / float(ctx['send_lanes']), 'daily send cap stated by the owner'
+        else: allowed, allowed_basis = 0, 'no send volume approved yet'
+        units = min(available, allowed); per = get('list_click_rate') * get('click_to_paid'); unit = 'messages a day'
+        basis = '%d messages a day (%s; the list allows %d a day: %s, each contact messaged %d times)' % (units, allowed_basis, available, ctx['contacts_basis'], ASSUMED['list_touches'])
+        extra = {'available': available, 'allowed': allowed}
+    elif model == 'referral':
+        members = inputs.get('paid') if inputs.get('paid') is not None else record.get('current_paid') or 0
+        units = members * get('referral_share_rate') / 30.0; per = get('paid_per_sharer'); unit = 'members sharing an invite a day'; start = get('referral_lead_days')
+        basis = '%d paying members, %g%% share an invite in a month, %g paid friend per sharer' % (members, ASSUMED['referral_share_rate'] * 100, ASSUMED['paid_per_sharer'])
+    elif model == 'creators':
+        outreach = approved or get('creator_outreach_per_day')
+        units = outreach; per = get('creator_yes_rate') * get('visits_per_creator_post') * v2p(); unit = 'creators contacted a day'; start = get('creator_lead_days')
+        basis = '%g creators contacted a day x %g%% say yes x %g visits from each one\'s post' % (outreach, ASSUMED['creator_yes_rate'] * 100, ASSUMED['visits_per_creator_post'])
+        extra = {'outreach': outreach}
+    elif model == 'launch':
+        live_in = 0 if inputs.get('ltd_listing_url') and inputs.get('ltd_live_in_days') is None else get('ltd_live_in_days')
+        low = get('ltd_sales_low'); units, per, unit, start = low / 30.0, 1.0, 'deal sales a day while live', live_in
+        basis = 'A launch deal typically sells %d to %d in its first month; the plan counts the low end, live in %d days' % (low, ASSUMED['ltd_sales_high'], live_in)
+        extra = {'low': low, 'live_in': live_in}
+    elif model == 'launch_day':
+        lead = ASSUMED['launch_day_lead_days']; visits = get('launch_day_visits')
+        units, per, unit, start = visits, v2p(), 'visits on launch day', lead
+        basis = 'One launch day, about %d days from now, bringing about %d visits' % (lead, visits)
+        extra = {'paid_by_end': visits * per if days > lead + ctx['cycle'] else 0.0}
+    elif model == 'trials':
+        trials = (inputs.get('trials_per_week') or 0) / 7.0
+        units, per, unit = trials, to_paid(), 'trials a day'
+        basis = ('%g trials a week (given)' % inputs['trials_per_week']) if inputs.get('trials_per_week') is not None else 'trials per week not given, counted as 0'
+    elif model == 'directory':
+        live = inputs.get('listings_live') or 0; planned = get('listings_planned'); installs = get('installs_per_listing_per_day')
+        per = to_paid() if ctx['b2b'] else 10 * v2p(); lead = ASSUMED['listing_lead_days']
+        units, unit, start = (live + planned) * installs, 'installs or sign-ups a day from listings', 0 if live else lead
+        basis = '%d live + %d new listings (live in about %d days) x %g installs a day each' % (live, planned, lead, installs)
+        extra = {'paid_by_end': live * installs * per * days + planned * installs * per * max(0, days - lead - ctx['cycle'])}
+    elif model == 'outreach':
+        mailboxes = get('mailboxes'); most = get('sends_per_mailbox') * mailboxes
+        if approved: allowed, allowed_basis = approved, 'approved template cap'
+        elif inputs.get('daily_send_cap') is not None: allowed, allowed_basis = inputs['daily_send_cap'] / float(ctx['send_lanes']), 'daily send cap stated by the owner'
+        else: allowed, allowed_basis = 0, 'no send volume approved yet'
+        units = min(allowed, most); per = get('reply_rate') * ASSUMED['reply_to_demo'] * to_paid(); assumed.append('reply_to_demo'); unit = 'emails a day'
+        start = ASSUMED['first_reply_days']
+        basis = '%d emails a day (%s; %d mailbox(es) send at most %d) x %g%% reply x %g%% of replies book a demo' % (units, allowed_basis, mailboxes, most, ASSUMED['reply_rate'] * 100, ASSUMED['reply_to_demo'] * 100)
+        extra = {'allowed': allowed, 'most': most, 'mailboxes': mailboxes}
+    else:  # partners
+        outreach = approved or get('partner_outreach_per_day'); lead = get('partner_lead_days')
+        units, unit, start = outreach, 'partners contacted a day', lead
+        per = get('partner_yes_rate') * get('paid_per_partner_per_month') / 30.0
+        live = max(0, days - lead - ctx['cycle'])
+        extra = {'outreach': outreach, 'paid_by_end': outreach * ASSUMED['partner_yes_rate'] * live * live / 2.0 * ASSUMED['paid_per_partner_per_month'] / 30.0}
+        basis = '%g agencies or consultants contacted a day x %g%% join x %g paid customer each a month, after about %d days' % (outreach, ASSUMED['partner_yes_rate'] * 100, ASSUMED['paid_per_partner_per_month'], lead)
+    if ctx['cycle'] and model not in ('trials', 'launch', 'launch_day'):
+        start += ctx['cycle']; basis += '; then a %d-day sales cycle' % ctx['cycle']
+    paid_by_end = extra.pop('paid_by_end') if 'paid_by_end' in extra else units * per * max(0, days - start)
+    row = {'lane': lane, 'title': goals()[lane]['title'], 'model': model, 'unit': unit, 'per_day': round(units, 1), 'paid_per_unit': round(per, 5),
+           'starts_after_days': start, 'paid_by_end': round(paid_by_end, 1), 'paid_per_day': round(paid_by_end / days, 2) if days else 0,
+           'basis': basis + '.', 'assumed': sorted(set(assumed)), '_units': units, '_per': per, '_start': start, '_exact': paid_by_end, '_extra': extra}
+    if new_account: row['new_account'] = sorted(set(new_account))
+    return row
+
+
+LANE_LABEL = {'G-CREATOR-COLLAB': 'Creators', 'G-BASE-REACTIVATE': 'Win-back', 'G-BASE-REFERRAL': 'Member invites', 'G-BASE-UPGRADE': 'Upgrades',
+              'G-B2B-LTD': 'Launch deal', 'G-B2B-ALTERNATIVES': 'Competitor-alternative search', 'G-B2B-INTENT': 'Public requests', 'G-B2B-TRIAL-CONVERT': 'Trials',
+              'G-B2B-MARKETPLACE': 'Marketplaces', 'G-B2B-OUTBOUND': 'Outbound email', 'G-B2B-PARTNERS': 'Agencies and consultants'}
+
+
+def _label(lane): return LANE_LABEL.get(lane) or goals()[lane]['title'].split(':')[0].strip()
+
+
+def _lever(row, text, adds, needs, ask=None, days=1, **more):
+    if row: text = _label(row['lane']) + ': ' + text[0].lower() + text[1:]
+    lever = {'lane': row['lane'] if row else None, 'lever': text, 'adds_by_end': None if adds is None else round(adds, 1),
+             'adds_per_day': None if adds is None else round(adds / float(max(days, 1)), 2), 'needs_from_owner': needs, 'ask': ask}
+    lever.update(more)
+    return lever
+
+
+def _row_levers(ctx, row):
+    """Levers that need no ad money, for one lane: each says what it adds by the end and what the owner must do."""
+    model, units, per, extra, days = row['model'], row['_units'], row['_per'], row['_extra'], ctx['days']
+    live = max(0, days - row['_start']); out = []
+    if model == 'posts' and extra['posts'] < MAX_POSTS_PER_DAY:
+        out.append(_lever(row, 'Post %d times a day instead of %g.' % (MAX_POSTS_PER_DAY, extra['posts']), (MAX_POSTS_PER_DAY - extra['posts']) * extra['visits_per_post'] * per * live,
+                          'Approve a weekly batch with %d posts a day for this lane.' % MAX_POSTS_PER_DAY, days=days))
+    elif model == 'replies' and extra['replies'] < MAX_REPLIES_PER_DAY:
+        out.append(_lever(row, 'Reply to up to %d matching requests a day instead of %g (each reply written for that post).' % (MAX_REPLIES_PER_DAY, extra['replies']),
+                          (MAX_REPLIES_PER_DAY - extra['replies']) * per * live, 'Approve one reply template with a daily cap of %d.' % MAX_REPLIES_PER_DAY, 'approve_send_volume', days, suggested=MAX_REPLIES_PER_DAY))
+    elif model == 'list':
+        if ctx['contacts'] == 0:
+            out.append(_lever(row, 'Give the member list so the agent can message past and free members.', None,
+                              'Upload the member list (email, name, status, last purchase) or say how many contacts it has.', 'upload_list', days))
+        elif extra['allowed'] < extra['available']:
+            out.append(_lever(row, 'Approve up to %d messages a day from one template (now %d).' % (math.ceil(extra['available']), extra['allowed']),
+                              (extra['available'] - units) * per * live, 'Approve the message template with a daily cap of %d.' % math.ceil(extra['available']),
+                              'approve_send_volume', days, suggested=int(math.ceil(extra['available']))))
+    elif model == 'referral' and row['_exact'] > 0:
+        out.append(_lever(row, 'Give both the member and the friend a reward (for example one free session each).', row['_exact'],
+                          'Approve the reward. Assumption: a reward doubles the invites that are shared.', None, days))
+    elif model == 'creators' and extra['outreach'] < MAX_CREATOR_OUTREACH:
+        out.append(_lever(row, 'Contact %d creators a day instead of %g.' % (MAX_CREATOR_OUTREACH, extra['outreach']), (MAX_CREATOR_OUTREACH - extra['outreach']) * per * live,
+                          'Approve the creator outreach template with a daily cap of %d, and the offer (free access and an affiliate share).' % MAX_CREATOR_OUTREACH, 'approve_send_volume', days, suggested=MAX_CREATOR_OUTREACH))
+    elif model == 'launch' and extra['live_in'] > 7 and ctx['inputs'].get('ltd_live_in_days') is None:
+        out.append(_lever(row, 'Apply today to a launch-deal marketplace that can list within about a week.', (min(days, extra['live_in']) - min(days, 7)) * units * per,
+                          'Approve the deal terms (deal price, number of codes, refund window) so the agent can apply today.', None, days))
+    elif model == 'trials' and units > 0:
+        out.append(_lever(row, 'Send activation and upgrade messages to every trial.', units * per * ASSUMED['trial_lift'] * days,
+                          'Give the list of current trials (upload it, or connect Stripe). Assumption: these messages raise trial-to-paid by %d%%.' % (ASSUMED['trial_lift'] * 100), 'upload_list', days))
+    elif model == 'directory':
+        lead = ASSUMED['listing_lead_days']
+        out.append(_lever(row, 'List in %d more marketplaces or directories where buyers search.' % ASSUMED['listings_planned'],
+                          ASSUMED['listings_planned'] * ASSUMED['installs_per_listing_per_day'] * per * max(0, days - lead - ctx['cycle']),
+                          'Create or confirm the developer or vendor accounts those listings need.', None, days))
+    elif model == 'outreach' and live > 0 and per > 0:
+        target = extra['most']
+        if extra['allowed'] < target:
+            out.append(_lever(row, 'Approve up to %d emails a day to published business contacts (now %d).' % (target, extra['allowed']), (target - units) * per * live,
+                              'Approve the outreach template with a daily cap of %d, after the sending domain is verified.' % target, 'approve_send_volume', days, suggested=int(target)))
+        out.append(_lever(row, 'Add 2 more warmed-up sending mailboxes (each sends about %d a day).' % ASSUMED['sends_per_mailbox'], 2 * ASSUMED['sends_per_mailbox'] * per * live,
+                          'Create 2 more mailboxes on the sending domain.', None, days))
+    elif model == 'partners' and extra['outreach'] < MAX_PARTNER_OUTREACH and row['_exact'] > 0:
+        out.append(_lever(row, 'Contact %d agencies or consultants a day instead of %g.' % (MAX_PARTNER_OUTREACH, extra['outreach']), row['_exact'] * (MAX_PARTNER_OUTREACH / float(extra['outreach']) - 1),
+                          'Approve the partner outreach template with a daily cap of %d, and the referral share.' % MAX_PARTNER_OUTREACH, 'approve_send_volume', days, suggested=MAX_PARTNER_OUTREACH))
+    return [lever for lever in out if lever['adds_by_end'] is None or lever['adds_by_end'] > 0.05]
+
+
+def _needed_layers(ctx, math_, remaining):
+    days = ctx['days']; paid = remaining / float(days) if days else float(remaining)
+    need = {'paid_per_day': round(paid, 2), 'visits_per_day': math_['needed_per_day']['visits_per_day']}
+    if ctx['preset'] == 'existing_base':
+        rate = (ctx['inputs'].get('list_click_rate') or ASSUMED['list_click_rate']) * (ctx['inputs'].get('click_to_paid') or ASSUMED['click_to_paid'])
+        need['messages_per_day_if_all_from_the_list'] = int(math.ceil(paid / rate - 1e-9)) if remaining else 0
+    if ctx['preset'] in ('b2b_self_serve', 'new_brand') and remaining and 'signup_to_paid' in math_['funnel']: need['trials_per_day'] = int(math.ceil(paid / ctx['to_paid'] - 1e-9))
+    if ctx['preset'] == 'b2b_sales' and remaining:
+        demos = paid / ctx['to_paid']; replies = demos / ASSUMED['reply_to_demo']
+        need.update(demos_per_day=round(demos, 1), replies_per_day=round(replies, 1), outreach_emails_per_day_if_all_outbound=int(math.ceil(replies / (ctx['inputs'].get('reply_rate') or ASSUMED['reply_rate']) - 1e-9)))
+    return need
+
+
+def _feasibility(store, owner, record, math_):
+    """Can the lanes reach the target with what is known now? Honest verdict, the gap, and the levers that close it."""
+    ctx = _context(store, owner, record, math_); days = ctx['days']; remaining = math_['remaining_customers']; inputs = ctx['inputs']
+    rows = [_lane_row(store, owner, record, ctx, lane) for lane in record.get('lanes') or []]
+    total = sum(row['_exact'] for row in rows); limits = []
+    if inputs.get('capacity_per_week') is not None:
+        limits.append({'limit': 'capacity_per_week', 'most_by_end': inputs['capacity_per_week'] * days / 7.0,
+                       'text': 'You can serve %d more paying customers a week (given), so at most %d by the end.' % (inputs['capacity_per_week'], inputs['capacity_per_week'] * days / 7.0)})
+    if ctx['preset'] == 'b2b_sales' and inputs.get('demos_per_week') is not None:
+        most = inputs['demos_per_week'] / 7.0 * ctx['to_paid'] * max(0, days - ctx['cycle'])
+        limits.append({'limit': 'demos_per_week', 'most_by_end': most,
+                       'text': '%d demos a week (given) x %g%% become paying, after a %d-day sales cycle: at most %d by the end.' % (inputs['demos_per_week'], ctx['to_paid'] * 100, ctx['cycle'], most)})
+    ceiling = min([limit['most_by_end'] for limit in limits] or [float('inf')])
+    expected = min(total, ceiling)
+    for limit in limits: limit['binding'] = limit['most_by_end'] < total
+    gap = max(0.0, remaining - expected)
+    # The ad cap counts only as far as the stated limits leave room after the other lanes: clicks past that bring
+    # customers the team cannot serve or demo. ad_cap says how much of the stated or approved cap is useful.
+    ad_rows = [row for row in rows if row['model'] == 'ads']
+    ads_total = sum(row['_exact'] for row in ad_rows); ad_cap = None
+    if ad_rows and ctx['ad_cap'] > 0:
+        room = max(0.0, ceiling - (total - ads_total))
+        useful = ctx['ad_cap'] if ads_total <= room else (int(math.ceil(ctx['ad_cap'] * room / ads_total - 1e-9)) if room >= 1 else 0)
+        brings = min(ads_total, room)
+        per = sum(row['_per'] for row in ad_rows) / len(ad_rows)
+        cost = ctx['cpc'] / per if per else None
+        ad_cap = {'daily_cap': ctx['ad_cap'], 'useful_daily_cap': useful, 'brings_by_end': round(brings, 1), 'room_by_end': None if room == float('inf') else round(room, 1),
+                  'limited_by': [limit['limit'] for limit in limits if limit['binding']] if ads_total > room else [],
+                  'cost_per_customer': None if cost is None else round(cost, 2)}
+        if ctx['price'] and cost and cost > ctx['price']:
+            ad_cap['warning'] = 'At these rates each customer costs about %s %.2f in ads, more than the price %s %.2f, so this cap loses money until a higher buying rate is measured.' % (ctx['currency'], cost, ctx['currency'], ctx['price'])
+        if ads_total > room:
+            for row in ad_rows: row['_capped'] = row['_exact'] * room / ads_total if ads_total else 0.0
+    free = [lever for row in rows for lever in _row_levers(ctx, row)]
+    if ctx['cycle'] > 7 and days:
+        sooner = sum(row['_units'] * row['_per'] * (max(0, days - (row['_start'] - ctx['cycle'] + 7)) - max(0, days - row['_start']))
+                     for row in rows if row['model'] not in ('trials', 'launch', 'partners', 'directory'))
+        if sooner > 0.05 or not rows:
+            free.append(_lever(None, 'Offer a paid pilot or a monthly plan bought by card, so a deal can close in about 7 days instead of %d.' % ctx['cycle'], sooner,
+                               'Approve a pilot offer (price, length, what is included).', None, days, cycle_days=7))
+    free.sort(key=lambda lever: -(lever['adds_by_end'] or 0))
+    # 1. Levers that bring more buyers (demand), largest first, until the lanes and these levers bring what is still needed.
+    #    A lever adding less than half a customer changes nothing the owner would notice, so it is not asked for.
+    demand_gap = max(0.0, remaining - total)
+    plan, covered = [], 0.0
+    for lever in free:
+        if covered >= demand_gap: break
+        if lever['adds_by_end'] and lever['adds_by_end'] >= 0.5: plan.append(lever); covered += lever['adds_by_end']
+    # A paid pilot in the plan shortens the cycle, so the demos a week given reach further by the end.
+    pilot = any(lever.get('cycle_days') for lever in plan)
+    def most_with(limit, cycle):
+        if limit['limit'] != 'demos_per_week': return limit['most_by_end']
+        return inputs['demos_per_week'] / 7.0 * ctx['to_paid'] * max(0, days - cycle)
+    plan_cycle = min(ctx['cycle'], 7) if pilot else ctx['cycle']
+    levers = list(free)
+    # 2. Ads, only as far as the stated limits (seats, stock, demos) leave room: a customer the team cannot serve or demo
+    #    is not won by buying more clicks. One ad lever at most, the same in levers, closes_gap_with and asks.
+    headroom = ceiling - (total + covered)
+    losing = blocked = None
+    if ad_rows and days - 1 - ctx['cycle'] > 0:
+        live = days - 1 - ctx['cycle']; cost = ctx['cpc'] / ctx['v2p']
+        def ad_lever(missing, alternative=False):
+            extra = missing / float(live) / ctx['v2p'] * ctx['cpc']; cap = int(math.ceil(ctx['ad_cap'] + extra))
+            text = ('Raise the daily ad cap to %s %d (now %s %.2f).' % (ctx['currency'], cap, ctx['currency'], ctx['ad_cap'])) if ctx['ad_cap'] else 'Approve a daily ad cap of %s %d.' % (ctx['currency'], cap)
+            if alternative: text = text[:-1] + ', in place of the levers above.'
+            lever = _lever(ad_rows[0], text, missing, 'Approve a daily ad budget cap of %s %d.' % (ctx['currency'], cap), 'approve_ad_budget', days, suggested=cap,
+                           cost_per_customer=round(cost, 2))
+            if alternative: lever['alternative'] = True
+            if ctx['price'] and cost > ctx['price']:
+                lever['warning'] = 'At these rates each customer costs about %s %.2f in ads, more than the price %s %.2f, so this lever loses money until a higher buying rate is measured.' % (ctx['currency'], cost, ctx['currency'], ctx['price'])
+            return lever
+        rest = min(demand_gap - covered, headroom)
+        instead = min(demand_gap, ceiling - total)
+        if rest >= 1:  # less than one customer is rounding, not a reason to buy ads
+            lever = ad_lever(rest); levers.append(lever)
+            if lever.get('warning'): losing = lever
+            else: plan.append(lever); covered += rest
+        elif demand_gap - covered >= 1:
+            blocked = next((limit for limit in limits if limit['most_by_end'] < total + covered + 1), None)
+        elif instead >= 1:
+            levers.append(ad_lever(instead, alternative=True))
+    # 3. Limits the owner can raise (seats, demos), sized to what the lanes and the levers above can bring.
+    demand = total + covered; need = min(float(remaining), demand); after = {}
+    raise_first = []
+    for limit in limits:
+        most = most_with(limit, plan_cycle); after[limit['limit']] = most
+        if most >= need - 0.05: continue
+        if limit['limit'] == 'capacity_per_week':
+            per_week = int(math.ceil(need * 7.0 / max(days, 1) - inputs['capacity_per_week'])) if days else 0
+            if per_week > 0:
+                raise_first.append(_lever(None, 'Make room for about %d more paying customers a week (seats, tables or stock).' % per_week, need - most,
+                                          'Add capacity, then tell the agent the new number (capacity_per_week).', None, days, limit='capacity_per_week', suggested=inputs['capacity_per_week'] + per_week))
+                after['capacity_per_week'] = need
+        elif days - plan_cycle > 0:
+            per_demo = ctx['to_paid'] * (days - plan_cycle) / 7.0  # paying customers by the end from one more demo a week
+            want = int(math.ceil(need / per_demo - 1e-9)); for_target = int(math.ceil(remaining / per_demo - 1e-9))
+            if want > inputs['demos_per_week']:
+                text = 'Run about %d demos a week instead of %d.' % (want, inputs['demos_per_week'])
+                if for_target > want: text = text[:-1] + ' (all %d still needed would take about %d a week).' % (remaining, for_target)
+                if plan_cycle != ctx['cycle']: text = text[:-1] + ', counting the 7-day pilot offer in this plan.'
+                raise_first.append(_lever(None, text, need - most, 'Free up demo time or add a person who runs demos, then tell the agent the new number (demos_per_week).',
+                                          None, days, limit='demos_per_week', suggested=want, for_target=for_target))
+                after['demos_per_week'] = need
+    ceiling_after = min(list(after.values()) or [float('inf')])
+    plan = raise_first + plan; levers = raise_first + levers
+    for lever in levers:  # a lever that brings buyers past a stated limit adds only up to that limit until it is raised
+        if lever.get('limit') or not lever['adds_by_end']: continue
+        cycle = min(ctx['cycle'], 7) if lever.get('cycle_days') else plan_cycle  # the pilot's own shorter cycle counts for it
+        mosts = [(limit['limit'], most_with(limit, cycle)) for limit in limits]
+        over = [name for name, most in mosts if most < total + lever['adds_by_end']]
+        if over: lever.update(limited_by=over, adds_within_current_limits=round(max(0.0, min(lever['adds_by_end'], min(most for _, most in mosts) - total)), 1))
+    reachable = min(demand, ceiling_after)
+    if remaining == 0: verdict = 'on_track'
+    elif expected >= remaining: verdict = 'on_track'
+    elif expected >= STRETCH_SHARE * remaining: verdict = 'stretch'
+    else: verdict = 'not_with_current_inputs'
+    assumed = sorted({name for row in rows for name in row['assumed']})
+    end = time.strftime('%Y-%m-%d', time.gmtime(record['target']['end']))
+    if remaining == 0: summary = 'The target is reached.'
+    elif not rows: summary = 'No lanes yet, so nothing can be counted toward the %d customers still needed.' % remaining
+    else:
+        summary = {'on_track': 'On paper the lanes bring about %d of the %d paying customers still needed by %s.',
+                   'stretch': 'Possible but tight: the lanes bring about %d of the %d paying customers still needed by %s.',
+                   'not_with_current_inputs': 'Not with the current inputs: the lanes bring about %d of the %d paying customers still needed by %s.'}[verdict] % (round(expected), remaining, end)
+        if ctx['cycle'] and ctx['cycle'] + ASSUMED['first_reply_days'] >= days:
+            summary += ' A deal takes about %d days to close, as long as the time left, so deals started now mostly close after the end.' % ctx['cycle']
+        if verdict != 'on_track' and plan: summary += ' To close the gap: ' + ' '.join(lever['lever'] for lever in plan)
+        if losing: summary += ' Ads could bring the rest only at a loss: ' + losing['warning'][0].lower() + losing['warning'][1:]
+        if blocked:
+            summary += ' More ad money would not help: %s' % ('the demos your team can run are the limit, so raise demos_per_week first.' if blocked['limit'] == 'demos_per_week'
+                                                              else 'the customers you can serve are the limit, so raise capacity_per_week first.')
+        if reachable < remaining - 0.5:
+            summary += ' Even with every lever here it is about %d of %d: a longer time, a lower target or a stronger offer is needed.' % (round(reachable), remaining)
+        if ctx['preset'] == 'new_brand' and (ctx['v2p_assumed'] or time.time() - record['target']['start'] < 7 * DAY):
+            summary += ' These levers are estimates until the first 7 days of real visits and payments are counted; the plan is rechecked then.'
+        elif assumed: summary += ' Rates not measured yet are assumed (listed in assumed); the plan is recalculated every day as real numbers come in.'
+    clean = []
+    for row in rows:
+        out = {key: value for key, value in row.items() if not key.startswith('_')}
+        if '_capped' in row:  # the ad cap past the limits brings customers nobody can serve or demo: not counted
+            out.update(paid_by_end=round(row['_capped'], 1), paid_per_day=round(row['_capped'] / days, 2) if days else 0,
+                       paid_by_end_before_limits=round(row['_exact'], 1), limited_by=ad_cap['limited_by'])
+        clean.append(out)
+    return {'verdict': verdict, 'summary': summary, 'needed': _needed_layers(ctx, math_, remaining),
+            'capacity': dict({'lanes': clean, 'paid_by_end': round(expected, 1), 'paid_per_day': round(expected / days, 2) if days else 0, 'before_limits': round(total, 1), 'limits': limits},
+                             **({'ad_cap': ad_cap} if ad_cap else {})),
+            'gap': {'customers_by_end': round(gap, 1), 'paid_per_day': round(gap / days, 2) if days else round(gap, 1), 'share_covered': round(expected / remaining, 2) if remaining else 1.0},
+            'levers': levers, 'closes_gap_with': plan, 'reachable_with_levers': round(reachable, 1), 'assumed': assumed}
+
+
+def _missing_inputs(store, owner, record):
+    preset = PRESETS.get(record.get('preset'))
+    if not preset: return []
+    inputs = record.get('inputs') or {}; missing = []
+    for name in preset['asks']:
+        if inputs.get(name) not in (None, '', []): continue
+        if name in ('price', 'acv') and record.get('price_minor'): continue
+        if name == 'paid' and record.get('current_paid'): continue
+        if name == 'ad_daily_cap' and record.get('ad_budget'): continue
+        if name == 'list_size' and _list_size(store, owner, inputs)[1] == 'the uploaded list': continue
+        missing.append(name)
+    return missing
+
+
+def _where(hosted, kind, detail=''):
+    if hosted:
+        return {'answer': 'Tell your AI agent in the chat; it records the answer with plan_month inputs.',
+                'upload_list': 'Your owner page (the private link you saved at sign-up): Upload list (CSV with email, name, status, last_purchase; up to 20,000 rows).',
+                'connect_stripe': 'Your owner page: Connect Stripe (read-only).',
+                'approve_send_volume': 'Your owner page: the template appears in the weekly batch with its daily cap; approve it there.',
+                'approve_ad_budget': 'Your owner page: Approve ad budget.',
+                'verify_sending_domain': 'Your owner page: sending-domain checklist (SPF, DKIM, DMARC at your domain host).',
+                'provide_link': 'Tell your AI agent the link in the chat.'}[kind]
+    return {'answer': 'Tell your AI agent, or run: python3 nuluno.py plan --input %s=<value>' % detail,
+            'upload_list': 'Keep the list on your own computer; the agent sends from your own mail tool or account. Tell it how many contacts: python3 nuluno.py plan --input list_size=<number>',
+            'approve_send_volume': 'After the agent hands you the template with submit_batch, run in your own terminal: python3 nuluno.py approve <batch_id> --items <template id>',
+            'approve_ad_budget': 'After the agent runs request_ad_budget, run in your own terminal: python3 nuluno.py approve-budget',
+            'verify_sending_domain': 'Set SPF, DKIM and DMARC at your domain host, then run: python3 nuluno.py plan --input sending_domain_verified=yes',
+            'provide_link': 'Tell your AI agent, or run: python3 nuluno.py plan --input %s=https://...' % detail}[kind]
+
+
+def _asks(store, owner, record, math_, feas):
+    """What the owner is asked for now: answers only they have, and the approvals or connections the plan needs."""
+    hosted = hasattr(store, 'tracked_link'); inputs = record.get('inputs') or {}; asks, seen = [], set()
+    models = {lane: _model_of(lane, record) for lane in record.get('lanes') or []}
+    def add(kind, reason, lane=None, **more):
+        key = (kind, lane, more.get('input'))
+        if key in seen: return
+        seen.add(key); ask = {'kind': kind, 'reason': reason, 'where': _where(hosted, kind, more.get('input', ''))}
+        if lane: ask['lane'] = lane
+        ask.update(more); asks.append(ask)
+    for name in _missing_inputs(store, owner, record):
+        if name == 'list_size':
+            add('upload_list', 'The lanes that message your own members need your member list (or, on your own computer, how many contacts it has).', **({} if hosted else {'input': 'list_size'}))
+            continue
+        add('answer', INPUTS[name][1], input=name, optional=name in OPTIONAL_ASKS)
+    if hosted and not math_['paid']['counted_by_engine']:
+        add('connect_stripe', 'Connecting Stripe read-only lets the engine count real paying customers itself instead of asking you.')
+    for lever in feas['closes_gap_with']:
+        if lever['ask'] == 'approve_send_volume':
+            add('approve_send_volume', 'The agent prepares one message template for this lane; approving it with a daily cap of %d lets it send up to %d personalised messages a day.' % (lever['suggested'], lever['suggested']),
+                lever['lane'], suggested=lever['suggested'], agent_does_first='submit_batch with an item of kind template (lane, text with {placeholders}, audience_rule, daily_cap %d)' % lever['suggested'])
+        elif lever['ask'] == 'approve_ad_budget':
+            add('approve_ad_budget', 'Ads spend only after you approve one daily cap; %s %d a day is what closes the gap at the assumed rates.' % (record.get('currency') or 'USD', lever['suggested']),
+                lever['lane'], suggested=lever['suggested'], agent_does_first='request_ad_budget with daily_cap %d' % lever['suggested'], warning=lever.get('warning'))
+        elif lever['ask'] == 'upload_list':
+            add('upload_list', 'Messaging people already on your list is the cheapest way to more paying customers: ' + lever['needs_from_owner'], lever['lane'])
+    if inputs.get('daily_send_cap') is not None:  # the plan counts the stated send cap, but nothing is sent before a template is approved
+        for row in feas['capacity']['lanes']:
+            if row['model'] in ('list', 'outreach') and row['per_day'] > 0 and not _template_caps(record, row['lane']):
+                volume = int(math.ceil(row['per_day'] - 1e-9))
+                add('approve_send_volume', 'The plan counts %d messages a day on this lane from the daily send cap you stated, but nothing is sent until you approve one message template with that daily cap.' % volume,
+                    row['lane'], suggested=volume, agent_does_first='submit_batch with an item of kind template (lane, text with {placeholders}, audience_rule, daily_cap %d)' % volume)
+    budget = record.get('ad_budget') or {}
+    ad_cap = feas['capacity'].get('ad_cap') or {}
+    if any(m == 'ads' for m in models.values()) and not budget.get('approved_at') and (inputs.get('ad_daily_cap') or 0) > 0 and ad_cap.get('useful_daily_cap'):
+        # only as much of the stated cap as brings customers within the stated limits; never a cap that buys clicks for nothing
+        currency, stated = record.get('currency') or 'USD', inputs['ad_daily_cap']; useful = min(stated, ad_cap['useful_daily_cap'])
+        if useful < stated:
+            reason = ('You said up to %s %g a day for ads, but %s %d a day already brings the about %d customers your %s leave room for; the rest would bring customers past that limit. '
+                      'Nothing is spent until you approve a cap.' % (currency, stated, currency, useful, round(ad_cap['brings_by_end']),
+                                                                    'demos' if ad_cap['limited_by'] == ['demos_per_week'] else 'seats or stock' if ad_cap['limited_by'] == ['capacity_per_week'] else 'demos and seats'))
+        else: reason = 'You said up to %s %g a day for ads; nothing is spent until you approve that cap.' % (currency, stated)
+        add('approve_ad_budget', reason, next(lane for lane, m in models.items() if m == 'ads'), suggested=useful,
+            agent_does_first='request_ad_budget with daily_cap %g' % useful, warning=ad_cap.get('warning'))
+    channels = [c.lower() for c in inputs.get('message_channels') or []]
+    emails = any(m == 'outreach' for m in models.values()) or (any(m == 'list' for m in models.values()) and (not channels or 'email' in channels))
+    if emails and not _yes(inputs.get('sending_domain_verified')):
+        add('verify_sending_domain', 'Email sent in volume from a domain without SPF, DKIM and DMARC lands in spam, so this is set up once before any template is approved.')
+    for lane, model in models.items():
+        if model == 'launch' and not inputs.get('ltd_listing_url'):
+            add('provide_link', 'When the launch deal is live, its link lets the engine count the deal sales; until then the plan assumes it goes live in %d days.' % (inputs.get('ltd_live_in_days') if inputs.get('ltd_live_in_days') is not None else ASSUMED['ltd_live_in_days']),
+                lane, input='ltd_listing_url', optional=True)
+        if model == 'directory' and (inputs.get('listings_live') or 0) > 0 and not inputs.get('listing_urls'):
+            add('provide_link', 'The links of your live listings let the engine count what they bring.', lane, input='listing_urls')
+    return asks
 
 
 def set_month_target(store, owner, product, args):
@@ -907,7 +1594,10 @@ def set_month_target(store, owner, product, args):
     limit = _lane_limit(store, owner)
     return {'accepted': True, 'month_target': _summary(record), 'lane_limit': limit,
             'next': {'call': 'plan_month', 'instruction': 'Read the product page, then pick %s goals on different channels where this product\'s buyers are (where_are_we lists every goal) and call plan_month with their goal ids. '
-                                                          'Decide yourself; tell the owner the plan it returns.' % ('3 to %d' % limit if limit >= 3 else 'up to %d' % limit)}}
+                                                          'Decide yourself; tell the owner the plan it returns.' % ('3 to %d' % limit if limit >= 3 else 'up to %d' % limit),
+                     'presets': {key: value['title'] for key, value in PRESETS.items()},
+                     'or_preset': 'Or call plan_month with preset (the one that fits this business) and inputs you already know; it picks the lanes, '
+                                  'says honestly whether the target is reachable, and lists in asks what only the owner can give.'}}
 
 
 def _parse_funnel(given):
@@ -929,7 +1619,21 @@ def plan_month(store, owner, product, args):
     if not record: return {'accepted': False, 'error': 'No month target yet. Call set_month_target first.'}
     if record['status'] not in ('planning', 'running'): return {'accepted': False, 'error': 'This month target has %s. Start a new one with set_month_target.' % record['status'], 'month_target': _summary(record)}
     lanes = args.get('lanes'); limit = _lane_limit(store, owner)
-    if not isinstance(lanes, list) or not lanes or not all(isinstance(g, str) for g in lanes): return {'accepted': False, 'error': 'lanes is a list of 1 to %d goal ids.' % limit}
+    preset_id = args.get('preset')
+    if preset_id is not None and preset_id not in PRESETS: return {'accepted': False, 'error': 'preset is one of %s.' % ', '.join(PRESETS)}
+    preset_id = preset_id or record.get('preset')
+    inputs = _parse_inputs(args.get('inputs'))
+    if isinstance(inputs, str): return {'accepted': False, 'error': inputs}
+    inputs = dict(record.get('inputs') or {}, **inputs)
+    skipped, left_out = [], []
+    if lanes in (None, []) and preset_id:
+        lanes, skipped, lane_models = _default_lanes(preset_id, inputs)
+        record['lane_models'] = lane_models
+        if not lanes: return {'accepted': False, 'skipped': skipped, 'error': 'None of the %s preset\'s goals are in this library. Pass lanes yourself.' % preset_id}
+        lanes, left_out = lanes[:limit], lanes[limit:]
+        if not lanes: return {'accepted': False, 'lane_limit': limit, 'error': 'This plan runs no lanes.'}
+    if not isinstance(lanes, list) or not lanes or not all(isinstance(g, str) for g in lanes):
+        return {'accepted': False, 'error': 'lanes is a list of 1 to %d goal ids, or pass preset (%s) to start from its lanes.' % (limit, ', '.join(PRESETS))}
     lanes = [g.strip() for g in lanes]
     unknown = [g for g in lanes if g not in goals()]
     if unknown: return {'accepted': False, 'error': 'Unknown goal ids: %s. where_are_we lists every goal.' % ', '.join(unknown)}
@@ -939,6 +1643,10 @@ def plan_month(store, owner, product, args):
     funnel = _parse_funnel(args.get('funnel'))
     if isinstance(funnel, str): return {'accepted': False, 'error': funnel}
     now = time.time()
+    price = inputs.get('price') or inputs.get('acv')
+    if price and not record.get('price_minor'): record['price_minor'] = int(round(price * 100))
+    if preset_id: record.update(preset=preset_id); _seed_funnel(record, preset_id, inputs)
+    record['inputs'] = inputs
     for old in record.get('lanes') or []:
         if old not in lanes: stop_goal(store, lane_owner(owner, old), product, {})
     for lane in lanes:
@@ -952,11 +1660,20 @@ def plan_month(store, owner, product, args):
     math_ = _math(store, owner, record, now)
     _snapshot(record, math_, now)
     _save_campaign(store, owner, record)
-    store.log(owner + '#campaign', 0, 'month_plan', 'goal', {'lanes': lanes, 'funnel': record['funnel']})
+    store.log(owner + '#campaign', 0, 'month_plan', 'goal', {'lanes': lanes, 'funnel': record['funnel'], 'preset': record.get('preset'), 'inputs': inputs})
     plan_lanes = [{'lane': lane, 'title': goals()[lane]['title'], 'channel': goals()[lane]['channel'], 'daily_visit_quota': math_['daily_visit_quota_per_lane'].get(lane),
                    'round_window_hours': min(goals()[lane].get('observation_seconds', 172800), DAY) // 3600} for lane in lanes]
-    return {'accepted': True, 'status': 'running', 'tell_the_owner': _plan_text(record, math_), 'plan': math_, 'lanes': plan_lanes,
-            'next': _next_lane(store, owner, product, record, now), 'daily_rhythm': DAILY_RHYTHM}
+    feasibility = _feasibility(store, owner, record, math_)
+    answer = {'accepted': True, 'status': 'running', 'tell_the_owner': _plan_text(record, math_) + ' ' + feasibility['summary'], 'plan': math_, 'lanes': plan_lanes,
+              'feasibility': feasibility, 'asks': _asks(store, owner, record, math_, feasibility),
+              'next': _next_lane(store, owner, product, record, now), 'daily_rhythm': DAILY_RHYTHM}
+    if record.get('preset'): answer['preset'] = {'id': record['preset'], 'title': PRESETS[record['preset']]['title'], 'inputs': inputs}
+    if skipped: answer['skipped_lanes'] = skipped
+    if left_out: answer['left_out_lanes'] = {'lanes': left_out, 'why': 'This plan runs up to %d lane%s at the same time.' % (limit, '' if limit == 1 else 's')}
+    if record.get('preset') == 'existing_base' and inputs.get('paid') and not record.get('current_paid') and record['target']['amount'] > inputs['paid']:
+        answer['check_target'] = ('The target counts every paying customer from 0, but you have %d paying now. If the target is a total (for example doubling %d to %d), '
+                                  'call set_month_target with amount %d, current_paid %d and replace true, then plan_month again.') % (inputs['paid'], inputs['paid'], 2 * inputs['paid'], 2 * inputs['paid'], inputs['paid'])
+    return answer
 
 
 def _snapshot(record, math_, now):
@@ -1041,6 +1758,10 @@ def month_status(store, owner, product, args):
                   pending_approvals=pending, ad_budget=budget, next=_next_lane(store, owner, product, record, now, views), daily_rhythm=DAILY_RHYTHM,
                   record_month_numbers='When the owner or a platform gives totals since the start, pass paid_customers and visits in record_numbers values (with lane); counted numbers from the engine replace them.')
     if math_['notes']: result['notes'] = math_['notes']
+    if record['status'] in ('planning', 'running'):
+        if record.get('preset'): result['preset'] = {'id': record['preset'], 'title': PRESETS[record['preset']]['title'], 'inputs': record.get('inputs') or {}}
+        result['feasibility'] = _feasibility(store, owner, record, math_)
+        result['asks'] = _asks(store, owner, record, math_, result['feasibility'])
     if pending: result['tell_the_owner'] = 'Waiting for your approval: ' + '; '.join(p['what'] + (' ' + p['batch_id'] if p.get('batch_id') else ' ' + p.get('ad_budget', '')) for p in pending) + '.'
     if record['status'] in ('reached', 'ended', 'stopped'):
         result['result'] = {'reached': record['status'] == 'reached', 'paid_total': math_['paid']['total'], 'target': record['target']['amount'], 'ended_at': _when(record.get('ended_at')),
@@ -1080,6 +1801,16 @@ def submit_batch(store, owner, product, args):
         if not isinstance(channel, str) or not channel.strip(): return {'accepted': False, 'error': 'Item %d: channel names where it goes (threads, reddit, email ...).' % number}
         if not isinstance(text, str) or not text.strip() or len(text) > 5000: return {'accepted': False, 'error': 'Item %d: text is the exact text to publish or send, up to 5000 characters.' % number}
         entry = {'id': '%s-%d' % (batch_id, number), 'batch_id': batch_id, 'lane': lane, 'kind': kind, 'channel': channel.strip()[:60], 'text': text, 'state': 'awaiting_owner'}
+        if kind == 'template':
+            problem = _template_problem(text)
+            if problem: return {'accepted': False, 'error': 'Item %d: %s' % (number, problem)}
+            rule, cap = item.get('audience_rule'), item.get('daily_cap')
+            if not isinstance(rule, str) or not rule.strip() or len(rule) > 500:
+                return {'accepted': False, 'error': 'Item %d: a template needs audience_rule, who it goes to, in up to 500 characters (for example "members who have not booked in 90 days").' % number}
+            if not _num(cap) or cap != int(cap) or not 1 <= cap <= MAX_TEMPLATE_CAP:
+                return {'accepted': False, 'error': 'Item %d: a template needs daily_cap, the most messages a day built from it, a whole number from 1 to %d.' % (number, MAX_TEMPLATE_CAP)}
+            _, names, limits = _template_slots(text)
+            entry.update(audience_rule=rule.strip(), daily_cap=int(cap), placeholders=names, placeholder_limits=dict(zip(names, limits)), sent_by_day={}, handed_by_day={})
         for key in ('when', 'link_target'):
             if item.get(key) not in (None, ''): entry[key] = str(item[key])[:600]
         clean.append(entry)
@@ -1089,8 +1820,11 @@ def submit_batch(store, owner, product, args):
     store.log(owner + '#campaign', 0, batch_id, 'batch', {'items': len(clean), 'week_of': batch['week_of']})
     kinds = {}
     for entry in clean: kinds[entry['kind']] = kinds.get(entry['kind'], 0) + 1
+    templates = [entry for entry in clean if entry['kind'] == 'template']
+    volume = (' Approving a template lets me send up to its daily cap of personalised messages built from it each day: ' + '; '.join(
+        '%s up to %d a day to %s' % (entry['id'], entry['daily_cap'], entry['audience_rule']) for entry in templates) + '.') if templates else ''
     return {'accepted': True, 'batch_id': batch_id, 'items': len(clean), 'status': 'awaiting_owner', 'valid_until': _when(batch['valid_until']),
-            'approval_needed': {'tell_the_owner': 'I prepared %d items for the next 7 days (%s), batch %s. Please read them and approve the ones you want published.' % (len(clean), ', '.join('%d %s' % (n, k) for k, n in kinds.items()), batch_id),
+            'approval_needed': {'tell_the_owner': 'I prepared %d items for the next 7 days (%s), batch %s. Please read them and approve the ones you want published.' % (len(clean), ', '.join('%d %s' % (n, k) for k, n in kinds.items()), batch_id) + volume,
                                 'where': 'The owner approves on their private owner page (hosted service) or runs "nuluno.py approve %s" in their own terminal (local engine). There is no tool for approving.' % batch_id,
                                 'rule': 'You cannot approve. Publish an item only after batch_status shows it approved, with exactly its text, and pass its id as approved_item in submit_step.'}}
 
@@ -1101,9 +1835,149 @@ def batch_status(store, owner, product, args):
     now = time.time(); out = []
     for batch in reversed((record.get('batches') or [])[-10:]):
         out.append({'batch_id': batch['batch_id'], 'status': _batch_state(batch, now), 'week_of': batch['week_of'], 'valid_until': _when(batch['valid_until']),
-                    'items': [{key: item.get(key) for key in ('id', 'lane', 'kind', 'channel', 'text', 'when', 'link_target', 'state', 'approved_by', 'used_receipt') if item.get(key) is not None}
-                              for item in batch['items']]})
-    return {'batches': out, 'note': 'Publish only items in state approved, with exactly their text, and pass the id as approved_item. used means already published.'}
+                    'items': [_item_view(item, now) for item in batch['items']]})
+    return {'batches': out, 'note': 'Publish only items in state approved, with exactly their text, and pass the id as approved_item. used means already published. '
+                                    'A template stays approved for its batch week: each message built from it (placeholders filled, the rest unchanged) counts toward its daily_cap. '
+                                    'Each placeholder value: ' + TEMPLATE_VALUE_RULE + '.'}
+
+
+def _day(ts=None): return time.strftime('%Y-%m-%d', time.gmtime(ts or time.time()))
+
+
+def _item_view(item, now=None):
+    view = {key: item.get(key) for key in ('id', 'lane', 'kind', 'channel', 'text', 'when', 'link_target', 'state', 'approved_by', 'used_receipt',
+                                           'audience_rule', 'daily_cap', 'placeholders', 'placeholder_limits') if item.get(key) is not None}
+    if item.get('kind') == 'template':
+        sent = (item.get('sent_by_day') or {}).get(_day(now), 0)
+        view.update(sent_today=sent, remaining_today=max(0, item['daily_cap'] - sent))
+    return view
+
+
+def _template_slots(text):
+    """(fixed text pieces, placeholder names, the most characters each placeholder may hold) of a template, compared
+    after normalising like any approved text. {topic:120} sets a placeholder's own limit."""
+    norm = _same_text(text); fixed, names, limits, at = [], [], [], 0
+    for match in _PLACEHOLDER.finditer(norm):
+        fixed.append(norm[at:match.start()]); names.append(match.group(1)); at = match.end()
+        limits.append(int(match.group(2)) if match.group(2) else (NAME_PLACEHOLDER_CHARS if _name_like(match.group(1)) else PLACEHOLDER_DEFAULT_CHARS))
+    fixed.append(norm[at:])
+    return fixed, names, limits
+
+
+def _template_parts(text):
+    fixed, names, _ = _template_slots(text)
+    return fixed, names
+
+
+def _name_like(name): return name.lower() in ('first_name', 'last_name', 'name', 'full_name', 'company', 'company_name', 'name_or_handle', 'handle')
+def _link_like(name): return name.lower() in ('link', 'url', 'tracked_link') or name.lower().endswith(('_link', '_url'))
+
+
+def _template_problem(text):
+    fixed, names, limits = _template_slots(text)
+    if len(names) > MAX_PLACEHOLDERS: return 'a template has at most %d placeholders.' % MAX_PLACEHOLDERS
+    if any(not piece for piece in fixed[1:-1]): return 'two placeholders cannot touch; put fixed text between them (for example "{first_name} {last_name}").'
+    bad = [name for name, most in zip(names, limits) if not 1 <= most <= PLACEHOLDER_MAX_CHARS]
+    if bad: return 'a placeholder limit such as {%s:120} is 1 to %d characters.' % (bad[0], PLACEHOLDER_MAX_CHARS)
+    if len(''.join(''.join(fixed).split())) < TEMPLATE_MIN_FIXED:
+        return 'a template keeps at least %d characters of fixed text (the words around the placeholders that the owner approves).' % TEMPLATE_MIN_FIXED
+    return None
+
+
+_LINE_BREAKS = '\n\r\x0b\x0c\x1c\x1d\x1e\x85  '
+# A domain on any top-level domain (evil.lol, x.zip) counts as a link. A few dotted words that are not domains are
+# allowed first: framework names and abbreviations.
+_NOT_DOMAINS = r'(?:node\.js|vue\.js|next\.js|nuxt\.js|react\.js|asp\.net|e\.g|i\.e)(?![a-z0-9-]|\.[a-z0-9])'
+_DOMAIN = r'(?<![a-z0-9-])(?!%s)[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,24}(?![a-z0-9-])' % _NOT_DOMAINS
+_URLISH = re.compile(r'(?i)(?:[a-z][a-z0-9+.-]*://|www\.|%s|\b\d{1,3}(?:\.\d{1,3}){3}\b|[^\s@]+@[^\s@]+\.[^\s@]+)' % _DOMAIN)
+_SENTENCE_BREAK = re.compile(r'[.!?]+["\'’”)\]]*\s+[A-Z]|[。！？]\s*\S')
+
+
+def _value_problem(name, value, most, fixed, links=(), urlish=None, new_sentence=None):
+    """Why one placeholder value is refused, or None. A value fills a slot: a name, a topic, a tip. It never brings
+    a link (except a link placeholder holding the product's or the round's tracked link), an address, a new sentence
+    or more lines, and it never repeats the template's own fixed text. urlish and new_sentence may be worked out
+    beforehand for the whole text (see _template_fill)."""
+    if not value.strip(): return 'an empty value'
+    if len(value) > most: return '{%s} is %d characters, more than its %d' % (name, len(value), most)
+    if any(ch in value for ch in _LINE_BREAKS): return '{%s} spans more than one line' % name
+    if _link_like(name):
+        if ' ' in value.strip() or not _allowed_link(value.strip(), links):
+            return '{%s} must be exactly the product link or the round\'s tracked link' % name
+        return None
+    if urlish if urlish is not None else _URLISH.search(value): return '{%s} contains a link, a domain or an address' % name
+    if new_sentence if new_sentence is not None else _SENTENCE_BREAK.search(value): return '{%s} starts a new sentence' % name
+    if _name_like(name) and (len(value.split()) > 6 or re.search(r'[,;:!?|<>{}\[\]]', value)): return '{%s} is not a name' % name
+    flat = value.lower()
+    if any(len(piece.strip()) >= 8 and piece.strip().lower() in flat for piece in fixed): return '{%s} repeats the template\'s fixed text' % name
+    return None
+
+
+def _allowed_link(value, links):
+    """value is one of links, with an optional ?query or #part; a link ending in / also allows any path below it."""
+    for link in links:
+        if value == link or value.startswith(link + '?') or value.startswith(link + '#'): return True
+        if link.endswith('/') and value.startswith(link): return True
+    return False
+
+
+def _link_prefixes(store, owner, product, item, rounds=0):
+    """Links a link placeholder may hold: pages of the product's site and of the item's link_target, and the lane's
+    tracked links (hosted service)."""
+    out = []
+    url = product if isinstance(product, str) else (product.get('url') if isinstance(product, dict) else None)
+    for given in (url, (item or {}).get('link_target')):
+        found = re.match(r'(https://[A-Za-z0-9.-]+(?::[0-9]+)?)(?:[/?#]|$)', str(given or '').strip())
+        if found: out += [found.group(1), found.group(1) + '/']
+    if hasattr(store, 'tracked_link'):
+        for number in range(max(1, rounds - 4), rounds + 1):
+            try: link = store.tracked_link(owner, number, '')
+            except Exception: link = None
+            if link: out.append(str(link).split('?')[0].split('#')[0])
+    return tuple(out)
+
+
+def _template_fill(template, text, links=()):
+    """(True, None) when text is the template with every placeholder filled by an allowed value (see _value_problem)
+    and the fixed text unchanged (whitespace normalised; a line break may stand for a space in the fixed text only).
+    Otherwise (False, why). Matched by walking the fixed pieces, so the time stays bounded for any input."""
+    fixed, names, limits = _template_slots(template)
+    import unicodedata
+    marked = re.sub(r'\s+', lambda m: '\n' if any(ch in m.group() for ch in _LINE_BREAKS) else ' ', unicodedata.normalize('NFKC', str(text))).strip()
+    sent = marked.replace('\n', ' ')  # the same length: a value is read from marked, the fixed text compared on sent
+    if not names: return (True, None) if sent == fixed[0] else (False, 'the text is not the approved text')
+    if not sent.startswith(fixed[0]): return False, 'the text does not start like the template'
+    # links and sentence breaks found once in the whole text: a value is refused when one touches (link) or lies in
+    # (sentence break) its span. Prefix sums keep each check constant, so adversarial input stays fast.
+    import bisect
+    flags = [0] * (len(marked) + 1)
+    for match in _URLISH.finditer(marked):
+        for i in range(match.start(), match.end()): flags[i + 1] = 1
+    for i in range(len(marked)): flags[i + 1] += flags[i]
+    breaks = [(m.start(), m.end()) for m in _SENTENCE_BREAK.finditer(marked)]; starts = [b[0] for b in breaks]
+    def inside(at, end):  # breaks do not overlap, so the first one starting in the span is the one to check
+        i = bisect.bisect_left(starts, at)
+        return i < len(breaks) and breaks[i][1] <= end
+    positions, why = {len(fixed[0])}, None
+    for index, (name, most) in enumerate(zip(names, limits)):
+        piece, last, reached = fixed[index + 1], index == len(names) - 1, set()
+        for at in positions:
+            for size in range(1, most + 1):
+                end = at + size
+                if end > len(sent): break
+                fits = (end + len(piece) == len(sent) and sent.endswith(piece)) if last else sent.startswith(piece, end)
+                if not fits: continue
+                problem = _value_problem(name, marked[at:end], most, fixed, links, flags[end] - flags[at] > 0, inside(at, end))
+                if problem: why = why or problem; continue
+                if last: return True, None
+                reached.add(end + len(piece))
+        positions = reached
+        if not positions: break
+    return False, why or 'the fixed text differs from the template, or a value is longer than its limit'
+
+
+def _fills_template(template, text, links=()):
+    return _template_fill(template, text, links)[0]
 
 
 def approve_batch(store, owner, batch_id, item_ids, by):
@@ -1164,19 +2038,24 @@ def _approved(record, lane, item_id):
             if item['state'] == 'used': return None, 'Item %s was already published (%s). Each approved item is used once.' % (item_id, item.get('used_receipt'))
             if item['state'] != 'approved': return None, 'Item %s is not approved by the owner yet. Show the owner the exact text first, or wait until batch_status shows it approved.' % item_id
             if now > batch['valid_until']: return None, 'The approval of item %s has expired (batch for the week of %s). Get the owner\'s approval again.' % (item_id, batch['week_of'])
+            if item.get('kind') == 'template':
+                sent = (item.get('sent_by_day') or {}).get(_day(now), 0)
+                return dict(item, sent_today=sent, remaining_today=max(0, item['daily_cap'] - sent)), None
             return item, None
     return None, 'No item %s in any batch. batch_status lists them.' % item_id
 
 
 def _approved_for(record, lane):
     now = time.time()
-    return [{key: item.get(key) for key in ('id', 'kind', 'channel', 'text', 'when') if item.get(key) is not None}
+    return [{key: value for key, value in _item_view(item, now).items() if key in ('id', 'kind', 'channel', 'text', 'when', 'audience_rule', 'daily_cap', 'sent_today', 'remaining_today')}
             for batch in record.get('batches') or [] if now <= batch['valid_until'] for item in batch['items'] if item['lane'] == lane and item['state'] == 'approved'][:10]
 
 
 LANE_APPROVAL_RULE = ('Required on a month target lane: a step that publishes or sends something is accepted only with approved_item, the id of an item the owner approved. '
                       'Put the exact text in submit_batch; the owner approves it on their owner page (hosted service) or by running "python3 nuluno.py approve <batch_id> --all" in their own terminal (local engine). '
-                      'Then publish exactly that text and pass its id as approved_item in submit_step. Until then, submit the step with status "blocked" and needs.')
+                      'Then publish exactly that text and pass its id as approved_item in submit_step. Until then, submit the step with status "blocked" and needs. '
+                      'For many personalised messages, submit one item of kind template instead: text with {placeholders} such as {first_name}, audience_rule and daily_cap. '
+                      'Once approved, put every message you sent from it in output (one string each); each counts toward the daily cap. next_recipients gives the next people from the owner\'s list (hosted service).')
 
 
 def _lane_step_sends(store, key, step_id):
@@ -1230,6 +2109,44 @@ def _month_numbers(store, owner, record, lane, args):
     return flags
 
 
+def _count_day(entry, key, amount):
+    days = entry.setdefault(key, {}); today = _day()
+    days[today] = days.get(today, 0) + amount
+    for old in sorted(days)[:-14]: del days[old]
+
+
+def next_recipients(store, owner, product, args):
+    """The next people to message with an approved template, from the owner's list, never more than its daily cap."""
+    args = args if isinstance(args, dict) else {}
+    record = _campaign(store, owner); lane = str(args.get('lane') or '').strip(); item_id = str(args.get('item_id') or '').strip()
+    if not record or lane not in (record.get('lanes') or []):
+        return {'accepted': False, 'error': 'lane must be one of the month target lanes: %s.' % (', '.join(record['lanes']) if record and record.get('lanes') else 'none yet')}
+    item, problem = _approved(record, lane, item_id)
+    if problem: return {'accepted': False, 'error': problem}
+    if item.get('kind') != 'template': return {'accepted': False, 'error': 'next_recipients works with an approved item of kind template; %s is a single %s.' % (item_id, item['kind'])}
+    n = args.get('n', 20)
+    if not _num(n) or n != int(n) or not 1 <= n <= 200: return {'accepted': False, 'error': 'n is a whole number from 1 to 200.'}
+    entry = next(e for batch in record['batches'] for e in batch['items'] if e['id'] == item['id'])
+    handed = (entry.get('handed_by_day') or {}).get(_day(), 0); left = entry['daily_cap'] - handed
+    base = {'item_id': item['id'], 'daily_cap': entry['daily_cap'], 'audience_rule': entry['audience_rule'], 'template': entry['text'], 'sent_today': item['sent_today']}
+    if left <= 0: return dict(base, accepted=False, remaining_today=0, error='Template %s already handed out its %d recipients for today. Continue tomorrow.' % (item['id'], entry['daily_cap']))
+    if not callable(getattr(store, 'next_recipients', None)):
+        return dict(base, accepted=True, available=False, remaining_today=item['remaining_today'],
+                    note='This engine holds no recipient list (the hosted service keeps a list the owner uploads). Use your own list of people who match audience_rule, '
+                         'send at most remaining_today messages from this template today, and put each sent message in output when you submit the step with approved_item.')
+    found, problem = _hook(store, 'next_recipients', owner, lane, item['id'], int(min(n, left)))
+    note = problem
+    if isinstance(found, dict): note = note or found.get('note'); found = found.get('recipients')
+    recipients = [r for r in (found or []) if isinstance(r, dict)][:int(min(n, left))]
+    if recipients:
+        _count_day(entry, 'handed_by_day', len(recipients)); _save_campaign(store, owner, record)
+    answer = dict(base, accepted=True, available=bool(recipients), recipients=recipients, remaining_today=left - len(recipients),
+                  rule='Send each person one message built from the template (fill the placeholders from their row, leave the rest unchanged; each value: ' + TEMPLATE_VALUE_RULE + '), only through the channel the template names. '
+                       'Then submit the lane step with approved_item %s and every sent message in output. Skip anyone whose row does not match audience_rule.' % item['id'])
+    if not recipients: answer['note'] = note or 'No more recipients on the uploaded list for this template. The owner can upload a list on their owner page.'
+    return answer
+
+
 def _with_lane(name, tool):
     """Every goal tool also works on one lane of a month target (lane=<goal id>). Without lane it is unchanged."""
     def run(store, owner, product, args):
@@ -1278,7 +2195,11 @@ def _with_lane(name, tool):
             if item:
                 for batch in record['batches']:
                     for entry in batch['items']:
-                        if entry['id'] == item['id']: entry.update(state='used', used_at=time.time(), used_receipt=result.get('receipt'), used_links=args.get('links') if isinstance(args.get('links'), list) else [])
+                        if entry['id'] != item['id']: continue
+                        if entry.get('kind') == 'template':  # a template stays approved; its messages are counted per day
+                            _count_day(entry, 'sent_by_day', result.get('template_messages_counted') or 0)
+                            entry['last_receipt'] = result.get('receipt')
+                        else: entry.update(state='used', used_at=time.time(), used_receipt=result.get('receipt'), used_links=args.get('links') if isinstance(args.get('links'), list) else [])
             _save_campaign(store, owner, record)
         _decorate(record, lane, result)
         return result
@@ -1289,7 +2210,7 @@ GOAL_TOOLS = {'where_are_we': where_are_we, 'set_goal': set_goal, 'next_step': n
               'record_numbers': record_numbers, 'read_page': read_page, 'stop_goal': stop_goal, 'tracking': tracking}
 TOOLS = {name: _with_lane(name, tool) for name, tool in GOAL_TOOLS.items()}
 TOOLS.update({'set_month_target': set_month_target, 'plan_month': plan_month, 'month_status': month_status,
-              'submit_batch': submit_batch, 'batch_status': batch_status, 'request_ad_budget': request_ad_budget})
+              'submit_batch': submit_batch, 'batch_status': batch_status, 'request_ad_budget': request_ad_budget, 'next_recipients': next_recipients})
 
 # Tool descriptions shared by every MCP front end.
 TOOL_SPECS = [
@@ -1312,16 +2233,20 @@ TOOL_SPECS = [
     {'name': 'set_month_target', 'description': 'Start a month target, for example 100 paying customers in 30 days (days 7 to 90). kind paid_customers (amount = customers) or revenue_minor (amount in cents; needs price). price is what one customer pays (39 for US$39); current_paid counts customers already won toward this target. Then call plan_month.',
      'inputSchema': {'type': 'object', 'properties': {'amount': {'type': 'number'}, 'kind': {'type': 'string', 'enum': list(MONTH_KINDS)}, 'days': {'type': 'integer'}, 'price': {'type': 'number'},
                                                       'currency': {'type': 'string'}, 'current_paid': {'type': 'integer'}, 'why': {'type': 'string'}, 'replace': {'type': 'boolean'}}, 'required': ['amount'], 'additionalProperties': False}},
-    {'name': 'plan_month', 'description': 'Choose the lanes of the month target: 3 to 5 goal ids on different channels (the plan may allow fewer). The engine works the target back into paid customers and visits per day, says which funnel rates are measured and which are assumed, splits the daily visits across lanes and starts every lane. Show the owner tell_the_owner.',
-     'inputSchema': {'type': 'object', 'properties': {'lanes': {'type': 'array', 'items': {'type': 'string'}}, 'funnel': {'type': 'object'}}, 'required': ['lanes'], 'additionalProperties': False}},
-    {'name': 'month_status', 'description': 'Where the month target stands: paid customers and visits so far with their source, pace, what each lane needs today, approvals waiting for the owner, the ad budget, and next: the lane and step to work on now.',
+    {'name': 'plan_month', 'description': 'Choose the lanes of the month target: 3 to 5 goal ids on different channels (the plan may allow fewer), or a preset (new_brand, existing_base, b2b_self_serve, b2b_sales) that picks them, with inputs you know (price, members, paid, trials_per_week ...). The engine works the target back into what is needed per day at each layer, says which rates are measured and which assumed, judges honestly whether the lanes can reach it (feasibility: verdict, gap, levers), lists asks only the owner can answer, and starts every lane. Show the owner tell_the_owner. Call again with more inputs to update the plan.',
+     'inputSchema': {'type': 'object', 'properties': {'lanes': {'type': 'array', 'items': {'type': 'string'}}, 'preset': {'type': 'string', 'enum': list(PRESETS)},
+                                                      'inputs': {'type': 'object'}, 'funnel': {'type': 'object'}}, 'additionalProperties': False}},
+    {'name': 'month_status', 'description': 'Where the month target stands: paid customers and visits so far with their source, pace, what each lane needs today, feasibility (can the lanes still reach it, the gap, the levers), asks for the owner, approvals waiting, the ad budget, and next: the lane and step to work on now.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
-    {'name': 'submit_batch', 'description': 'Hand the owner up to 50 items (posts, replies, emails, ads, messages) for the coming 7 days to approve in one go. Each item: lane, kind, channel, the exact text, optional when and link_target. You cannot approve; the owner does it on their own page or terminal.',
+    {'name': 'submit_batch', 'description': 'Hand the owner up to 50 items (posts, replies, emails, ads, messages) for the coming 7 days to approve in one go. Each item: lane, kind, channel, the exact text, optional when and link_target. A template item (kind template) is a text with {placeholders} plus audience_rule and daily_cap: approving it allows up to daily_cap personalised messages a day built from it. You cannot approve; the owner does it on their own page or terminal.',
      'inputSchema': {'type': 'object', 'properties': {'items': {'type': 'array', 'items': {'type': 'object', 'properties': {'lane': {'type': 'string'}, 'kind': {'type': 'string', 'enum': list(ITEM_KINDS)}, 'channel': {'type': 'string'},
-                                                                                                                         'text': {'type': 'string'}, 'when': {'type': 'string'}, 'link_target': {'type': 'string'}}, 'required': ['lane', 'kind', 'channel', 'text']}},
+                                                                                                                         'text': {'type': 'string'}, 'when': {'type': 'string'}, 'link_target': {'type': 'string'},
+                                                                                                                         'audience_rule': {'type': 'string'}, 'daily_cap': {'type': 'integer'}}, 'required': ['lane', 'kind', 'channel', 'text']}},
                                                       'week_of': {'type': 'string'}}, 'required': ['items'], 'additionalProperties': False}},
     {'name': 'batch_status', 'description': 'List the weekly batches and the state of each item: awaiting_owner, approved (may be published with exactly its text) or used.',
      'inputSchema': {'type': 'object', 'properties': {}, 'additionalProperties': False}},
+    {'name': 'next_recipients', 'description': 'For an approved template (item_id) on a lane: the next n people to message from the owner\'s uploaded list, never more than its daily cap a day. The local engine holds no list and says so; then use your own list that matches audience_rule.',
+     'inputSchema': {'type': 'object', 'properties': {'lane': {'type': 'string'}, 'item_id': {'type': 'string'}, 'n': {'type': 'integer'}}, 'required': ['lane', 'item_id'], 'additionalProperties': False}},
     {'name': 'request_ad_budget', 'description': 'Ask the owner to approve one daily ad budget cap for the month target (all ad channels together, in the currency\'s main unit). Spend nothing until it is approved; record_numbers on an ad lane flags spend above the cap.',
      'inputSchema': {'type': 'object', 'properties': {'daily_cap': {'type': 'number'}, 'currency': {'type': 'string'}, 'channels': {'type': 'array', 'items': {'type': 'string'}}}, 'required': ['daily_cap', 'currency', 'channels'], 'additionalProperties': False}},
 ]

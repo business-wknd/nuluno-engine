@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 (2026-11-27)
+
+**Presets for three kinds of business**
+- `plan_month` takes `preset` and `inputs` instead of, or as well as, `lanes`: `new_brand` (a consumer product with no paying customers yet), `existing_base` (a brand with members or customers), `b2b_self_serve` (software with a free trial or free plan) and `b2b_sales` (software sold through demos). A preset picks the lanes and asks only what an agent cannot know (price, members, paying users now, trials a week, sales cycle, demos a week ...). Inputs are checked, merged with earlier calls and remembered; the agent chooses the channels and may pass rates it measured. Command line: `plan --preset <preset> --input key=value`.
+- B2B presets add a sign-up layer (visits to trials or demos, then to paid) with rates marked measured or assumed. `existing_base` enforces `capacity_per_week` in the math and flags a target that ignores the paying users the owner already has.
+
+**Feasibility and asks**
+- `plan_month` and `month_status` return `feasibility`: `verdict` (`on_track`, `stretch` or `not_with_current_inputs`), what is needed per day at each layer, what each lane can bring by the end and why, the gap, and `levers` with what each adds and needs from the owner. An ad lever whose cost per customer is above the price carries a `warning` and is never used to close the gap; ads are not offered when the sales cycle is longer than the days left. `tell_the_owner` ends with the summary.
+- `asks`: what only the owner can give (answers to preset questions, a list upload, a Stripe connection on the hosted service, a send volume, an ad budget, a verified sending domain, a link), each with the reason and where to answer it.
+
+**Templates and recipients**
+- Batch item kind `template`: a text with up to 10 `{placeholders}`, an `audience_rule` and a `daily_cap` (1 to 2000). Once approved it stays approved for its batch week; `submit_step` with `approved_item` set to a template counts every message in the output built from it (fixed text unchanged after normalising whitespace, each placeholder 1 to 200 characters) and refuses a day over the cap. Counts are kept per UTC day. Plain items keep the exact-text, one-use rule.
+- New tool `next_recipients(lane, item_id, n)`: on the hosted service, the next people to message from the list the owner uploaded, within the template's daily cap. Locally it says there is no list. Optional store hooks `next_recipients` and `list_size`.
+
+**Library: 11 new playbooks (110 in all)**
+- `G-CREATOR-COLLAB` (paying customers through creators), `G-BASE-REACTIVATE`, `G-BASE-REFERRAL`, `G-BASE-UPGRADE` (existing members), and `G-B2B-LTD`, `G-B2B-ALTERNATIVES`, `G-B2B-INTENT`, `G-B2B-TRIAL-CONVERT`, `G-B2B-MARKETPLACE`, `G-B2B-OUTBOUND`, `G-B2B-PARTNERS` (B2B SaaS). 186 reusable steps (31 new) with 1,300 checklist items.
+- Two new Agent Skills (26 in all): `customer-base-growth` and `b2b-saas-growth`; `G-CREATOR-COLLAB` is in `partners-and-deals`. The `sales-goal` skill explains presets, feasibility, asks and templates.
+- `server.json` for the official MCP registry, and `docs/social.png` for the GitHub social preview.
+
 ## 0.3.0 (2026-11-23)
 
 **Month target mode**

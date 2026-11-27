@@ -23,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import core
 
-VERSION = '0.3.0'
+VERSION = '0.4.0'
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 
 

@@ -1,8 +1,8 @@
 ---
 name: sales-goal
-description: "When the user wants to sell a product or get more clicks, sign-ups, customers or sales, and wants the work to keep going until a real number is reached: picks one of 99 sales goals, each judged by one number, works it one step at a time, records numbers before and after, and when the target is missed names one bottleneck and changes one thing for the next round. Saves progress so a new chat continues. Includes a dependency-free engine (Python 3) that checks each step."
+description: "When the user wants to sell a product or get more clicks, sign-ups, customers or sales, and wants the work to keep going until a real number is reached: picks one of 110 sales goals, each judged by one number, works it one step at a time, records numbers before and after, and when the target is missed names one bottleneck and changes one thing for the next round. For a month target (for example 100 paying customers in 30 days) it plans several channels at once from a preset for a new brand, a brand with existing customers or B2B SaaS, and says honestly whether the plan can reach it and what would close the gap. Saves progress so a new chat continues. Includes a dependency-free engine (Python 3) that checks each step."
 metadata:
-  version: 0.3.0
+  version: 0.4.0
   source: https://github.com/business-wknd/nuluno-engine
 ---
 
@@ -53,15 +53,39 @@ python3 scripts/nuluno.py plan G-TH-LINK-RATE G-RD-PURCHASES G-EM-PURCHASE
 python3 scripts/nuluno.py month
 ```
 
-`target` starts it; add `--price 39 --currency USD` and `--current-paid N` when known. `plan` takes 1 to 5 goal ids on different channels (pick 3 to 5 yourself; a plan may allow fewer). Each becomes a lane with one round a day. The engine works the target back into paying customers and visits per day, says which rates are measured and which are assumed (2 of every 100 visitors paying, until real numbers exist), and splits the daily visits across the lanes. Show the owner its `tell_the_owner`.
+`target` starts it; add `--price 39 --currency USD` and `--current-paid N` when known. `plan` takes 1 to 5 goal ids on different channels (pick 3 to 5 yourself; a plan may allow fewer), or a preset that picks them for the kind of business:
 
-`month` shows progress with its source, the pace, each lane and `next`: the lane to work on now. Work it with `next`, `submit` and `numbers` plus `--lane <goal id>`, then run `month` again. When the owner or a platform gives totals since the start, add `paid_customers` and `visits` to `numbers`.
+| Preset | When | Lanes it starts with | It asks the owner |
+|---|---|---|---|
+| `new_brand` | A new consumer product, no paying customers yet | creators (`G-CREATOR-COLLAB`), one organic channel, ads under an approved daily cap, community requests | price, free trial or preview, ad daily cap |
+| `existing_base` | A brand with members or customers | win-back (`G-BASE-REACTIVATE`), member invites (`G-BASE-REFERRAL`), upgrades (`G-BASE-UPGRADE`), one channel for new people | members, paying users now, list size, where members can be messaged, how many more customers can be served a week, price |
+| `b2b_self_serve` | Software with a free trial or free plan and a low price | launch deal (`G-B2B-LTD`), competitor alternatives (`G-B2B-ALTERNATIVES`), public requests (`G-B2B-INTENT`), trial conversion (`G-B2B-TRIAL-CONVERT`), integration marketplaces (`G-B2B-MARKETPLACE`) | price, trials a week, trial to paid if known, competitors if known |
+| `b2b_sales` | Software sold through demos | outbound to published contacts (`G-B2B-OUTBOUND`), public requests, competitor alternatives, agency partners (`G-B2B-PARTNERS`), trial conversion if there is a trial | contract value, sales cycle in days, demos a week, whether there is a trial |
 
-A week of content is approved in one go: write the posts, replies and emails to a file as `{"items": [{"lane": ..., "kind": "post", "channel": ..., "text": ..., "when": ...}]}` and run `batch @week.json`. `batches` shows which items the owner approved. On a lane, `submit` of a step that publishes or sends is accepted only with `--approved-item <id>`: publish an approved item with exactly its text. Any other text goes into a new batch first. For ads, `ad-budget 10 --currency USD --channel meta_ads` asks the owner for one daily cap. Spend nothing until it is approved; spend above the cap is flagged `over_budget`.
+```bash
+python3 scripts/nuluno.py target 100 --days 30 --price 9.99 --currency USD
+python3 scripts/nuluno.py plan --preset new_brand --input free_trial=yes --input ad_daily_cap=20
+```
+
+Pass what you know as `--input key=value` (`inputs` in `plan_month`); run `plan` again with more inputs as the owner answers. You choose the channels yourself (`organic_channel`, `ads_channel`, `community_channel`, `acquisition_channel`) and may pass rates you measured. A goal a preset names that this library lacks is replaced by the closest one and listed in `skipped_lanes`.
+
+Each lane runs one round a day. The engine works the target back into what is needed per day at each layer (paying customers, trials or demos, visits), says which rates are measured and which are assumed (2 of every 100 visitors paying, until real numbers exist), and splits the work across the lanes. Show the owner its `tell_the_owner`.
+
+`feasibility` is the honest check: `verdict` is `on_track`, `stretch` or `not_with_current_inputs`, with the gap and `levers`, each saying what it adds and what it needs from the owner (more posts a day, a template with a higher daily cap, a higher ad cap, a list, a marketplace listing). When ads would cost more per customer than the price, the lever carries a `warning` and is never used to close the gap. Tell the owner the verdict as it is; never promise the target.
+
+`asks` lists what only the owner can give: an answer to a preset question, a member list, a Stripe connection (hosted), a send volume, an ad budget, a verified sending domain or a link. Each ask says why and where the owner answers it. Ask for them together, once, and do what `agent_does_first` says before the owner is asked to approve.
+
+`month` shows progress with its source, the pace, feasibility, asks, each lane and `next`: the lane to work on now. Work it with `next`, `submit` and `numbers` plus `--lane <goal id>`, then run `month` again. When the owner or a platform gives totals since the start, add `paid_customers` and `visits` to `numbers`.
+
+A week of content is approved in one go: write the posts, replies and emails to a file as `{"items": [{"lane": ..., "kind": "post", "channel": ..., "text": ..., "when": ...}]}` and run `batch @week.json`. `batches` shows which items the owner approved. On a lane, `submit` of a step that publishes or sends is accepted only with `--approved-item <id>`: publish an approved item with exactly its text. Any other text goes into a new batch first.
+
+For many messages written for each person (win-back, invites, outreach, replies), hand in one item of kind `template`: the text with up to 10 `{placeholders}` such as `{first_name}` or `{their_post}`, an `audience_rule` (who it goes to) and a `daily_cap` (1 to 2000). Once the owner approves it, it stays approved for its batch week: submit the step with `--approved-item <template id>` and every message you sent in the output, each as its own string; a message counts when only the placeholders differ (each filled with 1 to 200 characters), and the engine refuses a day that would go over the cap. On the hosted engine, `next_recipients` gives the next people from the list the owner uploaded; locally there is no list, so use the owner's own list that matches `audience_rule`.
+
+For ads, `ad-budget 10 --currency USD --channel meta_ads` asks the owner for one daily cap. Spend nothing until it is approved; spend above the cap is flagged `over_budget`.
 
 `approve` and `approve-budget` are for the owner, in their own terminal. Never run them yourself.
 
-Tool names: `set_month_target` = `target`, `plan_month` = `plan`, `month_status` = `month`, `submit_batch` = `batch`, `batch_status` = `batches`, `request_ad_budget` = `ad-budget`; `lane` = `--lane`, `approved_item` = `--approved-item`.
+Tool names: `set_month_target` = `target`, `plan_month` = `plan` (its `preset` = `--preset`, `inputs` = `--input key=value`), `month_status` = `month`, `submit_batch` = `batch`, `batch_status` = `batches`, `request_ad_budget` = `ad-budget`; `lane` = `--lane`, `approved_item` = `--approved-item`. `next_recipients` is hosted only.
 
 ## Other ways to run the same engine
 
@@ -86,7 +110,9 @@ Tool names: `set_month_target` = `target`, `plan_month` = `plan`, `month_status`
 | `messaging-apps` | `G075`, `G076`, `G077`, `G078` |
 | `email-marketing` | `G-EM-REPLY`, `G-EM-CLICK`, `G-EM-PURCHASE`, `G-EM-UNSUBSCRIBE` |
 | `webinars` | `G-WB-ATTEND`, `G-WB-MEETINGS`, `G-WB-PURCHASE` |
-| `partners-and-deals` | `G085`, `G086`, `G087`, `G088`, `G089`, `G090` |
+| `partners-and-deals` | `G085`, `G086`, `G087`, `G088`, `G089`, `G090`, `G-CREATOR-COLLAB` |
+| `customer-base-growth` | `G-BASE-REACTIVATE`, `G-BASE-REFERRAL`, `G-BASE-UPGRADE` |
+| `b2b-saas-growth` | `G-B2B-LTD`, `G-B2B-ALTERNATIVES`, `G-B2B-INTENT`, `G-B2B-TRIAL-CONVERT`, `G-B2B-MARKETPLACE`, `G-B2B-OUTBOUND`, `G-B2B-PARTNERS` |
 | `product-hunt-launch` | `G-PH-MAKERS`, `G-PH-PUBLIC-EMAILS`, `G-PH-LAUNCH-TRAFFIC`, `G-PH-LAUNCH-PURCHASE` |
 | `search-visibility` | `G067`, `G068` |
 | `review-directories` | `G083`, `G084` |

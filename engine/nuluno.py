@@ -15,7 +15,9 @@ Month target (several channels at once toward a number of paying customers):
 
     python3 nuluno.py target 100 --days 30 [--price 39 --currency USD] [--current-paid 0]
     python3 nuluno.py plan G-TH-LINK-RATE G-RD-PURCHASES G-EM-PURCHASE
-    python3 nuluno.py month
+    python3 nuluno.py plan --preset new_brand --input price=9.99 --input free_trial=yes
+                                                      (presets: new_brand, existing_base, b2b_self_serve, b2b_sales)
+    python3 nuluno.py month                           (progress, feasibility: can it be reached, the gap, the levers; asks)
     python3 nuluno.py next --lane G-TH-LINK-RATE      (--lane works on status, goal, next, submit, numbers, read, tracking, stop)
     python3 nuluno.py batch @week.json                (a JSON object {"items": [...], "week_of": "YYYY-MM-DD"})
     python3 nuluno.py batches
@@ -52,7 +54,9 @@ CLI_NAMES = {
     'tracking': 'python3 nuluno.py tracking',
     'use_product': 'python3 nuluno.py start <product url>',
     'set_month_target': 'python3 nuluno.py target <amount> [--days 30] [--price 39 --currency USD] [--current-paid N] [--kind revenue_minor]',
-    'plan_month': 'python3 nuluno.py plan <goal_id> <goal_id> ... [--funnel \'{"visit_to_paid": 0.02}\']',
+    'plan_month': 'python3 nuluno.py plan <goal_id> <goal_id> ... [--funnel \'{"visit_to_paid": 0.02}\']  or  python3 nuluno.py plan --preset <preset> [--input key=value ...]',
+    'inputs': '--input key=value on plan (repeat for more)',
+    'next_recipients': 'hosted service only (https://engine.nuluno.com keeps the list the owner uploads); here, use your own list that matches audience_rule',
     'month_status': 'python3 nuluno.py month',
     'submit_batch': 'python3 nuluno.py batch @week.json  (a JSON object {"items": [{"lane", "kind", "channel", "text", "when"}], "week_of": "YYYY-MM-DD"})',
     'batch_status': 'python3 nuluno.py batches',
@@ -89,6 +93,18 @@ def parse_json(text, what):
     return value
 
 
+def parse_inputs(pairs):
+    """--input key=value pairs: a number, true/false or a JSON list when the value reads as one, otherwise text."""
+    out = {}
+    for pair in pairs:
+        key, sep, value = pair.partition('=')
+        if not sep or not key.strip(): fail('--input is key=value, for example --input price=9.99', 2)
+        try: parsed = json.loads(value)
+        except ValueError: parsed = value
+        out[key.strip()] = parsed if isinstance(parsed, (int, float, bool, list)) else value
+    return out
+
+
 def build_parser():
     common = argparse.ArgumentParser(add_help=False)  # also accepted after the command; SUPPRESS keeps a value given before it
     common.add_argument('--data', default=argparse.SUPPRESS, help='folder for saved progress (default ~/.nuluno-engine)')
@@ -120,8 +136,10 @@ def build_parser():
     target.add_argument('--price', type=float, help='what one customer pays, in the main unit (39 for US$39)'); target.add_argument('--currency')
     target.add_argument('--current-paid', type=int, default=0, help='paying customers already won toward this target'); target.add_argument('--why', default='')
     target.add_argument('--replace', action='store_true', help='replace a running month target (only when the owner says so)')
-    plan = add('plan', 'month target: choose 1 to 5 lanes (goal ids) and get the daily plan')
-    plan.add_argument('lanes', nargs='+'); plan.add_argument('--funnel', help='JSON object of known rates, e.g. {"visit_to_paid": 0.03}, or @file.json')
+    plan = add('plan', 'month target: choose 1 to 5 lanes (goal ids), or a preset, and get the daily plan and whether it can be reached')
+    plan.add_argument('lanes', nargs='*'); plan.add_argument('--funnel', help='JSON object of known rates, e.g. {"visit_to_paid": 0.03}, or @file.json')
+    plan.add_argument('--preset', choices=list(core.PRESETS), help='start from the lanes and questions of one kind of business')
+    plan.add_argument('--input', action='append', default=[], metavar='KEY=VALUE', help='something known about the business, e.g. price=9.99 or members=50000 (repeatable)')
     add('month', 'month target: progress, pace, each lane and the lane to work on now')
     batch = add('batch', 'month target: hand the owner a week of items to approve in one go')
     batch.add_argument('items', help='@file.json or JSON text: {"items": [...], "week_of": "YYYY-MM-DD"}')
@@ -163,7 +181,13 @@ def run(args):
         extra = {key: value for key, value in (('price', args.price), ('currency', args.currency)) if value is not None}
         amount = int(args.amount) if args.amount == int(args.amount) else args.amount
         return call('set_month_target', amount=amount, kind=args.kind, days=args.days, current_paid=args.current_paid, why=args.why, replace=args.replace, **extra)
-    if args.command == 'plan': return call('plan_month', lanes=args.lanes, **({'funnel': parse_json(args.funnel, '--funnel')} if args.funnel else {}))
+    if args.command == 'plan':
+        extra = {'funnel': parse_json(args.funnel, '--funnel')} if args.funnel else {}
+        if args.preset: extra['preset'] = args.preset
+        if args.input: extra['inputs'] = parse_inputs(args.input)
+        if not args.lanes and not args.preset and not (core._campaign(store, owner) or {}).get('preset'):
+            fail('Name the lanes (goal ids), or a preset with --preset (%s).' % ', '.join(core.PRESETS), 2)
+        return call('plan_month', **dict(extra, **({'lanes': args.lanes} if args.lanes else {})))
     if args.command == 'month': return call('month_status')
     if args.command == 'batch':
         given = parse_json(args.items, 'items')
@@ -176,7 +200,12 @@ def run(args):
         if not batch: fail('No batch %s. Run: python3 nuluno.py batches' % args.batch_id)
         shown = [i for i in batch['items'] if i['state'] == 'awaiting_owner' and (args.all or i['id'] in args.items)]
         lines = ['Batch %s, week of %s. You approve publishing exactly these texts:' % (batch['batch_id'], batch['week_of'])] + ['\n[%s] %s on %s%s:\n%s' % (
-            i['id'], i['kind'], i['channel'], ' (' + i['when'] + ')' if i.get('when') else '', i['text']) for i in shown]
+            i['id'], i['kind'], i['channel'], ' (' + i['when'] + ')' if i.get('when') else '', i['text'])
+            + ('\n-> a template: up to %d personalised messages a day built from this text (only the {placeholders} change), sent to: %s'
+               '\n   each placeholder value: %s; one line, no link, domain or email address (a {link} placeholder holds only your product link or the tracked link), no new sentence.' % (
+                   i['daily_cap'], i['audience_rule'], ', '.join('{%s} up to %d characters' % (name, most) for name, most in (i.get('placeholder_limits') or {}).items()) or 'short')
+               if i['kind'] == 'template' else '')
+            for i in shown]
         if not owner_confirms(lines): fail('Not approved.')
         return core.approve_batch(store, owner, args.batch_id, 'all' if args.all else args.items, 'owner (command line)')
     if args.command == 'approve-budget':

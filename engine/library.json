@@ -1,5 +1,5 @@
 {
- "version": "2026.11.23",
+ "version": "2026.11.27",
  "goals": {
   "G-IG-FOLLOWERS": {
    "title": "Instagram: grow net new followers",
@@ -9126,6 +9126,996 @@
     }
    ],
    "title_zh": "Discord已同意成員提高體驗任務完成比例"
+  },
+  "G-CREATOR-COLLAB": {
+   "title": "Creators: get paying customers through creators whose audience wants the product",
+   "channel": "partnerships",
+   "metric": {
+    "key": "creator_paid_customers",
+    "formula": "count",
+    "components": [
+     "external_purchases"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "A-SEGMENTS",
+    "partner": "C-CR-FIND",
+    "proposal": "C-CR-OUTREACH",
+    "followup": "C-CR-ENABLE",
+    "motivation": "A-MOTIVES",
+    "data": "C-CR-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.creators.00.C-CR-ACCESS",
+     "skill": "C-CR-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.creators.01.C-CR-FIND",
+     "skill": "C-CR-FIND",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.creators.baseline.C-CR-METRICS",
+     "skill": "C-CR-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.creators.02.C-CR-OUTREACH",
+     "skill": "C-CR-OUTREACH",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.creators.03.C-CR-ENABLE",
+     "skill": "C-CR-ENABLE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.creators.observe.0.C-CR-METRICS",
+     "skill": "C-CR-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "創作者合作：讓受眾正需要產品的創作者帶來付費客戶",
+   "new_in": "0.4.0"
+  },
+  "G-BASE-REACTIVATE": {
+   "title": "Members: win back inactive members as paying members",
+   "channel": "customer_base",
+   "metric": {
+    "key": "reactivated_paying_members",
+    "formula": "count",
+    "components": [
+     "reactivated_paying_members"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "C-BASE-SEGMENT",
+    "motivation": "A-MOTIVES",
+    "data": "C-BASE-METRICS",
+    "message": "C-BASE-WINBACK",
+    "invite": "C-BASE-WINBACK"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.reactivate.00.C-BASE-ACCESS",
+     "skill": "C-BASE-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.reactivate.01.C-BASE-SEGMENT",
+     "skill": "C-BASE-SEGMENT",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.reactivate.baseline.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.reactivate.02.C-BASE-WINBACK",
+     "skill": "C-BASE-WINBACK",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.reactivate.observe.0.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "既有會員：喚回不活躍會員再次付費",
+   "new_in": "0.4.0"
+  },
+  "G-BASE-REFERRAL": {
+   "title": "Members: get new paying customers through member invites",
+   "channel": "customer_base",
+   "metric": {
+    "key": "paid_referrals",
+    "formula": "count",
+    "components": [
+     "paid_referrals"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "C-BASE-SEGMENT",
+    "motivation": "A-MOTIVES",
+    "data": "C-BASE-METRICS",
+    "program": "C-BASE-REFER",
+    "invite": "C-BASE-REFER"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.referral.00.C-BASE-ACCESS",
+     "skill": "C-BASE-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.referral.01.C-BASE-SEGMENT",
+     "skill": "C-BASE-SEGMENT",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.referral.baseline.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.referral.02.C-BASE-REFER",
+     "skill": "C-BASE-REFER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.referral.observe.0.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "既有會員：透過會員邀請帶來新的付費客戶",
+   "new_in": "0.4.0"
+  },
+  "G-BASE-UPGRADE": {
+   "title": "Members: move free and one-time users to a paid or season plan",
+   "channel": "customer_base",
+   "metric": {
+    "key": "upgrades",
+    "formula": "count",
+    "components": [
+     "upgrades"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "C-BASE-SEGMENT",
+    "motivation": "A-MOTIVES",
+    "data": "C-BASE-METRICS",
+    "fit": "C-BASE-UPGRADE",
+    "message": "C-BASE-UPGRADE"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.upgrade.00.C-BASE-ACCESS",
+     "skill": "C-BASE-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.upgrade.01.C-BASE-SEGMENT",
+     "skill": "C-BASE-SEGMENT",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.upgrade.baseline.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.upgrade.02.C-BASE-UPGRADE",
+     "skill": "C-BASE-UPGRADE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.upgrade.observe.0.C-BASE-METRICS",
+     "skill": "C-BASE-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "既有會員：讓免費與單次使用者升級付費或季票",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-LTD": {
+   "title": "B2B SaaS: sell a launch deal on SaaS deal marketplaces",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "deals_sold",
+    "formula": "count",
+    "components": [
+     "deals_sold"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "A-SEGMENTS",
+    "proposal": "C-LTD-ACCESS",
+    "content": "C-LTD-LISTING",
+    "proof": "C-LTD-SUPPORT",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.deals.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.deals.01.C-LTD-ACCESS",
+     "skill": "C-LTD-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.deals.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.deals.02.C-LTD-LISTING",
+     "skill": "C-LTD-LISTING",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.deals.03.C-LTD-SUPPORT",
+     "skill": "C-LTD-SUPPORT",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.deals.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：在 SaaS 優惠平台銷售上市優惠",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-ALTERNATIVES": {
+   "title": "B2B SaaS: win trials from people searching for a competitor alternative",
+   "channel": "b2b_search_ads",
+   "metric": {
+    "key": "alternative_trial_signups",
+    "formula": "count",
+    "components": [
+     "trial_signups"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "A-SEGMENTS",
+    "query": "C-ALT-RESEARCH",
+    "content": "C-ALT-PAGES",
+    "message": "C-GA-DRAFT",
+    "delivery": "C-GOOGLE_ADS-ACCESS",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.01.C-ALT-RESEARCH",
+     "skill": "C-ALT-RESEARCH",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.02.C-GOOGLE_ADS-ACCESS",
+     "skill": "C-GOOGLE_ADS-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.alternatives.03.C-ALT-PAGES",
+     "skill": "C-ALT-PAGES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.04.C-GA-DRAFT",
+     "skill": "C-GA-DRAFT",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.05.C-GA-ACTIVATE",
+     "skill": "C-GA-ACTIVATE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.alternatives.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    },
+    {
+     "node": "flow.goal.alternatives.finish.C-GA-STOP",
+     "skill": "C-GA-STOP",
+     "measure": null
+    }
+   ],
+   "title_zh": "B2B SaaS：從搜尋競品替代方案的人取得試用",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-INTENT": {
+   "title": "B2B SaaS: turn public requests and complaints into trials",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "intent_trial_signups",
+    "formula": "count",
+    "components": [
+     "trial_signups"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 259200,
+   "bottleneck_routes": {
+    "audience": "C-INT-FIND",
+    "query": "C-INT-FIND",
+    "message": "C-INT-REPLY",
+    "followup": "C-PT-CLOSE",
+    "rules": "C-INT-FIND",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.intent.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.intent.01.C-INT-FIND",
+     "skill": "C-INT-FIND",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.intent.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.intent.02.C-INT-REPLY",
+     "skill": "C-INT-REPLY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.intent.03.C-PT-CLOSE",
+     "skill": "C-PT-CLOSE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.intent.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：把公開的需求與抱怨轉成試用",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-TRIAL-CONVERT": {
+   "title": "B2B SaaS: raise the share of trials that become paying",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "trial_to_paid_rate",
+    "formula": "rate",
+    "components": [
+     "trial_to_paid_conversions",
+     "eligible_trials"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "C-TRIAL-STAGES",
+    "fit": "C-TRIAL-STAGES",
+    "motivation": "A-MOTIVES",
+    "message": "C-TRIAL-SEND",
+    "followup": "C-TRIAL-SEND",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.trials.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.trials.01.C-TRIAL-ACCESS",
+     "skill": "C-TRIAL-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.trials.02.C-TRIAL-STAGES",
+     "skill": "C-TRIAL-STAGES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.trials.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.trials.03.C-TRIAL-SEND",
+     "skill": "C-TRIAL-SEND",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.trials.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：提高試用轉付費的比例",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-MARKETPLACE": {
+   "title": "B2B SaaS: get sign-ups from integration marketplaces and software directories",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "marketplace_signups",
+    "formula": "count",
+    "components": [
+     "marketplace_signups"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 1209600,
+   "bottleneck_routes": {
+    "audience": "A-SEGMENTS",
+    "rules": "C-MKT-ACCESS",
+    "content": "C-MKT-LISTING",
+    "proof": "C-RV-PROOF",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.marketplaces.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.marketplaces.01.C-MKT-ACCESS",
+     "skill": "C-MKT-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.marketplaces.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.marketplaces.02.C-MKT-LISTING",
+     "skill": "C-MKT-LISTING",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.marketplaces.03.C-RV-PROOF",
+     "skill": "C-RV-PROOF",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.marketplaces.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：從整合市集與軟體目錄取得註冊",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-OUTBOUND": {
+   "title": "B2B SaaS: book sales calls by emailing published business contacts",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "outbound_meetings",
+    "formula": "count",
+    "components": [
+     "confirmed_meetings"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 604800,
+   "bottleneck_routes": {
+    "audience": "C-OB-LIST",
+    "message": "C-OB-SEQUENCE",
+    "delivery": "C-OB-ACCESS",
+    "followup": "C-PT-CLOSE",
+    "proof": "S26",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.01.C-OB-ACCESS",
+     "skill": "C-OB-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.02.C-OB-LIST",
+     "skill": "C-OB-LIST",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.outbound.03.C-OB-SEQUENCE",
+     "skill": "C-OB-SEQUENCE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.04.C-PT-CLOSE",
+     "skill": "C-PT-CLOSE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.outbound.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：寄信給公開的商務聯絡人以約到銷售會議",
+   "new_in": "0.4.0"
+  },
+  "G-B2B-PARTNERS": {
+   "title": "B2B SaaS: get paying customers through agencies and consultants",
+   "channel": "b2b_saas",
+   "metric": {
+    "key": "partner_paid_customers",
+    "formula": "count",
+    "components": [
+     "partner_paid_customers"
+    ],
+    "direction": "increase"
+   },
+   "observation_seconds": 1209600,
+   "bottleneck_routes": {
+    "partner": "C-AGY-FIND",
+    "proposal": "C-AGY-OUTREACH",
+    "followup": "C-AGY-ENABLE",
+    "motivation": "A-MOTIVES",
+    "data": "C-B2B-METRICS"
+   },
+   "plan": [
+    {
+     "node": "flow.goal.common.S01",
+     "skill": "S01",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-VOC",
+     "skill": "A-VOC",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-SEGMENTS",
+     "skill": "A-SEGMENTS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-MOTIVES",
+     "skill": "A-MOTIVES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-PRIORITY",
+     "skill": "A-PRIORITY",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-LADDER",
+     "skill": "A-LADDER",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.common.A-ANGLES",
+     "skill": "A-ANGLES",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.agencies.00.C-B2B-ACCESS",
+     "skill": "C-B2B-ACCESS",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.agencies.01.C-AGY-FIND",
+     "skill": "C-AGY-FIND",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.agencies.baseline.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "baseline"
+    },
+    {
+     "node": "flow.goal.agencies.02.C-AGY-OUTREACH",
+     "skill": "C-AGY-OUTREACH",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.agencies.03.C-AGY-ENABLE",
+     "skill": "C-AGY-ENABLE",
+     "measure": null
+    },
+    {
+     "node": "flow.goal.agencies.observe.0.C-B2B-METRICS",
+     "skill": "C-B2B-METRICS",
+     "measure": "current"
+    }
+   ],
+   "title_zh": "B2B SaaS：透過代理商與顧問取得付費客戶",
+   "new_in": "0.4.0"
   }
  },
  "skills": {
@@ -11888,81 +12878,6 @@
    },
    "tested": true
   },
-  "C-RD-INTENT": {
-   "title": "Find recent Reddit posts from people who need the product",
-   "purpose": "Read recent posts in the allowed subreddits and keep only those where a real person asks for what the product does, because the share of matching requests and the replies that follow depend on picking the right posts.",
-   "steps": [
-    {
-     "id": "C-RD-INTENT.01",
-     "do": "For each subreddit marked as allowed, write three to five searches from the buyer's own words, such as the problem in plain words, 'alternative to {category}', 'recommend {tool}' and 'looking for {solution}'. Search inside the subreddit, sorted by new, limited to the past month.",
-     "evidence": "Each subreddit with the searches and the time filter used."
-    },
-    {
-     "id": "C-RD-INTENT.02",
-     "do": "Open each result and read the full post and its comments; if read_page returns a login page or little text, ask the owner to paste the thread text, as agreed in the account step. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.",
-     "evidence": "A log of every post read, with its URL, the poster's username and a one-line summary, and the total number of posts read."
-    },
-    {
-     "id": "C-RD-INTENT.03",
-     "do": "Drop job posts, self-promotion, posts from people who are not the buyer, deleted or removed posts, locked or archived posts, solved questions, and posts older than 30 days. Write the reason for each one.",
-     "evidence": "An excluded list, each with its URL and reason."
-    },
-    {
-     "id": "C-RD-INTENT.04",
-     "do": "For each post you keep, copy the shortest exact quote that shows the need. Separately, write one line on why the product fits, citing the product fact it relies on, and mark it 'unsure' when the post does not say enough.",
-     "evidence": "Each kept post with its quote and a separate fit line marked 'fits' or 'unsure'."
-    },
-    {
-     "id": "C-RD-INTENT.05",
-     "do": "Check each kept post for an earlier reply from the brand's account and drop it if one exists. Count each person once even if they posted twice.",
-     "evidence": "The kept list after removing duplicates and threads the brand already answered."
-    },
-    {
-     "id": "C-RD-INTENT.06",
-     "do": "Hand over the kept posts, the excluded list and the counts, and note the last post read in each search so the next round continues from there. Never pad the list to reach a number; if nothing qualifies, report a real zero and say which searches or subreddits to change next.",
-     "evidence": "The final list with counts of posts read, kept and excluded, and where each search stopped."
-    }
-   ],
-   "deliver": [
-    "qualified_posts",
-    "excluded",
-    "posts_read",
-    "searches_used"
-   ],
-   "blockers": [
-    {
-     "code": "community_no_promo",
-     "do": "If a subreddit forbids promotion, do not collect posts there for product replies; never move the conversation to private messages to get around it."
-    },
-    {
-     "code": "old_or_resolved_thread",
-     "do": "If a post is solved, locked, archived or older than 30 days, drop it and write the reason; never follow up on it to sell."
-    },
-    {
-     "code": "no_results",
-     "do": "If nothing qualifies, report a real zero, change the searches toward the buyer's own words or try another allowed subreddit, and never invent requests."
-    },
-    {
-     "code": "product_does_not_fit",
-     "do": "If the posts found ask for something the product does not do, drop them and go back to the buyer situation before searching again."
-    },
-    {
-     "code": "api_commercial_permission",
-     "do": "If you would need bulk data or Reddit's API to continue, stop at what you have read page by page and wait for the owner's existing permission."
-    }
-   ],
-   "needs_link": false,
-   "writes": false,
-   "identity": false,
-   "title_zh": "Reddit子版需求與替代方案搜尋",
-   "deliver_help": {
-    "qualified_posts": "Each kept post: its URL, subreddit, poster's username, the exact quote, the posting date, and the fit line.",
-    "excluded": "Each dropped post with its URL and the reason, for example 'solved by another commenter'.",
-    "posts_read": "The total number of posts opened and read this round, kept or not.",
-    "searches_used": "The subreddits, searches and time filters you used."
-   },
-   "tested": true
-  },
   "C-RD-METRICS": {
    "title": "Read this goal's numbers from Reddit and sales records",
    "purpose": "Record the numbers this goal is judged on, for the same length of time before and after the round, from the round's Reddit threads and the owner's own sales records, so rounds are compared on real people and real purchases. record_numbers lists exactly which numbers it needs.",
@@ -12038,6 +12953,81 @@
     "numbers": "Each of the goal's component names with its value exactly as counted, for example 'qualified_replies: 3'.",
     "where_read": "For each number, the thread URLs, sales record or tracked link it came from, and the time it was read.",
     "date_range": "The first and last day measured, with the time zone, for example '2026-11-20 to 2026-11-22, Asia/Taipei'."
+   },
+   "tested": true
+  },
+  "C-RD-INTENT": {
+   "title": "Find recent Reddit posts from people who need the product",
+   "purpose": "Read recent posts in the allowed subreddits and keep only those where a real person asks for what the product does, because the share of matching requests and the replies that follow depend on picking the right posts.",
+   "steps": [
+    {
+     "id": "C-RD-INTENT.01",
+     "do": "For each subreddit marked as allowed, write three to five searches from the buyer's own words, such as the problem in plain words, 'alternative to {category}', 'recommend {tool}' and 'looking for {solution}'. Search inside the subreddit, sorted by new, limited to the past month.",
+     "evidence": "Each subreddit with the searches and the time filter used."
+    },
+    {
+     "id": "C-RD-INTENT.02",
+     "do": "Open each result and read the full post and its comments; if read_page returns a login page or little text, ask the owner to paste the thread text, as agreed in the account step. Note what the person uses now, their role, and whether the question is already solved (a 'Solved' flair, an edit by the poster, or an accepted answer). Count every post you open as read, including the ones you drop later, so the share of matching posts is honest.",
+     "evidence": "A log of every post read, with its URL, the poster's username and a one-line summary, and the total number of posts read."
+    },
+    {
+     "id": "C-RD-INTENT.03",
+     "do": "Drop job posts, self-promotion, posts from people who are not the buyer, deleted or removed posts, locked or archived posts, solved questions, and posts older than 30 days. Write the reason for each one.",
+     "evidence": "An excluded list, each with its URL and reason."
+    },
+    {
+     "id": "C-RD-INTENT.04",
+     "do": "For each post you keep, copy the shortest exact quote that shows the need. Separately, write one line on why the product fits, citing the product fact it relies on, and mark it 'unsure' when the post does not say enough.",
+     "evidence": "Each kept post with its quote and a separate fit line marked 'fits' or 'unsure'."
+    },
+    {
+     "id": "C-RD-INTENT.05",
+     "do": "Check each kept post for an earlier reply from the brand's account and drop it if one exists. Count each person once even if they posted twice.",
+     "evidence": "The kept list after removing duplicates and threads the brand already answered."
+    },
+    {
+     "id": "C-RD-INTENT.06",
+     "do": "Hand over the kept posts, the excluded list and the counts, and note the last post read in each search so the next round continues from there. Never pad the list to reach a number; if nothing qualifies, report a real zero and say which searches or subreddits to change next.",
+     "evidence": "The final list with counts of posts read, kept and excluded, and where each search stopped."
+    }
+   ],
+   "deliver": [
+    "qualified_posts",
+    "excluded",
+    "posts_read",
+    "searches_used"
+   ],
+   "blockers": [
+    {
+     "code": "community_no_promo",
+     "do": "If a subreddit forbids promotion, do not collect posts there for product replies; never move the conversation to private messages to get around it."
+    },
+    {
+     "code": "old_or_resolved_thread",
+     "do": "If a post is solved, locked, archived or older than 30 days, drop it and write the reason; never follow up on it to sell."
+    },
+    {
+     "code": "no_results",
+     "do": "If nothing qualifies, report a real zero, change the searches toward the buyer's own words or try another allowed subreddit, and never invent requests."
+    },
+    {
+     "code": "product_does_not_fit",
+     "do": "If the posts found ask for something the product does not do, drop them and go back to the buyer situation before searching again."
+    },
+    {
+     "code": "api_commercial_permission",
+     "do": "If you would need bulk data or Reddit's API to continue, stop at what you have read page by page and wait for the owner's existing permission."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "Reddit子版需求與替代方案搜尋",
+   "deliver_help": {
+    "qualified_posts": "Each kept post: its URL, subreddit, poster's username, the exact quote, the posting date, and the fit line.",
+    "excluded": "Each dropped post with its URL and the reason, for example 'solved by another commenter'.",
+    "posts_read": "The total number of posts opened and read this round, kept or not.",
+    "searches_used": "The subreddits, searches and time filters you used."
    },
    "tested": true
   },
@@ -21892,6 +22882,2303 @@
     "joined_members": "Each member who joined, once, with the link to their join message.",
     "completed_members": "Each member who posted the finished work, with the link to their proof.",
     "left_members": "Members who asked to leave or stop, or 'none'."
+   },
+   "tested": true
+  },
+  "C-CR-ACCESS": {
+   "title": "Settle the creator offer, the contact account and how sales are counted",
+   "purpose": "Agree with the owner, before any creator is contacted, what creators are offered, which account contacts them, how many may be contacted a day and how each creator's sales are counted, so every message promises only what the owner approved and every sale can be credited.",
+   "steps": [
+    {
+     "id": "C-CR-ACCESS.01",
+     "do": "Ask the owner which account contacts creators: the brand's business email, or the brand's own social account for creators who publish only a message route. Have the owner sign in, or confirm the agent's browser already is; never ask for a password. Check that the name and address shown match the brand.",
+     "evidence": "The contact account, who signed in, and the name shown on it."
+    },
+    {
+     "id": "C-CR-ACCESS.02",
+     "do": "Write down what can be offered, from terms the owner already has or decides now: free access (which plan, for how long), an affiliate or referral share (percentage, how long a referral counts, when it is paid, minimum payout), a discount code for the creator's audience if one exists, and a paid sponsorship only if the owner sets a budget. If there are no terms, show the owner two or three options with what each costs and wait for a decision. Never promise money yourself.",
+     "evidence": "The offer the owner approved, quoted from their message, or the options shown and 'waiting for the owner'."
+    },
+    {
+     "id": "C-CR-ACCESS.03",
+     "do": "Decide how each creator's sales are counted: the affiliate program the owner already runs (its link format), or, if there is none, call tracking for this round's tracked link and plan one label per creator (?v=creator-name). Confirm with the owner that the sale counter from tracking is on the page shown after payment, so purchases are counted by the engine.",
+     "evidence": "The link format with one example label, and whether the sale counter is in place."
+    },
+    {
+     "id": "C-CR-ACCESS.04",
+     "do": "Agree the limits: how many creators may be contacted a day (start at 10 or fewer), at most one follow-up per creator after 5 business days, and who presses send. Platform rules come first: no bulk messages, and no contact through a route the creator did not publish.",
+     "evidence": "The daily cap, the follow-up rule and who sends, approved by the owner."
+    },
+    {
+     "id": "C-CR-ACCESS.05",
+     "do": "Write the disclosure line creators will be given: they label the content as sponsored or affiliate as their platform and local law require (for example YouTube's paid promotion setting, or #ad), and the brand never asks them to hide it.",
+     "evidence": "The disclosure line."
+    },
+    {
+     "id": "C-CR-ACCESS.06",
+     "do": "Ask the owner how free access is handed out (accounts or codes, how many, which plan, how they are activated) so creators can really try the product. If none can be issued, the offer is affiliate only and says so.",
+     "evidence": "How free access is given and how many are available, or 'affiliate only'."
+    },
+    {
+     "id": "C-CR-ACCESS.07",
+     "do": "Put it in five lines (offer, contact account, link format, daily cap, disclosure) and get the owner's yes.",
+     "evidence": "The five-line summary and the owner's approval message."
+    }
+   ],
+   "deliver": [
+    "offer_terms",
+    "contact_account",
+    "creator_tracking",
+    "limits",
+    "owner_approval"
+   ],
+   "blockers": [
+    {
+     "code": "no_terms",
+     "do": "If the owner has not decided what creators get, contact nobody; show the options and wait for the answer."
+    },
+    {
+     "code": "wrong_account",
+     "do": "If the signed-in account is personal or belongs to another brand, stop and ask the owner to switch or to send the messages themselves."
+    },
+    {
+     "code": "no_sale_counter",
+     "do": "If the sale counter is not on the after-payment page, ask the owner to add it, or name the payment report that will be used instead."
+    },
+    {
+     "code": "no_free_access",
+     "do": "If the owner cannot give creators free access, make the offer affiliate only and say so in every message."
+    },
+    {
+     "code": "owner_action_needed",
+     "do": "If a verification screen, terms screen or identity check appears, stop and tell the owner which screen and which button; never accept terms for them."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "確認創作者合作方案、聯絡帳號與成交計算方式",
+   "deliver_help": {
+    "offer_terms": "What creators get, quoted from the owner's approval, for example 'free Pro for 3 months plus 30% of each sale for 12 months'.",
+    "contact_account": "The account that contacts creators, who signed in, and who presses send.",
+    "creator_tracking": "The link format per creator and whether the sale counter is in place. Example: 'https://.../r/abc?v=anna-piano'.",
+    "limits": "The daily contact cap, the follow-up rule and the disclosure line.",
+    "owner_approval": "The owner's message approving the five-line summary, with its date."
+   },
+   "tested": true
+  },
+  "C-CR-FIND": {
+   "title": "Find creators whose audience already wants the product",
+   "purpose": "Build a checked shortlist of creators whose recent content draws exactly the buyers this product serves (for example piano cover channels for a sheet-music tool), each with a business contact they published, because fit with the audience sells far more than follower count.",
+   "steps": [
+    {
+     "id": "C-CR-FIND.01",
+     "do": "From the buyer group and motive chosen earlier, write who the creator's viewers must be and what they watch or read, for example 'people learning songs on piano watch tutorial and cover videos'. List 3 to 5 content types and the platforms where they live (YouTube, TikTok, Instagram, blogs, newsletters, podcasts).",
+     "evidence": "The audience description, the content types and the platforms."
+    },
+    {
+     "id": "C-CR-FIND.02",
+     "do": "Search each platform and the web for those content types, for example 'piano tutorial {song}', '{niche} review' or '{niche} newsletter', with the brackets replaced. Collect at least 30 candidates with about 1,000 to 200,000 followers or subscribers; smaller creators answer more often and their audiences trust them. Skip direct competitors and accounts that only repost.",
+     "evidence": "The searches used, the date, and at least 30 candidates with profile URLs and follower counts as shown."
+    },
+    {
+     "id": "C-CR-FIND.03",
+     "do": "For each candidate, use read_page on at least three posts or videos from the last 90 days. Note the views on recent posts (not only followers), what viewers ask in the comments, and whether those questions are what the product answers.",
+     "evidence": "For each candidate, the URLs read, typical recent views, and one line on audience fit with one comment quoted."
+    },
+    {
+     "id": "C-CR-FIND.04",
+     "do": "Find each candidate's published business contact: the email on their channel's About page, their website's contact page, a 'work with me' or sponsorship page, or a creator marketplace profile. Use only contacts they published for business; never guess an address or use a personal one found elsewhere. Drop candidates with no published route.",
+     "evidence": "The contact route and the page it is published on, for each remaining candidate, and the list of dropped ones."
+    },
+    {
+     "id": "C-CR-FIND.05",
+     "do": "Check what each candidate promoted before and how they disclosed it, and whether they work with a competitor now. Note any rate card or sponsorship terms they publish; if none are published, write 'unknown'.",
+     "evidence": "Past sponsors or 'none seen', how they disclose, any conflict, and published terms or 'unknown'."
+    },
+    {
+     "id": "C-CR-FIND.06",
+     "do": "Rank by audience fit first, then recent views, then how clearly they invite business contact. Keep the top 10 to 20 for this round, each with one line on why their audience would buy.",
+     "evidence": "The ranked shortlist with the reason for each rank."
+    },
+    {
+     "id": "C-CR-FIND.07",
+     "do": "Show the owner the shortlist and ask them to strike anyone they do not want linked to the brand. Contact nobody in this step.",
+     "evidence": "The owner's reply and the final list."
+    }
+   ],
+   "deliver": [
+    "shortlist",
+    "fit_evidence",
+    "contact_routes",
+    "excluded"
+   ],
+   "blockers": [
+    {
+     "code": "too_few_fits",
+     "do": "If fewer than 10 creators fit, widen to nearby content types or platforms and tell the owner the list is thin."
+    },
+    {
+     "code": "no_published_contact",
+     "do": "If a strong candidate publishes no business contact, leave them off; never guess an email or message someone whose profile says no business requests."
+    },
+    {
+     "code": "competitor_conflict",
+     "do": "If a creator promotes a direct competitor now, mark the conflict and leave the choice to the owner."
+    },
+    {
+     "code": "page_unreadable",
+     "do": "If read_page cannot open a profile, use the platform's public web page or skip the candidate; never log in to collect pages."
+    },
+    {
+     "code": "owner_not_answered",
+     "do": "If the owner has not reviewed the shortlist, submit the step as blocked and say what they need to check."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "找出受眾正需要這個產品的創作者",
+   "deliver_help": {
+    "shortlist": "The 10 to 20 ranked creators with name, profile URL, platform, typical recent views and the owner's yes or no.",
+    "fit_evidence": "For each creator, the posts read and one line on why their audience matches the buyer, with a comment quoted.",
+    "contact_routes": "For each creator, the published business contact and the page it appears on.",
+    "excluded": "Candidates dropped and why: no published contact, competitor conflict, poor fit, or struck by the owner."
+   },
+   "tested": true
+  },
+  "C-CR-METRICS": {
+   "title": "Read paid customers from creator links",
+   "purpose": "Record how many real outside customers paid through creators in a fixed window, credited to a creator only where a link, label or code shows it, so the next round keeps the creators who sell and drops the ones who do not.",
+   "steps": [
+    {
+     "id": "C-CR-METRICS.01",
+     "do": "Call where_are_we (with lane in a month target) and copy this goal's component name (external_purchases) and observation window. For the baseline use the same length of time just before this round's first invitation; for the current reading use the window since creators started publishing.",
+     "evidence": "The component name, the window with start, end and time zone, and whether this is the baseline or the current reading."
+    },
+    {
+     "id": "C-CR-METRICS.02",
+     "do": "Read the engine's own counts first: tracking shows clicks per creator label and the sale counter's purchases in the window. If the step says the engine already counted external_purchases, leave it out of record_numbers; the engine's count is the one used.",
+     "evidence": "Clicks per label and the engine's purchase count, with the time read."
+    },
+    {
+     "id": "C-CR-METRICS.03",
+     "do": "Read the payment records for the same window (the payment tool's report or the owner's export) and the affiliate program's report if there is one. Match each purchase to a creator by label, code or the buyer's own words; anything else is 'source unknown'.",
+     "evidence": "Each purchase with its creator or 'source unknown', and the report it came from."
+    },
+    {
+     "id": "C-CR-METRICS.04",
+     "do": "Remove the owner's, team's and test payments, refunds inside the window, duplicates, and the free accounts given to creators; a creator's own free access is never a sale.",
+     "evidence": "What was removed and why, with counts before and after."
+    },
+    {
+     "id": "C-CR-METRICS.05",
+     "do": "Write one line per creator: post URL, public views, clicks, purchases, and whether a commission is now owed.",
+     "evidence": "One line per creator with these numbers and their sources."
+    },
+    {
+     "id": "C-CR-METRICS.06",
+     "do": "Call record_numbers with external_purchases (unless the engine counted it) and a source naming each report and when it was read. If there is no history, record 0 and say 'no history'. In a month target lane also pass paid_customers (paying customers since the month started, from the payment records), and visits and signups if you have them; they update the month progress and are not judged here. Never estimate.",
+     "evidence": "The record_numbers call as accepted."
+    }
+   ],
+   "deliver": [
+    "numbers",
+    "where_read",
+    "date_range",
+    "per_creator"
+   ],
+   "blockers": [
+    {
+     "code": "cannot_open_payments",
+     "do": "If you cannot open the payment report, ask the owner for an export of the exact window; never estimate sales."
+    },
+    {
+     "code": "no_history",
+     "do": "If there is no earlier window to compare, record 0 and say 'no history'; the first round then sets the baseline."
+    },
+    {
+     "code": "attribution_unknown",
+     "do": "If a sale cannot be tied to a creator, count its source as unknown and credit no one."
+    },
+    {
+     "code": "window_not_finished",
+     "do": "If the window has not ended, report the reading as early and read again when it ends."
+    },
+    {
+     "code": "own_activity_mixed_in",
+     "do": "If the owner's, team's or test purchases cannot be separated, ask the owner to mark them before recording."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "核對創作者連結帶來的付費客戶",
+   "deliver_help": {
+    "numbers": "external_purchases with its value, for example 'external_purchases: 7', plus any number you could not get, marked missing.",
+    "where_read": "Each source and when it was read, what was removed and why, and purchases whose source is unknown.",
+    "date_range": "Start and end of the window with time zone, and whether it is the baseline or the current reading.",
+    "per_creator": "One line per creator: post URL, views, clicks, purchases and commission owed."
+   },
+   "tested": true
+  },
+  "C-CR-OUTREACH": {
+   "title": "Send the approved creator invitation within the daily cap",
+   "purpose": "Invite each shortlisted creator once, through the contact they published, with a short personal message built from one owner-approved template, so the owner approves the wording and the daily volume once and every creator still gets a message about their own work.",
+   "steps": [
+    {
+     "id": "C-CR-OUTREACH.01",
+     "do": "Write one invitation template under 120 words with placeholders in curly brackets, for example {first_name}, {their_video} (a recent piece of theirs) and {why_their_audience} (one line on why their viewers fit). Say plainly who you write for, the offer exactly as approved, what you ask (try it free and post only if they like it), and how to say no. Everything outside the brackets stays word for word the same in every message. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {why_their_audience:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "The template text and the list of its placeholders."
+    },
+    {
+     "id": "C-CR-OUTREACH.02",
+     "do": "Write the audience rule in one sentence, for example 'creators on this round's approved shortlist, through their published business contact', and the daily cap agreed in the offer step.",
+     "evidence": "The audience rule and the daily cap."
+    },
+    {
+     "id": "C-CR-OUTREACH.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template's id and the owner's approval, or the owner's yes message."
+    },
+    {
+     "id": "C-CR-OUTREACH.04",
+     "do": "Fill the placeholders for each creator from what you read on their own pages; each value is true and one line, at most 80 characters (40 for a name) unless the template sets its own limit such as {their_video:120}, with no link except in a {link} placeholder. If a value does not fit naturally, leave that creator out of this round rather than changing the fixed text.",
+     "evidence": "Each filled message with its recipient."
+    },
+    {
+     "id": "C-CR-OUTREACH.05",
+     "do": "Send at most the daily cap per day, one message per creator, from the approved account; the owner sends if the agent has no tool for it. Never put several creators in one email, never switch to another channel, and if you are unsure whether a message went, check Sent before trying again. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "For each message, the recipient, the send time and who sent it."
+    },
+    {
+     "id": "C-CR-OUTREACH.06",
+     "do": "After 5 business days with no answer, send at most one short follow-up that is part of the approved templates, then stop. A no or a request to stop ends contact for good and goes on the do-not-contact list.",
+     "evidence": "Follow-ups sent, replies received, and the do-not-contact list."
+    },
+    {
+     "id": "C-CR-OUTREACH.07",
+     "do": "Record each reply in one list: yes, maybe (with their questions), no, or no answer. Pass each yes to the next step with what they asked for.",
+     "evidence": "The reply list with each creator's status."
+    }
+   ],
+   "deliver": [
+    "template",
+    "owner_approval",
+    "sent_messages",
+    "replies",
+    "do_not_contact"
+   ],
+   "blockers": [
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the template, send nothing; show them the template, rule and cap and wait."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If the shortlist is larger than the daily cap, send the rest on the following days; never go over the cap."
+    },
+    {
+     "code": "value_not_true",
+     "do": "If you cannot fill a placeholder with something true from their own pages, leave that creator out of this round."
+    },
+    {
+     "code": "bounce",
+     "do": "If an address bounces, remove it; never retry with a guessed spelling or another route."
+    },
+    {
+     "code": "platform_limit",
+     "do": "If the platform limits or flags the messages, stop for the day and tell the owner."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "在每日上限內寄出已核准的創作者邀請",
+   "deliver_help": {
+    "template": "The approved template word for word, with its placeholders.",
+    "owner_approval": "The template's id and the owner's approval with its date, or the owner's yes message.",
+    "sent_messages": "For every message and follow-up: recipient, send time, who sent it, and the filled text.",
+    "replies": "Each creator with yes, maybe, no or no answer, and any question they asked.",
+    "do_not_contact": "Creators who said no or asked to stop, or 'none'."
+   },
+   "tested": true
+  },
+  "C-CR-ENABLE": {
+   "title": "Give each creator who said yes free access, their own link and a short brief",
+   "purpose": "Turn each yes into a live, disclosed piece of content that points to the product through the creator's own link, so their audience hears a true message and every sale can be credited to them.",
+   "steps": [
+    {
+     "id": "C-CR-ENABLE.01",
+     "do": "For each creator who said yes, set up what was promised: the free account or code the owner issued, and their own link: their affiliate link if a program exists, otherwise this round's tracked link with their label (?v=their-name). Open each link and check it lands on the right page.",
+     "evidence": "For each creator, the access given and the link, opened and confirmed."
+    },
+    {
+     "id": "C-CR-ENABLE.02",
+     "do": "Write a one-page brief: who the product is for, the problem it solves in the buyer's words, three benefits from the proven benefits list, the price as shown on the product page, their link and code, the disclosure line, and a 'please do not say' list (no invented results, no guarantees, no fake urgency). Leave the creative choices to them.",
+     "evidence": "The brief, and a sentence-by-sentence check against the product facts."
+    },
+    {
+     "id": "C-CR-ENABLE.03",
+     "do": "Show the owner the brief and the delivery message word for word and get a yes, then send each creator their brief once from the approved account.",
+     "evidence": "The owner's approval and, for each creator, the send time."
+    },
+    {
+     "id": "C-CR-ENABLE.04",
+     "do": "Answer each creator's product questions from the fact sheet within one business day; anything not on it goes to the owner first.",
+     "evidence": "The questions asked and the answers given, with the owner's answer where one was needed."
+    },
+    {
+     "id": "C-CR-ENABLE.05",
+     "do": "When a creator publishes, open the post and check that their link or code is there and the disclosure is shown. If something is missing, ask them politely once to fix it. Never ask them to change their opinion.",
+     "evidence": "Each live post URL, whether the link and the disclosure are present, and any fix requested."
+    },
+    {
+     "id": "C-CR-ENABLE.06",
+     "do": "Record each creator's link, terms, post URL and publish date. A commission is owed only on a counted sale and paid only when it has really been paid.",
+     "evidence": "The creator record with link, terms, post URL, publish date and commission status."
+    }
+   ],
+   "deliver": [
+    "creators_live",
+    "creator_links",
+    "brief_text",
+    "post_urls"
+   ],
+   "blockers": [
+    {
+     "code": "creator_not_live",
+     "do": "If no creator has published by the end of the window, record that; never publish on their behalf or write their post for them."
+    },
+    {
+     "code": "disclosure_missing",
+     "do": "If a post has no disclosure, ask the creator once to add it and tell the owner; do not promote that post until it is fixed."
+    },
+    {
+     "code": "link_broken",
+     "do": "If a creator's link does not open the product, fix it with tracking and send them the corrected link."
+    },
+    {
+     "code": "no_access_to_give",
+     "do": "If the owner has not issued the free accounts or codes, submit the step as blocked with exactly how many are needed."
+    },
+    {
+     "code": "creator_asks_for_money",
+     "do": "If a creator asks for a fee beyond the approved terms, take it to the owner and promise nothing."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "給答應的創作者免費使用、專屬連結與簡短說明",
+   "deliver_help": {
+    "creators_live": "Each creator who agreed, with status: briefed, published, or not published yet.",
+    "creator_links": "Each creator's own link or code, opened and confirmed.",
+    "brief_text": "The brief as sent, including the disclosure line and the 'please do not say' list.",
+    "post_urls": "The public URL of each published post or video, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-BASE-ACCESS": {
+   "title": "Confirm the member list, the channels you may use and the limits",
+   "purpose": "Find out exactly which list of existing members or customers can be used, through which channels the owner may message them, who agreed to what, and how much there is to sell, so every message goes only to people the brand may contact and no seat is sold that does not exist.",
+   "steps": [
+    {
+     "id": "C-BASE-ACCESS.01",
+     "do": "Ask the owner where members are recorded: a list uploaded on the hosted owner page, the payment tool (Stripe customers), a booking or ticketing tool, a CRM, a spreadsheet, a LINE Official Account or WhatsApp Business. If nothing is uploaded yet, ask for a CSV export with email or phone, name, status (member, paying, free, past) and last purchase date, uploaded on the owner page or shared as a file. Never ask for a password to their tools.",
+     "evidence": "The list source, its columns, the row count, and when it was exported."
+    },
+    {
+     "id": "C-BASE-ACCESS.02",
+     "do": "For each channel the owner can message (email, LINE, WhatsApp, Instagram or Facebook messages, SMS), write which account sends, its sending limits and who presses send. Have the owner sign in, or confirm the agent's browser already is.",
+     "evidence": "Each channel with its sending account, limit and sender."
+    },
+    {
+     "id": "C-BASE-ACCESS.03",
+     "do": "Check consent per channel: who agreed to marketing email or messages, who only bought (some countries allow email to past buyers about similar products if they can opt out; others do not), and who unsubscribed or asked to stop. Write the rule you will apply and ask the owner to confirm it. People with no record of agreeing are left out of marketing messages.",
+     "evidence": "The consent rule, how many people it allows per channel, and the owner's confirmation."
+    },
+    {
+     "id": "C-BASE-ACCESS.04",
+     "do": "Get the do-not-contact list: unsubscribes, bounces, complaints, people who asked to stop, staff and test accounts. They are removed from every send in this goal.",
+     "evidence": "The do-not-contact list's size and where it came from."
+    },
+    {
+     "id": "C-BASE-ACCESS.05",
+     "do": "Ask for the capacity: seats, tables, stock or onboarding slots per week and the dates they cover (for example 'Taipei Saturday events: 40 seats a week'). Every offer in this goal stays inside it; if the plan would sell more than exists, the plan changes, not the promise.",
+     "evidence": "Capacity per week with dates and source, or 'no limit' confirmed by the owner."
+    },
+    {
+     "id": "C-BASE-ACCESS.06",
+     "do": "Read the current offer from the product's own pages: plans, prices, member or season options, existing discounts and referral rewards. Do not create plans, codes or rewards; the owner does that in their own tools if they decide to.",
+     "evidence": "The offer sheet with each line's URL."
+    },
+    {
+     "id": "C-BASE-ACCESS.07",
+     "do": "Summarise in five lines (list, channels, consent rule, do-not-contact list, capacity) and get the owner's yes.",
+     "evidence": "The summary and the owner's approval message."
+    }
+   ],
+   "deliver": [
+    "member_list",
+    "channels",
+    "consent_rule",
+    "suppression",
+    "capacity"
+   ],
+   "blockers": [
+    {
+     "code": "no_list",
+     "do": "If there is no member list, ask the owner to upload or export one and say exactly where on the owner page to do it; until then this goal sends nothing."
+    },
+    {
+     "code": "consent_unknown",
+     "do": "If nobody can say who agreed to messages, use only people who bought or wrote to the brand in the last 90 days and did not opt out, and tell the owner."
+    },
+    {
+     "code": "wrong_account",
+     "do": "If the signed-in sending account is personal or another brand's, stop and ask the owner to switch or to send themselves."
+    },
+    {
+     "code": "capacity_unknown",
+     "do": "If the owner cannot say how many seats or units exist, offer no dates or stock until they confirm."
+    },
+    {
+     "code": "personal_data_care",
+     "do": "Keep the list inside the hosted service or the owner's own files; never paste it into public places or other tools."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "確認會員名單、可聯絡的管道與上限",
+   "deliver_help": {
+    "member_list": "Where the list lives, its columns, its row count and export date. Example: 'owner page upload, 3,214 rows, exported 2026-11-26'.",
+    "channels": "Each channel with the sending account, its limit and who presses send.",
+    "consent_rule": "Who may get marketing messages on which channel, and how many people that is.",
+    "suppression": "The size and source of the do-not-contact list.",
+    "capacity": "Seats, stock or slots per week with dates, or 'no limit' confirmed by the owner."
+   },
+   "tested": true
+  },
+  "C-BASE-SEGMENT": {
+   "title": "Pick the members this round is for",
+   "purpose": "Turn the member list into one clear group for this goal, with a count and a reason, so the message speaks to their situation and the result is read against the right group.",
+   "steps": [
+    {
+     "id": "C-BASE-SEGMENT.01",
+     "do": "Apply the group this goal needs. Win back: paid or attended before, nothing in the last 60 to 180 days (pick the range from how often members normally come back). Referral: paying or recently active members who came at least twice or rated it well. Upgrade: free, trial or one-time buyers who used it at least once in the last 60 days. Write the exact rule with dates.",
+     "evidence": "The rule in one sentence with its date range."
+    },
+    {
+     "id": "C-BASE-SEGMENT.02",
+     "do": "Count the group from the list, then remove the do-not-contact list and anyone outside the consent rule. When the hosted list is used, the counts come from it.",
+     "evidence": "The count before and after each removal."
+    },
+    {
+     "id": "C-BASE-SEGMENT.03",
+     "do": "Split the group by what changes the message: city or location, what they bought, how long ago, how often. Keep at most 3 sub-groups; a sub-group under 30 people merges with another.",
+     "evidence": "The sub-groups with their counts."
+    },
+    {
+     "id": "C-BASE-SEGMENT.04",
+     "do": "For each sub-group, write the one real reason to act now (a new date in their city, a season starting, a feature they asked for), taken from the product facts and the buyer research.",
+     "evidence": "One reason per sub-group with its source."
+    },
+    {
+     "id": "C-BASE-SEGMENT.05",
+     "do": "Choose the channel per sub-group from the confirmed channels: the one they agreed to and use most.",
+     "evidence": "The channel per sub-group."
+    },
+    {
+     "id": "C-BASE-SEGMENT.06",
+     "do": "Check capacity: if everyone in the group said yes, would it fit the seats or stock per week? If not, spread the sends over weeks or make the group smaller.",
+     "evidence": "The capacity check and the send plan by week."
+    }
+   ],
+   "deliver": [
+    "segment_rule",
+    "counts",
+    "sub_groups",
+    "channel_plan"
+   ],
+   "blockers": [
+    {
+     "code": "group_too_small",
+     "do": "If the group has fewer than 30 people, widen the date range and say so."
+    },
+    {
+     "code": "list_out_of_date",
+     "do": "If the list was exported more than 14 days ago, ask the owner for a fresh export before anything is sent."
+    },
+    {
+     "code": "consent_unknown",
+     "do": "If you cannot tell who agreed to messages on a channel, leave those people out and tell the owner how many."
+    },
+    {
+     "code": "capacity_short",
+     "do": "If capacity cannot take the whole group, send to part of it now and the rest when seats free up."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "挑出這一輪要聯絡的會員",
+   "deliver_help": {
+    "segment_rule": "The exact rule with dates, for example 'paid at least once, nothing since 2026-08-01'.",
+    "counts": "The count before and after removing the do-not-contact list and people outside the consent rule.",
+    "sub_groups": "Each sub-group with its count and its reason to act now.",
+    "channel_plan": "The channel per sub-group and the send plan by week that fits capacity."
+   },
+   "tested": true
+  },
+  "C-BASE-METRICS": {
+   "title": "Read this goal's member numbers",
+   "purpose": "Record the number this goal is judged on, counted once per real person and net of refunds and tests, for the window before this round and for this round, so rounds are compared on paying members rather than replies.",
+   "steps": [
+    {
+     "id": "C-BASE-METRICS.01",
+     "do": "Call where_are_we (with lane in a month target) and copy this goal's component name and window: reactivated_paying_members, paid_referrals or upgrades.",
+     "evidence": "The goal id, the component name and the window in hours."
+    },
+    {
+     "id": "C-BASE-METRICS.02",
+     "do": "Write the counting rule before counting. reactivated_paying_members: a member of this round's win-back group who paid again inside the window. paid_referrals: a new customer who paid inside the window and came through a member's link, label or code. upgrades: a free, trial or one-time user in this round's group who started a paid or season plan inside the window.",
+     "evidence": "The rule for this goal's component, with dates and time zone."
+    },
+    {
+     "id": "C-BASE-METRICS.03",
+     "do": "Read the payment records for the window (the payment tool, the booking tool or the owner's export) and tracking's clicks per label. Match each payment to the group by email, member code or label.",
+     "evidence": "The sources read with times, and the matched payments."
+    },
+    {
+     "id": "C-BASE-METRICS.04",
+     "do": "Remove the owner's, team's and test payments, refunds inside the window, duplicates, and anyone who was already on that plan or paid before the round started.",
+     "evidence": "What was removed and why, with counts."
+    },
+    {
+     "id": "C-BASE-METRICS.05",
+     "do": "For the baseline, count the same thing for the same length of time just before this round, among the same kind of group (members who came back on their own, friends who arrived without an invite, upgrades without an offer). If there is no history, record 0 and say so.",
+     "evidence": "The baseline count and how it was taken."
+    },
+    {
+     "id": "C-BASE-METRICS.06",
+     "do": "Call record_numbers with this goal's component and a source naming each report and when it was read. In a month target lane also pass paid_customers (paying customers since the month started, from the payment records), and visits and signups if you have them; they update the month progress and are not judged here. Never estimate; a reply or a booking that is not paid does not count.",
+     "evidence": "The record_numbers call as accepted."
+    }
+   ],
+   "deliver": [
+    "numbers",
+    "where_read",
+    "date_range"
+   ],
+   "blockers": [
+    {
+     "code": "cannot_open_payments",
+     "do": "If you cannot open the payment records, ask the owner for an export of the exact window; never estimate."
+    },
+    {
+     "code": "cannot_match",
+     "do": "If payments cannot be matched to the group, count only matched ones and say how many could not be matched."
+    },
+    {
+     "code": "no_history",
+     "do": "If there is no earlier window to compare, record 0 and say 'no history'."
+    },
+    {
+     "code": "window_not_finished",
+     "do": "If the window has not ended, report the reading as early and read again when it ends."
+    },
+    {
+     "code": "own_activity_mixed_in",
+     "do": "If the owner's, team's or test payments cannot be separated, ask the owner to mark them before recording."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "核對會員喚回、推薦與升級的成果",
+   "deliver_help": {
+    "numbers": "This goal's component with its value, for example 'reactivated_paying_members: 23'.",
+    "where_read": "Each source and when it was read, what was removed and why, and payments that could not be matched.",
+    "date_range": "Start and end of the window with time zone, and whether it is the baseline or the current reading."
+   },
+   "tested": true
+  },
+  "C-BASE-WINBACK": {
+   "title": "Send the approved win-back message to inactive members within the daily cap",
+   "purpose": "Bring inactive members back with one personal, owner-approved message per person about something real and new for them, within the approved daily cap, so lapsed members return as paying members and nobody is spammed.",
+   "steps": [
+    {
+     "id": "C-BASE-WINBACK.01",
+     "do": "Write one template per sub-group, under 100 words, with placeholders such as {first_name}, {last_thing_they_did} and {next_date_in_their_city}. Lead with what is new or relevant for them, give one next step with the round's tracked link (?v= per sub-group), and an easy way to stop messages. No invented scarcity: 'few seats left' must be true at send time. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {last_thing_they_did:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "Each template with its placeholders and sub-group."
+    },
+    {
+     "id": "C-BASE-WINBACK.02",
+     "do": "Write each template's audience rule and propose a daily cap that fits the channel's limit and the capacity (for example 200 emails a day, or the LINE plan's monthly message allowance spread over the month).",
+     "evidence": "The audience rule and daily cap for each template."
+    },
+    {
+     "id": "C-BASE-WINBACK.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template ids and the owner's approval."
+    },
+    {
+     "id": "C-BASE-WINBACK.04",
+     "do": "Get the next recipients: on the hosted service call next_recipients with the lane, the template's item id and how many you will send today; otherwise take them in order from the owner's export, skipping anyone already contacted this round.",
+     "evidence": "Today's recipient count and where it came from."
+    },
+    {
+     "id": "C-BASE-WINBACK.05",
+     "do": "Send once per person from the approved account, at most the daily cap per day, filling only the placeholders with true values, each one line, at most 80 characters (40 for a name) unless the template sets its own limit such as {last_thing_they_did:120}, with no link except in a {link} placeholder. A WhatsApp message to someone who has not written in the last 24 hours needs a template Meta has approved. If you are unsure whether a message went, check before resending. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap.",
+     "evidence": "Per day: how many were sent, on which channel, by whom, and a sample of the sent texts."
+    },
+    {
+     "id": "C-BASE-WINBACK.06",
+     "do": "Answer replies the same day where you can: dates, price and fit from the fact sheet, anything else from the owner. Remove anyone who asks to stop from every later send.",
+     "evidence": "Replies with the answers given, and the people removed."
+    },
+    {
+     "id": "C-BASE-WINBACK.07",
+     "do": "Send no second message to the same person in this round. Record who came back (booked, renewed or paid) with the date.",
+     "evidence": "The members who came back, with dates and sources."
+    }
+   ],
+   "deliver": [
+    "templates",
+    "owner_approval",
+    "sent_record",
+    "replies",
+    "came_back"
+   ],
+   "blockers": [
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved a template, send nothing with it; show the template, rule and cap and wait."
+    },
+    {
+     "code": "no_recipients_left",
+     "do": "If the group is used up, say so and stop; never buy, borrow or scrape a list."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more people are due than the cap allows, send the rest on later days."
+    },
+    {
+     "code": "whatsapp_template_not_approved",
+     "do": "If Meta has not approved the WhatsApp template, send on another agreed channel or wait; never send free text to people outside the 24-hour window."
+    },
+    {
+     "code": "complaint_or_spam_flag",
+     "do": "If a spam complaint, block or warning arrives, pause sending on that channel and tell the owner the same day."
+    },
+    {
+     "code": "capacity_full",
+     "do": "If a date fills up, stop offering it at once and update the template only with the owner's yes."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "在每日上限內寄出已核准的喚回訊息",
+   "deliver_help": {
+    "templates": "Each approved template word for word with its audience rule and daily cap.",
+    "owner_approval": "The template ids and the owner's approval with dates.",
+    "sent_record": "Per day: count sent per channel, who sent, and sample texts.",
+    "replies": "Replies with answers, and the people who asked to stop.",
+    "came_back": "Members who booked, renewed or paid, with dates and where it was read, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-BASE-REFER": {
+   "title": "Ask happy members to invite a friend with their own invite link",
+   "purpose": "Give members who already value the product a simple, honest reason to bring a friend, with an invite link that is theirs, so new paying customers arrive through people they trust and every referral can be counted and rewarded.",
+   "steps": [
+    {
+     "id": "C-BASE-REFER.01",
+     "do": "Settle the referral offer with the owner from existing tools only: what the friend gets (for example a first-visit price or trial that already exists), what the member gets (credit, a free event, a discount), when the reward is given (after the friend pays) and any limit. If there is no reward, ask the owner once whether to add one in their own tools; never promise one yourself.",
+     "evidence": "The referral terms quoted from the owner, or 'no reward' confirmed."
+    },
+    {
+     "id": "C-BASE-REFER.02",
+     "do": "Give each member their own invite link: the product's own referral link if it has one, otherwise this round's tracked link with the member's label (?v=m-{member_code}) using a short code, never their email or name.",
+     "evidence": "The link format and one example, opened and confirmed to land on the right page."
+    },
+    {
+     "id": "C-BASE-REFER.03",
+     "do": "Write one invite template under 100 words with placeholders such as {first_name}, {their_link} and {what_they_liked}, plus a ready-to-forward line the member can paste to a friend. Make it about the friend's benefit, not the reward. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {what_they_liked:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "The template, the forwardable line and the placeholders."
+    },
+    {
+     "id": "C-BASE-REFER.04",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template's id and the owner's approval."
+    },
+    {
+     "id": "C-BASE-REFER.05",
+     "do": "Send once per member within the daily cap, taking recipients from next_recipients on the hosted service or from the owner's export, from the approved account. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "Per day: how many were sent, on which channel, and a sample of the sent texts."
+    },
+    {
+     "id": "C-BASE-REFER.06",
+     "do": "When a friend pays, check the payment against the member's label or code and record the reward as owed; it is paid only when the owner really gives it. Thank the member.",
+     "evidence": "Each paid referral with the member label, payment reference and reward status."
+    }
+   ],
+   "deliver": [
+    "referral_terms",
+    "invite_links",
+    "template",
+    "sent_record",
+    "paid_referrals"
+   ],
+   "blockers": [
+    {
+     "code": "no_reward_terms",
+     "do": "If the owner has not decided a reward, send the invite without one and never hint at one."
+    },
+    {
+     "code": "link_cannot_be_personal",
+     "do": "If the product cannot make per-member links, use the label on the tracked link or a code the owner creates."
+    },
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the template, send nothing; show it and wait."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more members are due than the cap allows, send the rest on later days."
+    },
+    {
+     "code": "reward_dispute",
+     "do": "If a member disputes a reward, pass it to the owner with the payment evidence and promise nothing."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "請滿意的會員用專屬連結邀請朋友",
+   "deliver_help": {
+    "referral_terms": "What the friend and the member get and when, quoted from the owner, or 'no reward'.",
+    "invite_links": "The invite link format and an example, opened and confirmed.",
+    "template": "The approved template and forwardable line word for word.",
+    "sent_record": "Per day: count sent per channel and sample texts.",
+    "paid_referrals": "Each paid referral with member label, payment reference and reward status, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-BASE-UPGRADE": {
+   "title": "Offer free and one-time users the paid or season plan that fits them",
+   "purpose": "Show people who already tried the product the existing paid plan that matches how they use it, with the real price and what changes for them, so the ones who would get more from it move up without pressure.",
+   "steps": [
+    {
+     "id": "C-BASE-UPGRADE.01",
+     "do": "From the segment step, write how each sub-group uses the product today and which existing plan fits (for example 'came to two single events in three months: the season pass costs less than three single tickets'). Work out the saving or gain from the real prices; if it is not real for a sub-group, make them no offer.",
+     "evidence": "Each sub-group with the plan that fits and the calculation from the price page."
+    },
+    {
+     "id": "C-BASE-UPGRADE.02",
+     "do": "Write one template per sub-group under 100 words with placeholders such as {first_name}, {times_used} and {what_they_get}. Give the price as shown on the product page, the one main benefit, a link to the plan with the round's tracked link (?v= per sub-group), and how to say no. Mention a deadline only if the offer really ends then. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {what_they_get:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "Each template with its placeholders."
+    },
+    {
+     "id": "C-BASE-UPGRADE.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template ids and the owner's approval."
+    },
+    {
+     "id": "C-BASE-UPGRADE.04",
+     "do": "Check capacity before sending: a season or membership plan needs the seats or slots behind it. Send no more offers in a week than capacity could take if everyone said yes.",
+     "evidence": "The capacity check for this week's sends."
+    },
+    {
+     "id": "C-BASE-UPGRADE.05",
+     "do": "Send once per person within the daily cap, from next_recipients on the hosted service or the owner's export, from the approved account. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "Per day: how many were sent and on which channel, with a sample of the sent texts."
+    },
+    {
+     "id": "C-BASE-UPGRADE.06",
+     "do": "Answer replies from the fact sheet the same day where you can; refunds, billing and exceptions go to the owner. Record each upgrade with its payment reference and date.",
+     "evidence": "Replies with answers, and each upgrade with its payment reference."
+    }
+   ],
+   "deliver": [
+    "plan_fit",
+    "templates",
+    "owner_approval",
+    "sent_record",
+    "upgrades"
+   ],
+   "blockers": [
+    {
+     "code": "no_fitting_plan",
+     "do": "If no existing plan is a real gain for a sub-group, make them no offer and tell the owner what plan they asked for."
+    },
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved a template, send nothing with it."
+    },
+    {
+     "code": "capacity_full",
+     "do": "If the plan has no seats or slots left, stop sending offers for it at once."
+    },
+    {
+     "code": "billing_change_needed",
+     "do": "If upgrading needs something the payment tool cannot do yet, tell the owner; never change billing yourself."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more people are due than the cap allows, send the rest on later days."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "向免費或單次使用者提供適合的付費或季票方案",
+   "deliver_help": {
+    "plan_fit": "Each sub-group, the plan that fits, and the saving or gain worked out from the real prices.",
+    "templates": "Each approved template word for word with its audience rule and daily cap.",
+    "owner_approval": "The template ids and the owner's approval with dates.",
+    "sent_record": "Per day: count sent per channel and sample texts.",
+    "upgrades": "Each upgrade with payment reference and date, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-B2B-ACCESS": {
+   "title": "Confirm the SaaS offer, the sign-up path and where paid customers are counted",
+   "purpose": "Pin down what a business buyer can sign up for and pay today, which accounts speak for the company, and where trials and paid customers are read, so every channel in this goal sends people to a working sign-up and every customer is counted once.",
+   "steps": [
+    {
+     "id": "C-B2B-ACCESS.01",
+     "do": "Use read_page on the pricing, sign-up and docs pages and write the offer: plans, monthly and yearly price, currency, trial length or free plan, whether a card is needed, refund policy, and who the product is for. The owner confirms it.",
+     "evidence": "The offer sheet with each line's URL and the owner's confirmation."
+    },
+    {
+     "id": "C-B2B-ACCESS.02",
+     "do": "Open the sign-up flow up to the first screen that asks for details and check it loads on a computer and a phone. Create no account unless the owner asks for a test sign-up; if they do, use inbox_address for the email and inbox_latest for the code, and tell the owner to leave it out of the counts.",
+     "evidence": "The sign-up URL, what its first screen asks for, and any test account created."
+    },
+    {
+     "id": "C-B2B-ACCESS.03",
+     "do": "Ask the owner where trials and paying customers are recorded: Stripe (connected on the hosted owner page, or an export), the product's admin, analytics, or a CRM they already use. Write which number comes from where. Never ask for a password or an API key.",
+     "evidence": "The source for trials, for paid customers and for visits, and who can read each."
+    },
+    {
+     "id": "C-B2B-ACCESS.04",
+     "do": "Confirm that the sale counter from tracking is on the page shown after the first payment, or name the payment report that replaces it.",
+     "evidence": "Whether the sale counter is in place, or the report that will be used."
+    },
+    {
+     "id": "C-B2B-ACCESS.05",
+     "do": "Ask which account speaks for the company in each channel this goal uses: the business email or sending domain, the founder's or company's profiles, the marketplace vendor account. Check that the names shown match the brand.",
+     "evidence": "Each account, who signed in, and the name shown."
+    },
+    {
+     "id": "C-B2B-ACCESS.06",
+     "do": "Write the ideal customer in four lines from the research steps: company type and size, the buyer's role, the problem in their words, and what they use today. Add the 3 to 5 competitors buyers compare with, from the owner and from search.",
+     "evidence": "The four-line customer profile and the competitor list with URLs."
+    },
+    {
+     "id": "C-B2B-ACCESS.07",
+     "do": "Agree the limits for this goal: daily caps for messages, the ad budget if ads are used, who presses send, and what may never be promised (roadmap features, custom work, discounts that do not exist). Get the owner's yes.",
+     "evidence": "The limits and the owner's approval message."
+    }
+   ],
+   "deliver": [
+    "offer",
+    "signup_path",
+    "count_sources",
+    "accounts",
+    "customer_profile"
+   ],
+   "blockers": [
+    {
+     "code": "signup_broken",
+     "do": "If the sign-up or payment page fails, tell the owner before any channel sends people there."
+    },
+    {
+     "code": "no_count_source",
+     "do": "If paid customers cannot be read anywhere, ask the owner to connect Stripe on the owner page or export the customers list; never estimate."
+    },
+    {
+     "code": "wrong_account",
+     "do": "If a signed-in account is personal or another brand's, stop and ask the owner to switch."
+    },
+    {
+     "code": "offer_unclear",
+     "do": "If the pages and the owner disagree on price or plans, use neither until the owner confirms one."
+    },
+    {
+     "code": "owner_action_needed",
+     "do": "If a verification, terms or identity screen appears, stop and tell the owner which screen and which button."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "確認 SaaS 方案、註冊流程與付費客戶的計算來源",
+   "deliver_help": {
+    "offer": "Plans, prices, trial and refund terms as shown on the product pages, with URLs, confirmed by the owner.",
+    "signup_path": "The sign-up URL, what it asks for, and whether it worked on a computer and a phone.",
+    "count_sources": "Where trials, paid customers and visits are read, for example 'paid: Stripe connected on the owner page; trials: admin export'.",
+    "accounts": "Each account used in this goal, who signed in and the name shown.",
+    "customer_profile": "The four-line ideal customer, the competitors, and the limits the owner approved."
+   },
+   "tested": true
+  },
+  "C-LTD-ACCESS": {
+   "title": "Choose the deal marketplace and get the deal terms approved by the owner",
+   "purpose": "Pick the deal marketplace whose buyers match this product and settle deal terms the owner can afford to honour for as long as the deal promises, before anything is listed, because a lifetime deal can sell fast and every buyer must still be served afterwards.",
+   "steps": [
+    {
+     "id": "C-LTD-ACCESS.01",
+     "do": "List the SaaS deal marketplaces that could fit (for example AppSumo, PitchGround, Dealify or SaaS Mantra) and use read_page on each one's current partner or 'sell with us' page. Note who their buyers are, which categories they accept, and their published requirements and terms (working product, support, refund window, revenue share or fees). Quote what each page says today and write 'unknown' where it does not say.",
+     "evidence": "Each marketplace with its partner page URL, the quoted requirements and terms, and the date read."
+    },
+    {
+     "id": "C-LTD-ACCESS.02",
+     "do": "Check the product against each marketplace's requirements: it works today without manual setup, it has help pages and a support contact, and it can redeem codes or create accounts for deal buyers the way the marketplace needs. List anything missing as owner work, never as done.",
+     "evidence": "A pass or missing list per marketplace."
+    },
+    {
+     "id": "C-LTD-ACCESS.03",
+     "do": "Work out with the owner what one deal buyer costs: hosting and AI cost per active account per month, support time per buyer, payment and marketplace fees, and how long service is promised. Compare it with the deal price after the marketplace's share. If a lifetime deal loses money, propose a limited deal instead (a yearly deal, usage caps, or a capped number of codes).",
+     "evidence": "The cost per buyer, the net per sale after fees, and the recommendation with the numbers behind it."
+    },
+    {
+     "id": "C-LTD-ACCESS.04",
+     "do": "Draft the deal terms: tiers (for example 1, 2 or 3 stacked codes), price per tier, what each includes and its usage limits, what is excluded (future plans, add-ons), the refund window the marketplace sets, the number of codes, and how long service is promised.",
+     "evidence": "The draft terms as a table."
+    },
+    {
+     "id": "C-LTD-ACCESS.05",
+     "do": "Get the owner's written approval of the exact terms. The owner applies and signs the marketplace's partner agreement themselves; the agent never accepts terms for them. If the form needs a new vendor account, the owner creates it.",
+     "evidence": "The owner's approval of the terms and the application's status (who submitted it and when)."
+    },
+    {
+     "id": "C-LTD-ACCESS.06",
+     "do": "Write the support plan: who answers deal buyers, how fast, where (the deal page's questions, email, help desk), and how many new users a week the team can onboard.",
+     "evidence": "The support plan with names, response time and weekly capacity."
+    }
+   ],
+   "deliver": [
+    "marketplace_choice",
+    "requirements_check",
+    "unit_economics",
+    "deal_terms",
+    "owner_approval",
+    "support_plan"
+   ],
+   "blockers": [
+    {
+     "code": "product_not_ready",
+     "do": "If the product does not meet a requirement, list the owner work and do not apply until it is done."
+    },
+    {
+     "code": "terms_lose_money",
+     "do": "If the deal loses money per buyer, do not recommend it; show the owner the numbers and the limited options."
+    },
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the exact terms in writing, list nothing."
+    },
+    {
+     "code": "application_rejected",
+     "do": "If the marketplace declines, record its reason and propose the next marketplace to the owner."
+    },
+    {
+     "code": "marketplace_waitlist",
+     "do": "If the marketplace has a waiting list, submit the step as blocked with the expected date."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "選擇 SaaS 優惠平台並由負責人核准方案條件",
+   "deliver_help": {
+    "marketplace_choice": "The chosen marketplace and why, with the partner page URL and date read.",
+    "requirements_check": "Each requirement with pass or missing, and the owner work for anything missing.",
+    "unit_economics": "Cost per deal buyer, net per sale after fees, and how long service is promised.",
+    "deal_terms": "The tiers, prices, limits, exclusions, refund window and number of codes.",
+    "owner_approval": "The owner's written approval of the terms and the application status.",
+    "support_plan": "Who answers, how fast, where, and how many new users a week."
+   },
+   "tested": true
+  },
+  "C-B2B-METRICS": {
+   "title": "Read this goal's B2B numbers: trials, meetings, deals and paid customers",
+   "purpose": "Record the number this goal is judged on, counted once per real company and net of tests, refunds and duplicates, for the window before this round and for this round, so channels are compared on buyers rather than activity.",
+   "steps": [
+    {
+     "id": "C-B2B-METRICS.01",
+     "do": "Call where_are_we (with lane in a month target) and copy this goal's component names and window.",
+     "evidence": "The goal id, the component names and the window in hours."
+    },
+    {
+     "id": "C-B2B-METRICS.02",
+     "do": "Write the counting rule for each component before counting. trial_signups: a new trial or free-plan account from an outside company inside the window, from this goal's links or pages. deals_sold: codes or deals sold on the marketplace inside the window, minus refunds shown inside it. marketplace_signups: installs or sign-ups the marketplace or the tracked link credits to the listing. trial_to_paid_conversions and eligible_trials: trials in this round's group whose pay date fell inside the window, and how many of them paid. confirmed_meetings: a call with a target company that both sides accepted on the calendar. partner_paid_customers: customers who paid inside the window and came through a partner's link, code or introduction.",
+     "evidence": "The rule for this goal's components, with dates and time zone."
+    },
+    {
+     "id": "C-B2B-METRICS.03",
+     "do": "Read the sources for the window: tracking (clicks per label and the sale counter), the payment tool or Stripe connection, the product's admin or analytics for sign-ups, the marketplace's vendor dashboard, and the calendar or CRM for meetings. If a source cannot be opened, ask the owner for an export of that exact window.",
+     "evidence": "Each source with the time it was read or the file received."
+    },
+    {
+     "id": "C-B2B-METRICS.04",
+     "do": "Keep one row per company: merge duplicates by domain or email, and remove the owner's, team's, test and competitor accounts, free accounts given away, and refunds inside the window.",
+     "evidence": "What was removed and why, with counts before and after."
+    },
+    {
+     "id": "C-B2B-METRICS.05",
+     "do": "For the baseline, count the same components for the same length of time just before this round. If there is no history, record 0 and say 'no history'.",
+     "evidence": "The baseline values and how they were taken."
+    },
+    {
+     "id": "C-B2B-METRICS.06",
+     "do": "Call record_numbers with each component under its exact name and a source naming each report and when it was read. In a month target lane also pass paid_customers (paying customers since the month started, from the payment records), and visits and signups if you have them; they update the month progress and are not judged here. Never estimate.",
+     "evidence": "The record_numbers call as accepted."
+    },
+    {
+     "id": "C-B2B-METRICS.07",
+     "do": "Write one line on where the funnel stalls: too few people reached, reached but not signing up, signing up but not using it, or using it but not paying.",
+     "evidence": "One line naming the stalled stage with the numbers behind it."
+    }
+   ],
+   "deliver": [
+    "numbers",
+    "where_read",
+    "date_range",
+    "stalled_stage"
+   ],
+   "blockers": [
+    {
+     "code": "cannot_open_source",
+     "do": "If a source cannot be opened, ask the owner for an export of the exact window; never estimate."
+    },
+    {
+     "code": "no_history",
+     "do": "If there is no earlier window to compare, record 0 and say 'no history'; the first round sets the baseline."
+    },
+    {
+     "code": "attribution_unknown",
+     "do": "If a sign-up or payment cannot be tied to this goal's links, pages or partners, leave it out and say how many."
+    },
+    {
+     "code": "window_not_finished",
+     "do": "If the window has not ended, report the reading as early and read again when it ends."
+    },
+    {
+     "code": "denominator_zero",
+     "do": "If a rate's denominator is 0, record 0, say so in source, and claim no rate."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "核對 B2B 試用、會議、成交與付費客戶數字",
+   "deliver_help": {
+    "numbers": "Each component under its exact name with its value, for example 'trial_signups: 18'.",
+    "where_read": "Each source and when it was read, what was removed and why.",
+    "date_range": "Start and end of the window with time zone, and whether it is the baseline or the current reading.",
+    "stalled_stage": "The stage where buyers stop, with the numbers behind it."
+   },
+   "tested": true
+  },
+  "C-LTD-LISTING": {
+   "title": "Publish the deal listing with true claims and the approved terms",
+   "purpose": "Get the deal live, or in a later round improve it, with a listing that states exactly what buyers get under the approved terms, with real screenshots and a demo, so buyers know what they pay for and refunds stay low.",
+   "steps": [
+    {
+     "id": "C-LTD-LISTING.01",
+     "do": "Read the marketplace's listing guide and two or three successful listings in the same category; note their sections, image sizes, video length and the questions buyers ask most.",
+     "evidence": "The guide URL, the listings read and the sections required."
+    },
+    {
+     "id": "C-LTD-LISTING.02",
+     "do": "Write the listing from the product facts: a headline with the buyer's outcome, who it is for and not for, what it does today (no roadmap promises), the tiers exactly as approved, limits, and how to redeem. Mark anything that will change after the deal as 'not included'.",
+     "evidence": "The listing text with a source for each claim."
+    },
+    {
+     "id": "C-LTD-LISTING.03",
+     "do": "Prepare assets from the real product: screenshots, a short demo of a real task (the demo video step's video can be used), and the founder's short note if the owner wants one.",
+     "evidence": "The asset list with file names and what each shows."
+    },
+    {
+     "id": "C-LTD-LISTING.04",
+     "do": "Show the owner the listing and assets word for word and get a clear yes; then the owner, or the agent with its own tools and the owner's yes, submits it in the vendor dashboard.",
+     "evidence": "The owner's approval and the submission time."
+    },
+    {
+     "id": "C-LTD-LISTING.05",
+     "do": "Answer the marketplace's review questions and make requested changes; any change to the terms goes back to the owner first.",
+     "evidence": "Each review question with the answer or change, and the owner's yes for any change to terms."
+    },
+    {
+     "id": "C-LTD-LISTING.06",
+     "do": "When the deal is live, open the public deal page and check that price, tiers, limits and redemption steps match what was approved. Pass the deal page URL as the first item in links.",
+     "evidence": "The live deal page URL and the check against the approved terms."
+    }
+   ],
+   "deliver": [
+    "listing_url",
+    "published_text",
+    "approved_terms_check",
+    "assets"
+   ],
+   "blockers": [
+    {
+     "code": "not_live_yet",
+     "do": "If the listing is still in review, submit the step as blocked with the expected live date."
+    },
+    {
+     "code": "terms_changed_by_marketplace",
+     "do": "If the marketplace asks for different terms, take them to the owner; change nothing without their yes."
+    },
+    {
+     "code": "claim_not_supported",
+     "do": "If a claim cannot be backed by the product facts, remove it."
+    },
+    {
+     "code": "redemption_fails",
+     "do": "If a code cannot be redeemed, stop promoting the deal and fix it with the owner first."
+    }
+   ],
+   "needs_link": true,
+   "writes": true,
+   "identity": false,
+   "title_zh": "以真實內容與核准條件上架優惠",
+   "deliver_help": {
+    "listing_url": "The public URL of the live deal page.",
+    "published_text": "The listing text as it appears on the live page.",
+    "approved_terms_check": "Each approved term and whether the live page matches it.",
+    "assets": "The screenshots and video used, with what each shows."
+   },
+   "tested": true
+  },
+  "C-LTD-SUPPORT": {
+   "title": "Answer deal buyers fast and tell the owner's list about the launch",
+   "purpose": "During the window answer every question and review on the deal page from the fact sheet, help buyers redeem, and tell people who already opted in to hear from the brand, because on deal marketplaces quick, honest answers and early real reviews decide how many buy.",
+   "steps": [
+    {
+     "id": "C-LTD-SUPPORT.01",
+     "do": "Check the deal page's questions and reviews at least twice a day during the window. Answer each from the fact sheet in plain words from the brand's vendor account; roadmap, custom work and refunds go to the owner first.",
+     "evidence": "Each question with the answer posted and its time."
+    },
+    {
+     "id": "C-LTD-SUPPORT.02",
+     "do": "Help each buyer who cannot redeem within the support plan's response time; record the problem and the fix.",
+     "evidence": "Redemption problems with the time each took to fix."
+    },
+    {
+     "id": "C-LTD-SUPPORT.03",
+     "do": "Ask buyers who have used it for a few days for an honest review on the deal page. Never offer anything for a good review, never write reviews yourself and never ask the team to.",
+     "evidence": "Review requests sent (to whom, when) and reviews posted."
+    },
+    {
+     "id": "C-LTD-SUPPORT.04",
+     "do": "If the owner has an opted-in list (email, LINE, a community), write one short launch note with the deal link, get the owner's yes on the exact text, and send it once within that list's normal limits.",
+     "evidence": "The approved note, where it was sent and to how many people."
+    },
+    {
+     "id": "C-LTD-SUPPORT.05",
+     "do": "Keep a list of every complaint and refund reason. When the same problem appears three times, tell the owner the same day with a proposed fix.",
+     "evidence": "The complaint list with counts per reason and what was reported to the owner."
+    }
+   ],
+   "deliver": [
+    "answers_posted",
+    "redemption_issues",
+    "review_requests",
+    "launch_note",
+    "complaints"
+   ],
+   "blockers": [
+    {
+     "code": "question_needs_owner",
+     "do": "If a question is about the roadmap, custom work or a refund, answer only after the owner decides."
+    },
+    {
+     "code": "review_incentive_asked",
+     "do": "Never offer a reward for reviews, even if a buyer asks for one."
+    },
+    {
+     "code": "refund_spike",
+     "do": "If refunds rise above the usual rate, tell the owner the same day with the reasons."
+    },
+    {
+     "code": "list_not_opted_in",
+     "do": "If nobody on a list agreed to hear from the brand, do not send them the launch note."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "快速回覆優惠買家並通知既有名單",
+   "deliver_help": {
+    "answers_posted": "Each question answered on the deal page with time and text.",
+    "redemption_issues": "Each redemption problem and its fix, or 'none'.",
+    "review_requests": "Who was asked for a review and when, and reviews posted.",
+    "launch_note": "The approved launch note, the list it went to and the count, or 'no opted-in list'.",
+    "complaints": "Complaint and refund reasons with counts, and what was reported to the owner."
+   },
+   "tested": true
+  },
+  "C-ALT-RESEARCH": {
+   "title": "Find the competitor searches buyers type and what they dislike about each",
+   "purpose": "Find which 'alternative to' and 'versus' searches real buyers type, and what reviewers say they dislike about each competitor, from public sources, so the comparison pages and ads answer an actual buyer question honestly.",
+   "steps": [
+    {
+     "id": "C-ALT-RESEARCH.01",
+     "do": "For each competitor from the access step, list the searches buyers use: '{competitor} alternative', '{competitor} alternatives for {use case}', '{competitor} vs {product}', '{competitor} pricing', 'cheaper than {competitor}'. Check the search engine's suggestions and related questions for each, and the keyword tool's volumes if the owner's ad account is connected.",
+     "evidence": "The searches per competitor with where each came from and any volume shown."
+    },
+    {
+     "id": "C-ALT-RESEARCH.02",
+     "do": "Use read_page on each competitor's pricing and feature pages and write what they charge and include today. Date it; prices change.",
+     "evidence": "Each competitor's plans and prices with URLs and the date read."
+    },
+    {
+     "id": "C-ALT-RESEARCH.03",
+     "do": "Read public reviews of each competitor (G2, Capterra, app marketplace reviews, Reddit threads) and copy 5 to 10 complaints in the reviewers' words with links, above all the ones this product really solves.",
+     "evidence": "Quoted complaints with URLs, each marked 'we solve this', 'partly' or 'no'."
+    },
+    {
+     "id": "C-ALT-RESEARCH.04",
+     "do": "Write a fair comparison table: where this product is better, where the competitor is better, and where they are the same, each with a source. Leave out anything you cannot verify.",
+     "evidence": "The comparison table with sources, including the competitor's real strengths."
+    },
+    {
+     "id": "C-ALT-RESEARCH.05",
+     "do": "Pick 2 to 4 searches for this round, each with real volume or clear buying words and a complaint the product truly solves. Group them as the keyword groups the ad draft step will use.",
+     "evidence": "The chosen searches grouped for ads, with the reason for each."
+    },
+    {
+     "id": "C-ALT-RESEARCH.06",
+     "do": "Note the rules: no competitor trademark in ad text where the ad platform or local law forbids it, no false or unverifiable claim about a competitor, and the date the comparison was checked shown on the page.",
+     "evidence": "The rules that apply, with a link to the ad platform's trademark policy."
+    }
+   ],
+   "deliver": [
+    "searches",
+    "competitor_facts",
+    "complaints",
+    "comparison_table",
+    "chosen_searches"
+   ],
+   "blockers": [
+    {
+     "code": "no_competitor_known",
+     "do": "If no competitor is known, search the problem in buyer words and list the tools people mention before going on."
+    },
+    {
+     "code": "no_volume_data",
+     "do": "If no search volume can be seen, choose searches with clear buying words and write 'volume unknown'."
+    },
+    {
+     "code": "cannot_verify_claim",
+     "do": "If a fact about a competitor cannot be checked on their own pages or a public review, leave it out."
+    },
+    {
+     "code": "trademark_rule",
+     "do": "If the ad platform restricts a competitor's trademark, keep it out of the ad text and use it only as a keyword where allowed."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "找出買家搜尋的競品替代關鍵字與對各競品的不滿",
+   "deliver_help": {
+    "searches": "The searches per competitor with their source and volume if shown.",
+    "competitor_facts": "Each competitor's plans and prices with URLs and date read.",
+    "complaints": "Quoted public complaints with URLs and whether the product solves each.",
+    "comparison_table": "The fair comparison table with sources.",
+    "chosen_searches": "The 2 to 4 searches for this round, grouped as keyword groups, with reasons."
+   },
+   "tested": true
+  },
+  "C-ALT-PAGES": {
+   "title": "Publish an honest comparison page for each chosen competitor search",
+   "purpose": "Give buyers who search for an alternative a page on the owner's site that answers their question fairly and puts the trial one click away, because a page that is fair to the competitor is the one buyers trust and search engines keep.",
+   "steps": [
+    {
+     "id": "C-ALT-PAGES.01",
+     "do": "For each chosen search, write one page: a title that matches the search ('{competitor} alternative for {use case}'), who should switch and who should not, the comparison table with sources and the date checked, the complaints it solves quoted from public reviews with links, how to switch (import, setup time), the price, and one call to the trial with the round's tracked link (?v= per page).",
+     "evidence": "Each page's full text with sources."
+    },
+    {
+     "id": "C-ALT-PAGES.02",
+     "do": "Check every claim against the product facts and the competitor's own pages; remove anything not true today. Keep the competitor's strengths in.",
+     "evidence": "A claim-by-claim check."
+    },
+    {
+     "id": "C-ALT-PAGES.03",
+     "do": "Show the owner each page word for word and get a clear yes.",
+     "evidence": "The owner's approval."
+    },
+    {
+     "id": "C-ALT-PAGES.04",
+     "do": "The owner publishes it on their site, or the agent does with its own tools and the owner's yes. Check it loads, can be indexed (no noindex), has a clear title and description, and is linked from the site's footer or a 'compare' page so search engines find it.",
+     "evidence": "The live URL, the indexing check, and where it is linked from."
+    },
+    {
+     "id": "C-ALT-PAGES.05",
+     "do": "Submit the page in the owner's search console if it is connected, or note that it is not. Pass the page URL as the first item in links.",
+     "evidence": "The submission result or 'not connected'."
+    }
+   ],
+   "deliver": [
+    "page_urls",
+    "published_text",
+    "owner_approval",
+    "tracked_links"
+   ],
+   "blockers": [
+    {
+     "code": "no_site_access",
+     "do": "If nobody can publish on the site, submit the step as blocked and tell the owner exactly which page to add and where."
+    },
+    {
+     "code": "claim_not_verified",
+     "do": "If a claim cannot be verified today, remove it before publishing."
+    },
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the page, publish nothing."
+    },
+    {
+     "code": "page_noindex",
+     "do": "If the page cannot be indexed, ask the owner to remove the noindex setting before the round is measured."
+    }
+   ],
+   "needs_link": true,
+   "writes": true,
+   "identity": false,
+   "title_zh": "為選定的競品搜尋發布誠實的比較頁",
+   "deliver_help": {
+    "page_urls": "The public URL of each comparison page.",
+    "published_text": "The text of each page as published.",
+    "owner_approval": "The owner's approval with its date.",
+    "tracked_links": "The tracked link with its label on each page."
+   },
+   "tested": true
+  },
+  "C-INT-FIND": {
+   "title": "Find public posts and reviews where people ask for this or complain about the problem",
+   "purpose": "Collect recent public posts where a real buyer asks for a tool like this or complains about the problem or a competitor, in places that allow answers, so every reply goes to someone who already wants a solution.",
+   "steps": [
+    {
+     "id": "C-INT-FIND.01",
+     "do": "Write 10 to 20 searches in the buyer's words from the research steps: requests ('looking for a tool to {job}', 'recommend {category}'), complaints ('{competitor} too expensive', '{competitor} alternative', 'hate {task}') and switching moments ('moving off {competitor}').",
+     "evidence": "The searches."
+    },
+    {
+     "id": "C-INT-FIND.02",
+     "do": "Search where buyers ask: Reddit (subreddits for the buyer's role or tools), X, LinkedIn posts, Hacker News, Indie Hackers, product communities and Q&A sites, and competitor reviews on G2, Capterra or app marketplaces. Use read_page on public pages only; never log in to collect pages, and use a private group only if the owner is a member and its rules allow it.",
+     "evidence": "Each place searched with the searches used and the date."
+    },
+    {
+     "id": "C-INT-FIND.03",
+     "do": "Keep posts from the last 14 days (30 days for reviews) where the author describes the problem this product solves or asks for a tool. Drop vendor posts, posts already solved to the author's satisfaction, and threads that no longer accept replies.",
+     "evidence": "The kept posts with URL, date, author handle and the sentence that shows the need."
+    },
+    {
+     "id": "C-INT-FIND.04",
+     "do": "Read each place's rules: self-promotion, whether links are allowed, required disclosure, and whether messaging strangers is allowed. Mark each post 'public reply ok', 'reply without link' or 'skip'. Send a private message only where the author asked for one (for example 'DM me recommendations').",
+     "evidence": "The rule for each place with its URL, and the mark on each post."
+    },
+    {
+     "id": "C-INT-FIND.05",
+     "do": "Score each post by fit (does the product truly solve it), freshness and how the author can be reached under the rules. Keep the top 10 to 30 for this round, no more than the reply cap allows.",
+     "evidence": "The ranked list with scores."
+    }
+   ],
+   "deliver": [
+    "qualified_posts",
+    "excluded",
+    "rules_by_place",
+    "searches_used"
+   ],
+   "blockers": [
+    {
+     "code": "too_few_posts",
+     "do": "If fewer than 10 posts qualify, widen the searches or places and tell the owner the list is thin."
+    },
+    {
+     "code": "rules_forbid",
+     "do": "If a place forbids replies like these, skip it; never work around its rules."
+    },
+    {
+     "code": "login_required",
+     "do": "If a page needs a login to read, ask the owner to paste the text or skip it; never log in to collect pages."
+    },
+    {
+     "code": "vendor_or_employee",
+     "do": "If the author works for a competitor or sells a similar tool, skip the post."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "找出公開詢問需求或抱怨問題的貼文與評論",
+   "deliver_help": {
+    "qualified_posts": "The ranked posts with URL, date, author handle, the need in their words and the reply mark.",
+    "excluded": "Posts left out and why.",
+    "rules_by_place": "The rules found for each place, with URLs.",
+    "searches_used": "The searches and places, with the date."
+   },
+   "tested": true
+  },
+  "C-INT-REPLY": {
+   "title": "Reply helpfully to each chosen post with the approved template, within the daily cap",
+   "purpose": "Answer each chosen post with a genuinely useful reply that says who you are and offers the product only where it fits, built from one owner-approved template and kept within a daily cap, so buyers get help and the brand never looks like spam.",
+   "steps": [
+    {
+     "id": "C-INT-REPLY.01",
+     "do": "Write one reply template under 90 words with placeholders such as {name_or_handle}, {their_problem} (in their words), {specific_tip:200} (one concrete tip in one sentence that helps even without the product, up to 200 characters) and {fit_line:120} (why the product fits their case, up to 120 characters). Every other value is one line of at most 80 characters (40 for a name), with no link except in a {link} placeholder. The fixed text says the relationship ('I work on {product}') and includes the tracked link only where the place allows links (?v= per place). Make a no-link version for places that forbid links.",
+     "evidence": "The template with its placeholders, and the no-link version."
+    },
+    {
+     "id": "C-INT-REPLY.02",
+     "do": "Write the audience rule ('authors of posts on this round's list marked public reply ok, from the last 14 days') and propose a daily cap: start at 10 replies a day across all places and at most 3 in the same community a day.",
+     "evidence": "The audience rule and the daily cap."
+    },
+    {
+     "id": "C-INT-REPLY.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template's id and the owner's approval."
+    },
+    {
+     "id": "C-INT-REPLY.04",
+     "do": "Fill the placeholders for each post from what the author wrote, each value true and one line, at most 80 characters (40 for a name) unless the template sets its own limit such as {specific_tip:200}, with no link except in a {link} placeholder. If the product does not fit their case, do not reply with the product; at most give the tip alone.",
+     "evidence": "Each filled reply with the post it answers."
+    },
+    {
+     "id": "C-INT-REPLY.05",
+     "do": "Post each reply from the brand's or founder's own account, at most the daily cap per day; never through new or borrowed accounts. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Put each reply's public URL in output. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "Each reply's public URL, posting time and account."
+    },
+    {
+     "id": "C-INT-REPLY.06",
+     "do": "Check back after 24 hours: answer follow-up questions from the fact sheet, and if the author asks how to start, give the trial link. If a reply was removed or the account warned, stop in that community and tell the owner.",
+     "evidence": "Follow-ups answered, replies removed or warnings received, and authors who started a trial."
+    }
+   ],
+   "deliver": [
+    "template",
+    "owner_approval",
+    "reply_urls",
+    "replied_text",
+    "conversations"
+   ],
+   "blockers": [
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the template, post nothing."
+    },
+    {
+     "code": "removed_or_warned",
+     "do": "If a reply is removed or the account is warned, stop posting in that community and tell the owner."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more posts qualify than the cap allows, keep the best ones for the next day."
+    },
+    {
+     "code": "no_fit",
+     "do": "If the product does not solve the author's case, do not mention it."
+    },
+    {
+     "code": "account_limited",
+     "do": "If the account is limited or new accounts cannot reply, tell the owner; never create or borrow other accounts."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "在每日上限內，用核准的模板逐一有用地回覆選定貼文",
+   "deliver_help": {
+    "template": "The approved template and its no-link version word for word.",
+    "owner_approval": "The template's id and the owner's approval with its date.",
+    "reply_urls": "The public URL of every reply posted.",
+    "replied_text": "The text of every reply as posted.",
+    "conversations": "Authors who answered, what they asked, and who started a trial, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-TRIAL-ACCESS": {
+   "title": "Connect the trial list and agree what 'activated' means",
+   "purpose": "Get a current list of trials with sign-up date, activity and pay date from a source the owner controls, and agree with the owner on the one action that shows a trial got value, so every message goes to the right trial at the right stage.",
+   "steps": [
+    {
+     "id": "C-TRIAL-ACCESS.01",
+     "do": "Ask the owner where trials are recorded: Stripe trialing subscriptions (connected on the hosted owner page), the product's admin export, or analytics. Get an upload or export of current trials with email, name, company, sign-up date, trial end date, plan and last active date. Never ask for a password or an API key.",
+     "evidence": "The source, its columns and row count, and the export time."
+    },
+    {
+     "id": "C-TRIAL-ACCESS.02",
+     "do": "Agree the activation action with the owner: the one thing users who end up paying usually do early (for example 'converted a first song', 'invited a teammate', 'connected their data'). Use the owner's numbers if they have them; otherwise pick the action closest to the product's main promise and mark it 'to check'.",
+     "evidence": "The activation action and how it shows in the data."
+    },
+    {
+     "id": "C-TRIAL-ACCESS.03",
+     "do": "Confirm which messages trial users agreed to: product and account emails, in-app messages, marketing emails. Write the rule for each message type and remove anyone who unsubscribed.",
+     "evidence": "The consent rule per message type and how many were removed."
+    },
+    {
+     "id": "C-TRIAL-ACCESS.04",
+     "do": "Confirm the tool for trial emails or in-app messages (the product's own email, the owner's email service, or in-app messaging), the sender name and address, and its daily limit, and list the trial emails the product already sends on its own.",
+     "evidence": "The sending tool, sender, daily limit, and the existing automatic trial emails."
+    },
+    {
+     "id": "C-TRIAL-ACCESS.05",
+     "do": "Read the trial-to-paid rate for the last 30 to 90 days if the data allows: trials that ended in that period and how many paid.",
+     "evidence": "The past rate with its period and source, or 'no history'."
+    }
+   ],
+   "deliver": [
+    "trial_list",
+    "activation_action",
+    "consent_rule",
+    "sending_tool",
+    "past_rate"
+   ],
+   "blockers": [
+    {
+     "code": "no_trial_data",
+     "do": "If there is no trial list, ask the owner to connect Stripe on the owner page or upload an export; until then send nothing."
+    },
+    {
+     "code": "no_activity_data",
+     "do": "If activity cannot be seen, use sign-up and trial end dates only and say so."
+    },
+    {
+     "code": "consent_unknown",
+     "do": "If consent for marketing messages is unknown, send only product and account messages about the user's own trial."
+    },
+    {
+     "code": "wrong_account",
+     "do": "If the sending account is not the product's, stop and ask the owner to switch."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "連接試用名單並定義「已啟用」",
+   "deliver_help": {
+    "trial_list": "Where the trial list comes from, its columns, row count and export time.",
+    "activation_action": "The activation action and how it is seen in the data.",
+    "consent_rule": "Which message types may go to whom, and how many were removed.",
+    "sending_tool": "The sending tool, sender, daily limit and the automatic trial emails already sent.",
+    "past_rate": "The past trial-to-paid rate with period and source, or 'no history'."
+   },
+   "tested": true
+  },
+  "C-TRIAL-STAGES": {
+   "title": "Sort trials by where they are stuck",
+   "purpose": "Split current trials by stage (signed up but never used it, used it but not activated, activated but not paid) so each gets the one message that moves them a step, instead of the same reminder for everyone.",
+   "steps": [
+    {
+     "id": "C-TRIAL-STAGES.01",
+     "do": "Put each trial in one stage: (a) signed up, never used it; (b) used it but has not done the activation action; (c) activated, with the trial ending in the next 7 days or past the pay date without paying; (d) paid, which is left out.",
+     "evidence": "Counts per stage with the date of the data."
+    },
+    {
+     "id": "C-TRIAL-STAGES.02",
+     "do": "For stages (a) and (b), find where people stop from the data you have: the setup step most people never finish, a common error, or support questions. Use read_page on the help pages for the fix.",
+     "evidence": "The main stopping point per stage with its evidence."
+    },
+    {
+     "id": "C-TRIAL-STAGES.03",
+     "do": "Write the one goal of the message for each stage: (a) finish setup in a few minutes with a direct link; (b) do the activation action with a short how-to; (c) choose a plan, with the real price and what happens to their work if they do not.",
+     "evidence": "One message goal per stage."
+    },
+    {
+     "id": "C-TRIAL-STAGES.04",
+     "do": "Read 5 to 10 replies, support tickets or cancellation reasons if the owner has them, and note the objections in users' words.",
+     "evidence": "The objections quoted with sources, or 'none available'."
+    },
+    {
+     "id": "C-TRIAL-STAGES.05",
+     "do": "Set timing per stage from the sign-up date (for example day 1, day 3, two days before the trial ends) and the most messages one person gets during a trial (at most 4, counting the product's own automatic emails).",
+     "evidence": "The schedule per stage and the per-person limit."
+    }
+   ],
+   "deliver": [
+    "stages",
+    "stopping_points",
+    "message_goals",
+    "objections",
+    "schedule"
+   ],
+   "blockers": [
+    {
+     "code": "data_too_thin",
+     "do": "If there are fewer than 20 trials, keep one stage for all and say so."
+    },
+    {
+     "code": "existing_emails_conflict",
+     "do": "If the product already sends automatic trial emails, count them in the per-person limit and ask the owner before adding more."
+    },
+    {
+     "code": "no_help_page",
+     "do": "If there is no help page for the stopping point, write the steps from the product itself and have the owner confirm them."
+    },
+    {
+     "code": "all_trials_paid",
+     "do": "If no trial is open, record that and wait for new trials."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "依卡關位置分類試用使用者",
+   "deliver_help": {
+    "stages": "Counts per stage and the date of the data.",
+    "stopping_points": "Where people stop in stages (a) and (b), with evidence.",
+    "message_goals": "The one goal of the message per stage.",
+    "objections": "Objections in users' words with sources, or 'none available'.",
+    "schedule": "When each stage gets its message, and the per-person limit."
+   },
+   "tested": true
+  },
+  "C-TRIAL-SEND": {
+   "title": "Send the approved stage messages to trials within the daily cap",
+   "purpose": "Send each trial the one approved message for their stage at the planned time, within the daily cap and the per-person limit, so more of them reach value and choose a plan before their trial ends.",
+   "steps": [
+    {
+     "id": "C-TRIAL-SEND.01",
+     "do": "Write one template per stage, under 120 words, with placeholders such as {first_name}, {company}, {their_last_action} and {days_left}. One goal per message, one link (the round's tracked link with ?v= per stage, or the in-app link), the real price only in stage (c), and an easy way to stop. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {their_last_action:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "The templates by stage."
+    },
+    {
+     "id": "C-TRIAL-SEND.02",
+     "do": "Write each template's audience rule (the stage definition) and a daily cap within the sending tool's limit.",
+     "evidence": "The rule and cap per template."
+    },
+    {
+     "id": "C-TRIAL-SEND.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself.",
+     "evidence": "The template ids and the owner's approval."
+    },
+    {
+     "id": "C-TRIAL-SEND.04",
+     "do": "Each day, take the trials due for a message (next_recipients on the hosted service, or the owner's latest export), remove anyone who paid, unsubscribed or reached the per-person limit, and send within the cap. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "Per day: how many were sent per stage, who was removed and why, and sample texts."
+    },
+    {
+     "id": "C-TRIAL-SEND.05",
+     "do": "Answer replies within one business day from the fact sheet; billing, discounts and exceptions go to the owner. Offer a short call only if the owner has time for one.",
+     "evidence": "Replies and the answers given."
+    },
+    {
+     "id": "C-TRIAL-SEND.06",
+     "do": "Record each trial who activated or paid after a message, with dates.",
+     "evidence": "The list with dates and where it was read."
+    }
+   ],
+   "deliver": [
+    "templates",
+    "owner_approval",
+    "sent_record",
+    "replies",
+    "moved_on"
+   ],
+   "blockers": [
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved a template, send nothing with it."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more trials are due than the cap allows, send the most urgent stage first and the rest the next day."
+    },
+    {
+     "code": "per_person_limit",
+     "do": "If someone already got the most messages allowed, send them nothing more."
+    },
+    {
+     "code": "data_stale",
+     "do": "If the trial list is more than 2 days old, ask for a fresh export before sending stage (c) messages."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "在每日上限內寄出各階段核准的試用訊息",
+   "deliver_help": {
+    "templates": "Each approved template word for word with its stage, audience rule and daily cap.",
+    "owner_approval": "The template ids and the owner's approval with dates.",
+    "sent_record": "Per day: count sent per stage, removals and sample texts.",
+    "replies": "Replies with answers.",
+    "moved_on": "Trials who activated or paid after a message, with dates, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-MKT-ACCESS": {
+   "title": "Pick the marketplaces and directories where buyers search, and check what each requires",
+   "purpose": "List only the integration marketplaces and software directories where this product's buyers look for tools and where it truly qualifies, and confirm the owner's vendor accounts, so every listing is real and nothing is promised that the product cannot do.",
+   "steps": [
+    {
+     "id": "C-MKT-ACCESS.01",
+     "do": "From the customer profile, list the tools buyers already use and, for each, where people find add-ons: Slack App Directory, HubSpot App Marketplace, Shopify App Store, Zapier's app directory, Chrome Web Store, Atlassian Marketplace, Google Workspace Marketplace; and software directories such as G2, Capterra, SaaSHub, AlternativeTo and Product Hunt.",
+     "evidence": "The tools buyers use and the matching marketplaces."
+    },
+    {
+     "id": "C-MKT-ACCESS.02",
+     "do": "For each, read the current publishing requirements (for example a working app or integration reviewed by the platform, a security review, privacy policy, support URL, demo account) and note the review time. A directory listing needs only a real product; an app marketplace needs a working integration.",
+     "evidence": "Requirements and review time per marketplace, with URLs."
+    },
+    {
+     "id": "C-MKT-ACCESS.03",
+     "do": "Check which ones the product qualifies for today: the integration or extension is already built and working, or it is a plain product listing. Building an integration is product work for the owner; list it as an option, never as done.",
+     "evidence": "'Qualifies now', 'needs product work' or 'not a fit', per marketplace."
+    },
+    {
+     "id": "C-MKT-ACCESS.04",
+     "do": "Ask the owner which vendor or developer accounts exist and have them sign in. A new account is created by the owner; the agent may use inbox_address and inbox_latest for its verification email if the owner asks. Never accept a developer agreement for the owner.",
+     "evidence": "The accounts, who signed in, and any agreement the owner accepted."
+    },
+    {
+     "id": "C-MKT-ACCESS.05",
+     "do": "Choose up to 3 marketplaces for this round where the product qualifies now and buyers search, and get the owner's yes.",
+     "evidence": "The chosen marketplaces with reasons and the owner's approval."
+    }
+   ],
+   "deliver": [
+    "marketplaces",
+    "requirements",
+    "qualification",
+    "vendor_accounts",
+    "chosen"
+   ],
+   "blockers": [
+    {
+     "code": "no_integration",
+     "do": "If no app marketplace fits because there is no integration, use directory listings only and tell the owner what integration would open which marketplace."
+    },
+    {
+     "code": "owner_action_needed",
+     "do": "If a vendor account or identity check is needed, tell the owner which page and which button."
+    },
+    {
+     "code": "agreement_needed",
+     "do": "If a developer agreement must be accepted, the owner reads and accepts it; never accept it for them."
+    },
+    {
+     "code": "requirement_unclear",
+     "do": "If a requirement is unclear, quote the marketplace's text and ask the owner before submitting."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "選出買家會搜尋的整合市集與目錄，並確認上架條件",
+   "deliver_help": {
+    "marketplaces": "The marketplaces and directories considered, with URLs.",
+    "requirements": "Each one's requirements and review time.",
+    "qualification": "'Qualifies now', 'needs product work' or 'not a fit' per marketplace.",
+    "vendor_accounts": "The vendor accounts, who signed in, and agreements the owner accepted.",
+    "chosen": "The up to 3 marketplaces for this round and the owner's yes."
+   },
+   "tested": true
+  },
+  "C-MKT-LISTING": {
+   "title": "Publish or improve the marketplace listing with real screenshots and the tracked link",
+   "purpose": "Make each chosen listing answer what a buyer browsing that marketplace wants to know, in their words, with real screenshots and a working install or trial path, so listing visitors become installs and trials.",
+   "steps": [
+    {
+     "id": "C-MKT-LISTING.01",
+     "do": "Read the top 5 listings in the same category on that marketplace: their names, first lines, screenshots, categories and the questions in their reviews.",
+     "evidence": "The listings read, with URLs, and what they have in common."
+    },
+    {
+     "id": "C-MKT-LISTING.02",
+     "do": "Write the listing in the marketplace's fields: name, short description with the buyer's outcome, long description, categories, pricing as on the product page, setup steps, and support and privacy URLs. Only claims the product facts support.",
+     "evidence": "The listing text per field with sources."
+    },
+    {
+     "id": "C-MKT-LISTING.03",
+     "do": "Prepare screenshots and a short video from the real product in the sizes the marketplace asks for.",
+     "evidence": "The files and what each shows."
+    },
+    {
+     "id": "C-MKT-LISTING.04",
+     "do": "Set the website or install link to the round's tracked link (?v= per marketplace) where the marketplace allows a redirect; otherwise use the product URL with a utm tag and read installs from the marketplace's own report.",
+     "evidence": "The link used per marketplace and why."
+    },
+    {
+     "id": "C-MKT-LISTING.05",
+     "do": "Show the owner the listing and assets word for word and get a yes; the owner, or the agent with its own tools and the owner's yes, submits or updates it. Answer the platform's review questions; any change to claims goes back to the owner.",
+     "evidence": "The owner's approval, the submission time, and the review questions with answers."
+    },
+    {
+     "id": "C-MKT-LISTING.06",
+     "do": "When it is live, open the public listing, check it matches what was approved, and pass its URL as the first item in links.",
+     "evidence": "The live URL and the check."
+    }
+   ],
+   "deliver": [
+    "listing_urls",
+    "published_text",
+    "tracked_links",
+    "review_status"
+   ],
+   "blockers": [
+    {
+     "code": "in_review",
+     "do": "If a listing is still in review, submit the step as blocked with the expected date."
+    },
+    {
+     "code": "rejected",
+     "do": "If a listing is rejected, record the reason and fix it with the owner before submitting again."
+    },
+    {
+     "code": "no_redirect_allowed",
+     "do": "If the marketplace forbids redirect links, use the product URL with a utm tag and read numbers from the marketplace's report."
+    },
+    {
+     "code": "claim_not_supported",
+     "do": "If a claim cannot be backed by the product facts, remove it."
+    }
+   ],
+   "needs_link": true,
+   "writes": true,
+   "identity": false,
+   "title_zh": "以真實截圖與追蹤連結上架或優化市集頁面",
+   "deliver_help": {
+    "listing_urls": "The public URL of each live listing.",
+    "published_text": "The listing text as it appears live.",
+    "tracked_links": "The link used on each listing.",
+    "review_status": "Each listing's review status and any changes asked for."
+   },
+   "tested": true
+  },
+  "C-OB-ACCESS": {
+   "title": "Set up a warmed-up sending domain, the legal basics and the daily cap",
+   "purpose": "Prepare cold outreach so it reaches inboxes and stays legal: a separate, verified sending domain warmed up slowly, a postal address and unsubscribe in every email, and a daily cap the owner approves, because one burst from a cold domain can hurt the brand's email for months.",
+   "steps": [
+    {
+     "id": "C-OB-ACCESS.01",
+     "do": "Ask the owner to use a separate sending domain or subdomain for outreach (for example get{product}.com or mail.{product}.com), never the main domain that sends receipts. The owner buys or sets it up; the agent lists exactly which DNS records to add. On the hosted service, follow the sending-domain checklist on the owner page.",
+     "evidence": "The sending domain and who set it up."
+    },
+    {
+     "id": "C-OB-ACCESS.02",
+     "do": "Check that the domain's SPF, DKIM and DMARC records are published and pass (read the DNS or a public checker), and that the mailbox can send and receive. Give the owner any missing record line by line.",
+     "evidence": "Each record found, pass or missing, with the time checked."
+    },
+    {
+     "id": "C-OB-ACCESS.03",
+     "do": "Plan the warm-up: for the first two weeks send only to real contacts who expect mail, a few a day per mailbox (for example 5 to 10 a day, adding about 5 a day each week), up to at most 30 to 50 a day per mailbox once replies and bounces look healthy. No outreach volume before warm-up is done.",
+     "evidence": "The warm-up schedule with dates and the day outreach may start."
+    },
+    {
+     "id": "C-OB-ACCESS.04",
+     "do": "Write the legal basics for the countries you will email: an honest From name and subject, the company's postal address, a working unsubscribe, and opt-outs honoured promptly (for example the US CAN-SPAM Act). Where the law requires prior consent for business email (for example Canada's CASL and some EU countries), email only contacts the law allows, or leave that country out. Ask the owner to confirm.",
+     "evidence": "The rules per country targeted, and the owner's confirmation."
+    },
+    {
+     "id": "C-OB-ACCESS.05",
+     "do": "Agree the daily cap with the owner (all mailboxes together) and the stop rules: pause if bounces pass 3% or any spam complaint arrives in a day.",
+     "evidence": "The daily cap and stop rules, approved by the owner."
+    },
+    {
+     "id": "C-OB-ACCESS.06",
+     "do": "Set up the do-not-contact list (opt-outs, bounces, customers, competitors, people who said no) and where replies are read.",
+     "evidence": "The do-not-contact list and the reply inbox."
+    }
+   ],
+   "deliver": [
+    "sending_domain",
+    "dns_check",
+    "warmup_plan",
+    "legal_rules",
+    "daily_cap"
+   ],
+   "blockers": [
+    {
+     "code": "no_separate_domain",
+     "do": "If there is no separate sending domain, send no outreach from the main domain; wait for the owner to set one up."
+    },
+    {
+     "code": "dns_missing",
+     "do": "If a record is missing or failing, give the owner the exact record to add and send nothing until it passes."
+    },
+    {
+     "code": "warmup_not_done",
+     "do": "If warm-up is not finished, send only within the warm-up schedule."
+    },
+    {
+     "code": "consent_country",
+     "do": "If a country needs prior consent you do not have, leave it out."
+    },
+    {
+     "code": "owner_action_needed",
+     "do": "If a DNS, billing or verification screen needs the owner, tell them which page and which button."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": true,
+   "title_zh": "設定已暖機的寄件網域、法規基本要求與每日上限",
+   "deliver_help": {
+    "sending_domain": "The outreach domain or subdomain and who set it up.",
+    "dns_check": "SPF, DKIM and DMARC: found, pass or missing, with the time checked.",
+    "warmup_plan": "The warm-up schedule and the first day outreach may start.",
+    "legal_rules": "The rules per country and the owner's confirmation.",
+    "daily_cap": "The daily cap, the stop rules and the do-not-contact list."
+   },
+   "tested": true
+  },
+  "C-OB-LIST": {
+   "title": "Build the target list from published business contacts only",
+   "purpose": "List companies that match the customer profile and, for each, a person in the buying role with a business contact they or their company published, because guessed or bought addresses bounce, annoy people and break the law in many places.",
+   "steps": [
+    {
+     "id": "C-OB-LIST.01",
+     "do": "Turn the customer profile into searches: company directories, industry lists, marketplaces where such companies appear, job posts that mention the problem, and companies that publicly reviewed a competitor.",
+     "evidence": "The searches and sources with dates."
+    },
+    {
+     "id": "C-OB-LIST.02",
+     "do": "Collect 50 to 150 companies that fit (size, type, location, a visible sign of the problem), each with the page that shows the fit.",
+     "evidence": "The company list with the fit evidence URL for each."
+    },
+    {
+     "id": "C-OB-LIST.03",
+     "do": "For each company, find the person in the buying role on the company's own team page, press page or public profile.",
+     "evidence": "Name, role and the page that shows it."
+    },
+    {
+     "id": "C-OB-LIST.04",
+     "do": "Find a published business contact for that person or role: an address printed on the company's website, press or contact page, a public profile that lists a business email, or the company's contact form. Never guess an address pattern, never use bought lists or tools that infer addresses, never use personal addresses. If nothing is published, use the contact form or leave the company out.",
+     "evidence": "The contact and the URL where it is published, for each person."
+    },
+    {
+     "id": "C-OB-LIST.05",
+     "do": "Remove customers, current trials, competitors, the do-not-contact list, and companies in countries the legal rules left out.",
+     "evidence": "Removed counts by reason."
+    },
+    {
+     "id": "C-OB-LIST.06",
+     "do": "For each kept contact, write one true personal line from their public pages (a recent post, launch, job ad or review) for {why_now}.",
+     "evidence": "The line and its source URL for each contact."
+    }
+   ],
+   "deliver": [
+    "target_list",
+    "contact_sources",
+    "removed",
+    "personal_lines"
+   ],
+   "blockers": [
+    {
+     "code": "no_published_contact",
+     "do": "If no contact is published, use the company's contact form or leave them out; never guess."
+    },
+    {
+     "code": "too_few_targets",
+     "do": "If fewer than 50 companies fit, widen the profile one step and tell the owner."
+    },
+    {
+     "code": "site_terms_forbid",
+     "do": "If a site's terms forbid collecting contacts, do not collect from it."
+    },
+    {
+     "code": "personal_address_only",
+     "do": "If only a personal address is found, leave the person out."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "只用公開發布的商務聯絡方式建立名單",
+   "deliver_help": {
+    "target_list": "Company, person, role and fit evidence for each contact.",
+    "contact_sources": "The published contact and the URL it appears on, for each person.",
+    "removed": "Removed counts by reason.",
+    "personal_lines": "The personal line and its source URL for each contact."
+   },
+   "tested": true
+  },
+  "C-OB-SEQUENCE": {
+   "title": "Send the approved outreach email and up to two follow-ups within the daily cap",
+   "purpose": "Reach each target once with a short, personal email built from one owner-approved template, then at most two polite follow-ups, within the warmed-up daily cap, so qualified buyers book a call and nobody is pestered.",
+   "steps": [
+    {
+     "id": "C-OB-SEQUENCE.01",
+     "do": "Write the first email template under 100 words with placeholders such as {first_name}, {company} and {why_now}: one line on why you write to them, the problem in their words, one proof the product facts support, a small ask (a 15-minute call, or 'shall I send a 2-minute video?'), the sender's real name and company, the postal address and an unsubscribe line. Plain text, no images, at most one link. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {why_now:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "The template with its placeholders."
+    },
+    {
+     "id": "C-OB-SEQUENCE.02",
+     "do": "Write two follow-up templates (day 3 and day 7, each under 60 words), sent only to people who did not reply, opt out or bounce.",
+     "evidence": "The two follow-up templates and their rules."
+    },
+    {
+     "id": "C-OB-SEQUENCE.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself. The cap counts first emails and follow-ups together and never goes past that day's warm-up schedule.",
+     "evidence": "The template ids, caps and the owner's approval."
+    },
+    {
+     "id": "C-OB-SEQUENCE.04",
+     "do": "Each day, send to the next contacts on the list within the cap, filling placeholders with true values, each one line of at most 80 characters (40 for a name) unless the template sets its own limit such as {why_now:120}, with no link except in a {link} placeholder; one recipient per email, from the warmed-up mailbox. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap.",
+     "evidence": "Per day: emails, follow-ups, bounces and opt-outs, with sample texts."
+    },
+    {
+     "id": "C-OB-SEQUENCE.05",
+     "do": "Read replies twice a day. A yes or a question gets an answer within one business day with the calendar link the owner approved; a no or 'remove me' goes on the do-not-contact list at once and gets no more mail.",
+     "evidence": "Replies by type and what was done."
+    },
+    {
+     "id": "C-OB-SEQUENCE.06",
+     "do": "Check the stop rules every day: bounces over 3% or any spam complaint pause sending, and the owner is told the same day.",
+     "evidence": "Daily bounce and complaint rates and any pause."
+    }
+   ],
+   "deliver": [
+    "templates",
+    "owner_approval",
+    "sent_record",
+    "replies",
+    "meetings_booked"
+   ],
+   "blockers": [
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved a template, send nothing with it."
+    },
+    {
+     "code": "warmup_cap",
+     "do": "If the cap is above that day's warm-up limit, send only up to the warm-up limit."
+    },
+    {
+     "code": "bounce_spike",
+     "do": "If bounces pass 3% in a day, pause, remove the bad addresses and tell the owner."
+    },
+    {
+     "code": "complaint",
+     "do": "If a spam complaint arrives, pause sending and tell the owner the same day."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more contacts are due than the cap allows, send the rest on later days."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "在每日上限內寄出核准的開發信與最多兩封追蹤信",
+   "deliver_help": {
+    "templates": "The approved first email and follow-ups word for word.",
+    "owner_approval": "The template ids, caps and the owner's approval with dates.",
+    "sent_record": "Per day: count sent, follow-ups, bounces and opt-outs, with sample texts.",
+    "replies": "Replies by type (yes, question, no, remove me) and what was done.",
+    "meetings_booked": "Calls accepted on the calendar, with company and date, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-AGY-FIND": {
+   "title": "Find agencies and consultants who already serve the buyer",
+   "purpose": "List agencies, consultants and implementers whose clients are this product's buyers and who publicly work with software partners, because one partner who recommends the product to every client can bring more paying customers than many single sales.",
+   "steps": [
+    {
+     "id": "C-AGY-FIND.01",
+     "do": "Write who the partner is: what service they sell to the buyer (setup, marketing, bookkeeping, development), their clients' size, and why recommending this product helps them (saves their time, adds a service, earns a share).",
+     "evidence": "The partner profile in four lines."
+    },
+    {
+     "id": "C-AGY-FIND.02",
+     "do": "Search partner directories of tools the buyers use (for example the HubSpot Solutions Directory, Shopify Partner directory, Webflow Experts, or accounting software advisor directories), service marketplaces (Clutch, agency pages on Upwork), and searches like '{service} agency for {buyer}'. Collect at least 30 candidates.",
+     "evidence": "The sources and searches with dates, and at least 30 candidates with URLs."
+    },
+    {
+     "id": "C-AGY-FIND.03",
+     "do": "For each candidate, use read_page on their services and case-study pages: who their clients are, which tools they already resell or recommend, and their size.",
+     "evidence": "For each candidate, the URLs read and one line on client fit."
+    },
+    {
+     "id": "C-AGY-FIND.04",
+     "do": "Check that each publishes a partnership or contact route (a partners page, a 'tools we use' page, a contact form or a business email on their site). Never guess addresses.",
+     "evidence": "The published route and its page for each candidate."
+    },
+    {
+     "id": "C-AGY-FIND.05",
+     "do": "Rank by client fit, then by whether they already partner with similar tools, then by size. Keep 10 to 20, mark any that partner with a direct competitor, and show the owner the list to strike anyone.",
+     "evidence": "The ranked list and the owner's reply."
+    }
+   ],
+   "deliver": [
+    "shortlist",
+    "fit_evidence",
+    "contact_routes",
+    "conflicts"
+   ],
+   "blockers": [
+    {
+     "code": "too_few_partners",
+     "do": "If fewer than 10 fit, widen to nearby services and tell the owner the list is thin."
+    },
+    {
+     "code": "no_published_route",
+     "do": "If a candidate publishes no contact route, leave them out; never guess."
+    },
+    {
+     "code": "competitor_partner",
+     "do": "If a candidate partners with a direct competitor, mark it and let the owner decide."
+    },
+    {
+     "code": "owner_not_answered",
+     "do": "If the owner has not reviewed the list, submit the step as blocked and say what to check."
+    }
+   ],
+   "needs_link": false,
+   "writes": false,
+   "identity": false,
+   "title_zh": "找出已在服務這群買家的代理商與顧問",
+   "deliver_help": {
+    "shortlist": "The 10 to 20 ranked partners with URL and the owner's yes or no.",
+    "fit_evidence": "For each, the pages read and one line on client fit.",
+    "contact_routes": "For each, the published contact route and its page.",
+    "conflicts": "Partners who work with a direct competitor, or 'none'."
+   },
+   "tested": true
+  },
+  "C-AGY-OUTREACH": {
+   "title": "Invite the chosen partners with the approved partner offer and template",
+   "purpose": "Offer each chosen partner a clear, owner-approved reason to recommend the product to their clients, sent once with a personal note within a daily cap, so partner calls get booked with the right firms.",
+   "steps": [
+    {
+     "id": "C-AGY-OUTREACH.01",
+     "do": "Settle the partner offer with the owner from what they will honour: a referral share (percentage and for how long), a reseller discount, a free partner account for their own use, co-marketing (a case study, a place on the owner's partner page), and how referrals are tracked (a partner link with the label ?v=partner-name, or a code). Never promise terms the owner did not approve.",
+     "evidence": "The approved partner offer quoted from the owner."
+    },
+    {
+     "id": "C-AGY-OUTREACH.02",
+     "do": "Write one invitation template under 120 words with placeholders such as {first_name}, {agency}, {their_client_type} and {their_case_study}: why their clients need this, what the partner gets, what you ask (a 20-minute call), and how to say no. Each placeholder value is one line of at most 80 characters (40 for a name); where one needs more, write its limit, for example {their_case_study:120} (200 at most). Values carry no links; a link goes in the fixed text or a {link} placeholder.",
+     "evidence": "The template with its placeholders."
+    },
+    {
+     "id": "C-AGY-OUTREACH.03",
+     "do": "Get the template approved. In a month target, send it with submit_batch as one item of kind 'template' with text, audience_rule and daily_cap, and tell the owner to approve it on their owner page or with the approve command. Outside a month target, show the owner the template, the audience rule and the cap, and get a clear yes. Never approve it yourself. Start at 10 partners a day.",
+     "evidence": "The template's id and the owner's approval."
+    },
+    {
+     "id": "C-AGY-OUTREACH.04",
+     "do": "Send once per partner through their published route within the cap, from the approved account; one follow-up after 5 business days that is part of the approved templates, then stop. When today's messages are out, submit this step with approved_item set to the template's id (in a month target) and the sent texts in output; the engine checks each one against the approved template and the day's cap. Fill each placeholder with a true value: one line, at most 80 characters (40 for a name) unless the template sets its own limit, with no link except in a {link} placeholder.",
+     "evidence": "Sends, follow-ups and replies with times."
+    },
+    {
+     "id": "C-AGY-OUTREACH.05",
+     "do": "Book a call with each interested partner using the owner's calendar link, and send them the partner one-pager before the call.",
+     "evidence": "Calls booked with dates."
+    }
+   ],
+   "deliver": [
+    "partner_offer",
+    "template",
+    "owner_approval",
+    "sent_record",
+    "calls_booked"
+   ],
+   "blockers": [
+    {
+     "code": "no_partner_terms",
+     "do": "If the owner has not decided the partner offer, contact nobody; show options and wait."
+    },
+    {
+     "code": "owner_has_not_approved",
+     "do": "If the owner has not approved the template, send nothing."
+    },
+    {
+     "code": "over_daily_cap",
+     "do": "If more partners are due than the cap allows, send the rest on later days."
+    },
+    {
+     "code": "partner_said_no",
+     "do": "If a partner says no or asks to stop, contact them no more."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "用核准的合作方案與模板邀請選定的合作夥伴",
+   "deliver_help": {
+    "partner_offer": "The partner offer exactly as the owner approved it.",
+    "template": "The approved template word for word.",
+    "owner_approval": "The template's id and the owner's approval with its date.",
+    "sent_record": "Each send and follow-up with recipient and time.",
+    "calls_booked": "Partner calls booked with dates, or 'none yet'."
+   },
+   "tested": true
+  },
+  "C-AGY-ENABLE": {
+   "title": "Onboard each partner and help them bring their first client",
+   "purpose": "Give each partner who says yes what they need to recommend the product with confidence (their own link, a partner account, a short demo and a client-ready one-pager) and help with their first client, because partners who succeed once keep referring.",
+   "steps": [
+    {
+     "id": "C-AGY-ENABLE.01",
+     "do": "Record each agreed partner's terms in writing (the approved offer, how referrals are tracked, when payouts happen) and have the owner send or approve the agreement; the agent never signs.",
+     "evidence": "Each partner's written terms and who approved them."
+    },
+    {
+     "id": "C-AGY-ENABLE.02",
+     "do": "Set up the partner's own link (the label ?v=partner-name on the round's tracked link, or the owner's referral tool) and a free partner account if one was offered. Open the link and check it works.",
+     "evidence": "The link and account for each partner, checked."
+    },
+    {
+     "id": "C-AGY-ENABLE.03",
+     "do": "Give a 20-minute walk-through (the owner live, or a recorded demo) and a one-page client brief: who it is for, the outcome, the price, how to start, and a 'do not promise' list.",
+     "evidence": "The brief and the date of the walk-through."
+    },
+    {
+     "id": "C-AGY-ENABLE.04",
+     "do": "Ask each partner which one or two clients fit now, and offer to join the first client call or send a short demo the partner can forward.",
+     "evidence": "The first clients named and the help offered."
+    },
+    {
+     "id": "C-AGY-ENABLE.05",
+     "do": "Check in once a week during the window; record introductions, trials and paid customers per partner. A commission is owed only on a counted payment.",
+     "evidence": "For each partner: introductions, trials, paid customers and commission owed."
+    }
+   ],
+   "deliver": [
+    "partner_terms",
+    "partner_links",
+    "brief_text",
+    "first_clients",
+    "partner_record"
+   ],
+   "blockers": [
+    {
+     "code": "agreement_not_signed",
+     "do": "If the owner has not approved the agreement, give the partner no link or account yet."
+    },
+    {
+     "code": "link_broken",
+     "do": "If a partner's link does not open the product, fix it before sending."
+    },
+    {
+     "code": "partner_inactive",
+     "do": "If a partner brings nobody after two check-ins, mark them inactive and stop chasing."
+    },
+    {
+     "code": "commission_question",
+     "do": "If a partner asks about a payout, answer only with the written terms and pass anything else to the owner."
+    }
+   ],
+   "needs_link": false,
+   "writes": true,
+   "identity": false,
+   "title_zh": "協助每位合作夥伴上手並帶來第一位客戶",
+   "deliver_help": {
+    "partner_terms": "Each partner's written terms and who approved them.",
+    "partner_links": "Each partner's link, opened and confirmed.",
+    "brief_text": "The client brief as sent.",
+    "first_clients": "Clients each partner named and the help given, or 'none yet'.",
+    "partner_record": "Per partner: introductions, trials, paid customers and commission owed."
    },
    "tested": true
   }

@@ -5,13 +5,13 @@
     "url": "https://engine.nuluno.com/?lang=en"
   },
   "metadata": {
-    "description": "Sales goals for AI agents: 99 playbooks, each judged by one number, and an engine that holds the agent to it",
-    "version": "0.3.0"
+    "description": "Sales goals for AI agents: 110 playbooks, each judged by one number, and an engine that holds the agent to it",
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "nuluno-engine",
-      "description": "24 sales skills (Instagram, TikTok, Threads, X, Reddit, LinkedIn, email, Meta ads, search ads, Product Hunt, search and AI answers, partners and more) holding 99 step-by-step playbooks, plus the Nuluno Engine MCP server: it accepts only the current step with every hand-back item filled in, refuses a profile page or a link that does not exist in place of a published post, waits out the observation window and, when a round misses, makes the agent name one change and run another round. Month-target mode: a number of paying customers in a month, split into daily visits per channel, with posts approved by the owner a week at a time",
+      "description": "26 sales skills (Instagram, TikTok, Threads, X, Reddit, LinkedIn, email, Meta ads, search ads, Product Hunt, search and AI answers, creators and partners, existing customers, B2B SaaS and more) holding 110 step-by-step playbooks, plus the Nuluno Engine MCP server: it accepts only the current step with every hand-back item filled in, refuses a profile page or a link that does not exist in place of a published post, waits out the observation window and, when a round misses, makes the agent name one change and run another round. Month-target mode: a number of paying customers in a month from a preset for a new brand, a brand with existing customers or B2B SaaS, split into what each channel needs per day, with an honest check of whether the plan can reach it and what would close the gap, and posts and message templates approved by the owner a week at a time",
       "source": "./"
     }
   ]

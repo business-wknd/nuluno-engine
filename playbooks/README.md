@@ -12,6 +12,16 @@ The pages are written from [`engine/library.json`](../engine/library.json) by `p
 | [Audience: confirm the outcome buyers really want](G-AUD-DESIRE.md) | audience | desire_response_rate | 10 |
 | [Audience: find the segment and angle that bring kept purchases](G-AUD-PURCHASE.md) | audience | external_purchase_rate | 11 |
 | [Audience: find the buyer group that sends the most real inquiries](G-AUD-SEGMENT.md) | audience | qualified_inquiry_rate | 11 |
+| [B2B SaaS: turn public requests and complaints into trials](G-B2B-INTENT.md) | b2b_saas | intent_trial_signups | 13 |
+| [B2B SaaS: sell a launch deal on SaaS deal marketplaces](G-B2B-LTD.md) | b2b_saas | deals_sold | 13 |
+| [B2B SaaS: get sign-ups from integration marketplaces and software directories](G-B2B-MARKETPLACE.md) | b2b_saas | marketplace_signups | 13 |
+| [B2B SaaS: book sales calls by emailing published business contacts](G-B2B-OUTBOUND.md) | b2b_saas | outbound_meetings | 14 |
+| [B2B SaaS: get paying customers through agencies and consultants](G-B2B-PARTNERS.md) | b2b_saas | partner_paid_customers | 13 |
+| [B2B SaaS: raise the share of trials that become paying](G-B2B-TRIAL-CONVERT.md) | b2b_saas | trial_to_paid_rate | 13 |
+| [B2B SaaS: win trials from people searching for a competitor alternative](G-B2B-ALTERNATIVES.md) | b2b_search_ads | alternative_trial_signups | 16 |
+| [Members: win back inactive members as paying members](G-BASE-REACTIVATE.md) | customer_base | reactivated_paying_members | 12 |
+| [Members: get new paying customers through member invites](G-BASE-REFERRAL.md) | customer_base | paid_referrals | 12 |
+| [Members: move free and one-time users to a paid or season plan](G-BASE-UPGRADE.md) | customer_base | upgrades | 12 |
 | [Discord: get more qualified replies to help answers](G073.md) | discord | qualified_reply_rate | 13 |
 | [Discord: turn help conversations into purchases](G074.md) | discord | external_purchases | 13 |
 | [Discord: raise task completion among opted-in members](G099.md) | discord | participation_rate | 12 |
@@ -56,6 +66,7 @@ The pages are written from [`engine/library.json`](../engine/library.json) by `p
 | [Microsoft Ads: lower the cost per purchase](G093.md) | microsoft_ads | purchase_cpa | 15 |
 | [Microsoft Ads: raise the share of ad views that reach the site](G094.md) | microsoft_ads | qualified_click_rate | 15 |
 | [Reddit, Threads, X, YouTube: turn request replies into conversations](G065.md) | multi | qualified_reply_rate | 27 |
+| [Creators: get paying customers through creators whose audience wants the product](G-CREATOR-COLLAB.md) | partnerships | creator_paid_customers | 13 |
 | [Partners: raise the share of referrals who qualify](G085.md) | partnerships | qualified_referral_rate | 12 |
 | [Referral partners: raise paid purchases per qualified referral](G086.md) | partnerships | referral_purchase_rate | 13 |
 | [Trials and inquiries: raise the share that become paying](G087.md) | partnerships | trial_purchase_rate | 13 |

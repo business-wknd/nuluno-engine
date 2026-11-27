@@ -485,6 +485,8 @@ class HostedStore(HookStore):
     """A store that says it is the hosted service (it gives tracked links), with an optional recipient list."""
     recipients = None
     def tracked_link(self, owner, round_number, target): return 'https://engine.example/t/abc'
+
+    def can_connect_stripe(self): return getattr(self, 'stripe_ready', True)
     def sale_counter(self, owner): return 'https://engine.example/s/abc'
 
 
@@ -775,6 +777,8 @@ class PresetTest(MonthTargetTest):
         stripe = self.asks(plan, 'connect_stripe')[0]; self.assertIn('owner page', stripe['where'])
         self.assertIn('owner page', self.asks(plan, 'upload_list')[0]['where']); self.assertNotIn('input', self.asks(plan, 'upload_list')[0])
         self.store.paid = {'count': 1, 'revenue_minor': 0, 'source': 'Stripe'}
+        self.assertFalse(self.asks(self.call('month_status'), 'connect_stripe'))
+        self.store.paid = None; self.store.stripe_ready = False  # no Connect button on the owner page: no ask
         self.assertFalse(self.asks(self.call('month_status'), 'connect_stripe'))
         store = ListStore(self.folder); self.store = store
         self.assertFalse(self.asks(self.call('month_status'), 'upload_list'))  # the list is uploaded

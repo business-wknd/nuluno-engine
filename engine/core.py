@@ -1522,7 +1522,8 @@ def _asks(store, owner, record, math_, feas):
             add('upload_list', 'The lanes that message your own members need your member list (or, on your own computer, how many contacts it has).', **({} if hosted else {'input': 'list_size'}))
             continue
         add('answer', INPUTS[name][1], input=name, optional=name in OPTIONAL_ASKS)
-    if hosted and not math_['paid']['counted_by_engine']:
+    can_connect = getattr(store, 'can_connect_stripe', None)
+    if hosted and not math_['paid']['counted_by_engine'] and (can_connect() if callable(can_connect) else False):
         add('connect_stripe', 'Connecting Stripe read-only lets the engine count real paying customers itself instead of asking you.')
     for lever in feas['closes_gap_with']:
         if lever['ask'] == 'approve_send_volume':
